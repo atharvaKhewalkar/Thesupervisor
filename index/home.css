@@ -1,0 +1,142 @@
+*{
+    margin: 0;
+}
+.navbar{
+    
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 3rem;
+    padding-right: 3rem;
+    box-shadow: 0px 0px 1px 0px rgb(28, 27, 27) ;
+    height: 12vh;
+    background-color: #000000;
+    color: aliceblue;
+    text-decoration: none;
+
+
+}
+.navbar ul{
+    
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    font-size: 1.4rem;   
+}
+
+.navbar ul li{
+    text-decoration: none;
+}
+.navbar ul li a{
+    text-decoration: none;
+    color: aliceblue;
+}
+.navbar ul li :hover{
+    cursor: pointer;
+}
+
+.home{
+    height: 89vh;
+    background: rgb(26, 26, 26);
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.wrapper{
+    display:flex;
+    flex-direction: column;
+    margin-right: 200px;
+}
+.wrapper .static-txt{
+    font-size: 100px;
+    font-weight: 400;
+    color: aliceblue;
+}
+.wrapper .dynamic-txt{
+    margin-left: 15px;
+    
+}
+.dynamic-txt li{
+    list-style: none;
+    font-size: 100px;
+    font-weight: 500;
+    color: rgb(250, 87, 87);
+}
+.dynamic-txt li span{
+    position: relative;
+}
+.dynamic-txt li span::after{
+    content: "";
+    left: 0;
+    background: rgb(26, 26, 26);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-left: 2px solid red;
+    animation: typing 2.1s steps(12) infinite ;
+}
+@keyframes typing{
+    100%{
+        left: 100%;
+        margin-right: 30px;
+    }
+}
+
+
+.tests{
+    height: 110vh;
+}
+.heading{
+    padding-top: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.heading h1{
+    font-weight: 700;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+
+.upcoming-1{
+    display: flex;
+    padding: 2rem;
+    justify-content: space-between;
+}
+.card{
+    height: 40vh;
+}
+
+
+.leaderboard{
+    height: 100vh;
+    background: rgb(26, 26, 26);
+    color: aliceblue;    
+}
+.ranks{
+    padding: 3rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    
+  }
+  
+  th, td {
+    border: 1px solid rgb(87, 87, 87);
+    padding: 5px;
+    color: rgb(43, 208, 214);
+  }
+  
+  th {
+    background-color: #070707;
+  }
+  
+  td {
+    text-align: center;
+  }
+  
