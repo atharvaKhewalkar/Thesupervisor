@@ -12,12 +12,7 @@
             <form method=POST action="{{ url_for('signUp') }}">
                 <h1>Create Account</h1>
                 <input type="text" name="username" placeholder="Name" />
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Select Year</option>
-                    <option value="1">SE</option>
-                    <option value="2">TE</option>
-                    <option value="3">BE</option>
-                  </select>
+                
                   <select class="form-select" aria-label="Default select example">
                     <option selected>Select Department</option>
                     <option value="1">IT</option>
@@ -29,7 +24,7 @@
                     <option value="1">MECHANICAL</option>
                     <option value="2">INSTRUMENTATION</option>
                   </select>
-                  <input type="number" name="Rollno" placeholder="Roll No" />
+                  
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Password" />
                 <button>Sign Up</button>
