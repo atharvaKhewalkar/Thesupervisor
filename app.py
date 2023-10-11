@@ -43,6 +43,7 @@ def signUp():
     if request.method == 'POST':
         users = mongo.db.users
         existing_user = users.find_one({'email': request.form['email']})
+        
 
         if existing_user is None:
             new_user = {
