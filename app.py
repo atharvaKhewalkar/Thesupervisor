@@ -55,5 +55,9 @@ def signUp():
 
     return 'User with this email already exists.'
 
+@app.route("/teacherLogin")
+def teacherLogin():
+    return render_template('teacherlogin.html')
+
 if __name__ == "__main__":
     app.run(debug=True)
