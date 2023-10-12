@@ -20,53 +20,51 @@
     </div>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form method=POST action="{{ url_for('signUp') }}">
+            <form method="POST" action="{{ url_for('signUp') }}">
                 <h1>Create Account</h1>
                 <input type="text" name="username" placeholder="Name" />
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Select Year</option>
-                    <option value="1">SE</option>
-                    <option value="2">TE</option>
-                    <option value="3">BE</option>
-                  </select>
-                  <select class="form-select" aria-label="Default select example">
-                    <option selected>Select Department</option>
-                    <option value="1">IT</option>
-                    <option value="2">CS</option>
-                    <option value="3">ENTC</option>
-                    <option value="1">AI&DS</option>
-                    <option value="2">CIVIL</option>
-                    <option value="3">A&R</option>
-                    <option value="1">MECHANICAL</option>
-                    <option value="2">INSTRUMENTATION</option>
-                  </select>
-                  <input type="number" name="Rollno" placeholder="Roll No" />
+                <select class="form-select" name="year" aria-label="Select Year">
+                    <option value="SE">SE</option>
+                    <option value="TE">TE</option>
+                    <option value="BE">BE</option>
+                </select>
+                <select class="form-select" name="department" aria-label="Select Department">
+                    <option value="IT">IT</option>
+                    <option value="CS">CS</option>
+                    <option value="ENTC">ENTC</option>
+                    <option value="AI&DS">AI&DS</option>
+                    <option value="CIVIL">CIVIL</option>
+                    <option value="A&R">A&R</option>
+                    <option value="MECHANICAL">MECHANICAL</option>
+                    <option value="INSTRUMENTATION">INSTRUMENTATION</option>
+                </select>
+                <input type="number" name="rollno" placeholder="Roll No" />
+                
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Password" />
                 <button>Sign Up</button>
             </form>
+            
         </div>
         <div class="form-container sign-in-container">
-            <form method=POST action="{{ url_for('login') }}">
+            <form method="POST" action="{{ url_for('login') }}">
                 <h1>Sign in</h1>
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Password" />
+                
                 <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                    <label class="form-check-label" for="flexRadioDefault1">
-                      Teacher
-                    </label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                    <label class="form-check-label" for="flexRadioDefault2">
-                      Student
-                    </label>
-                  </div>
-                <a href="/home/home.html">
-                    <button type="submit">Sign In</button>
-                </a>
+                    <input class="form-check-input" type="radio" name="user_type" id="teacher" value="teacher">
+                    <label class="form-check-label" for="teacher">Teacher</label>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="user_type" id="student" value="student" checked>
+                    <label class="form-check-label" for="student">Student</label>
+                </div>
+                
+                <button type="submit">Sign In</button>
             </form>
+            
 
         </div>
         <div class="overlay-container">

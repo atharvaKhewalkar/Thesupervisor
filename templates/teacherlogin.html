@@ -9,21 +9,20 @@
 <body>
     <section>
         <div>
-            <form method=POST action="{{ url_for('signUp') }}">
+            <form method=POST action="{{ url_for('signUpTeacher') }}">
                 <h1>Create Account</h1>
                 <input type="text" name="username" placeholder="Name" />
                 
-                  <select class="form-select" aria-label="Default select example">
-                    <option selected>Select Department</option>
-                    <option value="1">IT</option>
-                    <option value="2">CS</option>
-                    <option value="3">ENTC</option>
-                    <option value="1">AI&DS</option>
-                    <option value="2">CIVIL</option>
-                    <option value="3">A&R</option>
-                    <option value="1">MECHANICAL</option>
-                    <option value="2">INSTRUMENTATION</option>
-                  </select>
+                <select class="form-select" name="department" aria-label="Select Department">
+                    <option value="IT">IT</option>
+                    <option value="CS">CS</option>
+                    <option value="ENTC">ENTC</option>
+                    <option value="AI&DS">AI&DS</option>
+                    <option value="CIVIL">CIVIL</option>
+                    <option value="A&R">A&R</option>
+                    <option value="MECHANICAL">MECHANICAL</option>
+                    <option value="INSTRUMENTATION">INSTRUMENTATION</option>
+                </select>
                   
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Password" />
