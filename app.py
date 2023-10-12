@@ -1,5 +1,8 @@
 from flask import Flask, render_template, url_for, request, session, redirect
 from flask_pymongo import PyMongo
+import os
+import secrets
+from flask_mail import Mail, Message
 
 app = Flask(__name__)
 
@@ -10,6 +13,13 @@ app.secret_key = 'IT2023@'  # Replace with a unique and secret key
 app.config['MONGO_DBNAME'] = 'IT'
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/IT'
 
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'  # Replace with your email server details
+app.config['MAIL_PORT'] = 587  # Replace with your email server port
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'riteshphadtare32@gmail.com'  # Replace with your email username
+app.config['MAIL_PASSWORD'] = 'pexc sczh kjik exbv'  # Replace with your email password
+
+mail = Mail(app)
 mongo = PyMongo(app)
 
 @app.route("/")
@@ -30,45 +40,71 @@ def home():
 @app.route('/login', methods=['POST'])
 def login():
     user_type = request.form.get('user_type')  # Get the selected user type
-    
+
     if user_type == 'student':
         collection = mongo.db.users
     elif user_type == 'teacher':
         collection = mongo.db.teachers
     else:
         return 'Invalid user type selected'
-    
+
     login_user = collection.find_one({'email': request.form['email']})
-    
+
     if login_user:
         if request.form['password'] == login_user['password']:
-            if user_type == 'student':
-                return redirect(url_for('home'))
-            elif user_type == 'teacher':
-                return redirect(url_for('teacherDashoard'))
+            if login_user.get('verified', False):
+                if user_type == 'student':
+                    return redirect(url_for('home'))
+                elif user_type == 'teacher':
+                    return redirect(url_for('teacherDashboard'))
+            else:
+                return 'Your email is not verified. Please check your email for a verification link.'
     
     return 'Invalid email or password combination'
 
 
-@app.route('/signUp', methods=['POST', 'GET'])
-def signUp():
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
     if request.method == 'POST':
         users = mongo.db.users
         existing_user = users.find_one({'email': request.form['email']})
-        
+
         if existing_user is None:
+            # Generate a unique token for email verification
+            token = secrets.token_urlsafe(16)
             new_user = {
                 'name': request.form['username'],
-                'email': request.form['email'],
-                'password': request.form['password'],
                 'year': request.form['year'],
                 'department': request.form['department'],
-                'rollno': request.form['rollno']
+                'rollno': request.form['rollno'],
+                'email': request.form['email'],
+                'password': request.form['password'],
+                'token': token,  # Add a token field to store the verification token
+                'verified': False  # Initialize as not verified
             }
             users.insert_one(new_user)
-            return redirect(url_for('index'))
-    
+
+            # Send a verification email with a link containing the token
+            msg = Message('Email Verification', sender='riteshphadtare32@gmail.com', recipients=[request.form['email']])
+            msg.body = f"Please click on the following link to verify your email: {url_for('verify_email', token=token, _external=True)}"
+            mail.send(msg)
+
+            return 'Please check your email to verify your account.'
+
     return 'User with this email already exists.'
+
+@app.route('/verify_email/<token>', methods=['GET'])
+def verify_email(token):
+    users = mongo.db.users
+    user = users.find_one({'token': token})
+
+    if user:
+        # Mark the user as verified and remove the token
+        users.update_one({'_id': user['_id']}, {'$set': {'verified': True}, '$unset': {'token': 1}})
+        return 'Email verification successful. You can now log in.'
+
+    return 'Invalid token or user not found.'
 
 @app.route('/signUpTeacher', methods=['POST', 'GET'])
 def signUpTeacher():
