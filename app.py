@@ -37,6 +37,10 @@ def logout():
 def home():
     return render_template('index.html')
 
+@app.route('/test')
+def test():
+    return render_template('test.html')
+
 @app.route('/login', methods=['POST'])
 def login():
     user_type = request.form.get('user_type')  # Get the selected user type
