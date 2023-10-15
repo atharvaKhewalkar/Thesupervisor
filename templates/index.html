@@ -1,252 +1,265 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-   
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
 </head>
+
 <body>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link rel="stylesheet" href="/static/home.css">
-    <div class="navbar">
-        
-            <h2>THE SUPERVISOR</h2>
-            <ul>
-                <li><a>Home</a></li>
-                <li><a href="">Scoreboard</a></li>
-                <li><a href="">Profile</a></li>
-                <li onclick="logout()"><a href="/logout">Logout</a></li>
-            </ul>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/home.css">
+<div class="head">
+  <h2>THE SUPERVISOR</h2>
+</div>
+<div class="main">
+  <div class="Navbar">
+    <ul>
+      <li><a>Home</a></li>
+      <li><a href="">Scoreboard</a></li>
+      <li><a href="">Profile</a></li>
+      <li onclick="logout()"><a href="/logout">Logout</a></li>
+    </ul>
+  </div>
+
+<div class="content">
+  <section class="home">
+    <div class="wrapper">
+      <div class="static-txt">Hello..</div>
+
+      <ul class="dynamic-txt">
+        <li><span>IT Enthusiat..</span></li>
+
+      </ul>
     </div>
-    <section class="home">
-        <div class="wrapper">
-            <div class="static-txt">Hello..</div>
-            
-            <ul class="dynamic-txt">
-                <li><span>IT Enthusiat..</span></li>
-                
-            </ul>
+
+  </section>
+
+
+  <section class="tests">
+    <div class="heading">
+      <h1>Upcoming Tests</h1>
+    </div>
+    <div class="upcoming">
+      <div class="upcoming-1">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">DSA TEST</h5>
+            <p class="card-text">DSA test on unit 2 contains
+              MCQ's and Theory Question Answers..
+            </p><br>
+            <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
+            <p>
+              Marks:30 <br>
+              Date: 14 jan 2023 <br>
+              Time:12 pm
+            </p>
+          </div>
         </div>
 
-    </section>
-
-
-    <section class="tests">
-        <div class="heading">
-            <h1>Upcoming Tests</h1>
-        </div>
-        <div class="upcoming">
-            <div class="upcoming-1">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">DSA TEST</h5>
-                      <p class="card-text">DSA test on unit 2 contains
-                        MCQ's and Theory Question Answers..
-                      </p><br>
-                      <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
-                      <p>
-                        Marks:30 <br>
-                        Date: 14 jan 2023 <br>
-                        Time:12 pm
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">OOP TEST</h5>
-                      <p class="card-text">OOP test on unit 2 contains
-                        MCQ's and Theory Question Answers..
-                      </p><br>
-                      <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
-                      <p>
-                        Marks:30 <br>
-                        Date: 14 jan 2023 <br>
-                        Time:12 pm
-                      </p>
-                    </div>
-                  </div>
-
-
-                  <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">LDCO TEST</h5>
-                      <p class="card-text">LDCO test on unit 2 contains
-                        MCQ's and Theory Question Answers..
-                      </p><br>
-                      <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
-                      <p>
-                        Marks:30 <br>
-                        Date: 14 jan 2023 <br>
-                        Time:12 pm
-                      </p>
-                    </div>
-                  </div>
-
-
-                  <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">DM TEST</h5>
-                      <p class="card-text">DM test on unit 2 contains
-                        MCQ's and Theory Question Answers..
-                      </p><br>
-                      <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
-                      <p>
-                        Marks:30 <br>
-                        Date: 14 jan 2023 <br>
-                        Time:12 pm
-                      </p>
-                    </div>
-                  </div>
-    
-                 
-                  
-            </div>
-
-
-            <div class="upcoming-1">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">DSA PRACTICAL</h5>
-                      <p class="card-text">DSA test on unit 2 contains
-                        MCQ's and Theory Question Answers..
-                      </p><br>
-                      <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
-                      <p>
-                        Marks:30 <br>
-                        Date: 14 jan 2023 <br>
-                        Time:12 pm
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">OOP PRACTICAL</h5>
-                      <p class="card-text">OOP test on unit 2 contains
-                        MCQ's and Theory Question Answers..
-                      </p><br>
-                      <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
-                      <p>
-                        Marks:30 <br>
-                        Date: 14 jan 2023 <br>
-                        Time:12 pm
-                      </p>
-                    </div>
-                  </div>
-
-
-                  <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">LDCO PRACTICAL</h5>
-                      <p class="card-text">LDCO test on unit 2 contains
-                        MCQ's and Theory Question Answers..
-                      </p><br>
-                      <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
-                      <p>
-                        Marks:30 <br>
-                        Date: 14 jan 2023 <br>
-                        Time:12 pm
-                      </p>
-                    </div>
-                  </div>
-
-
-                  <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                      <h5 class="card-title">DM PRACTICAL</h5>
-                      <p class="card-text">DM test on unit 2 contains
-                        MCQ's and Theory Question Answers..
-                      </p><br>
-                      <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
-                      <p>
-                        Marks:30 <br>
-                        Date: 14 jan 2023 <br>
-                        Time:12 pm
-                      </p>
-                    </div>
-                  </div>
-    
-                 
-                  
-            </div>
-            
-        </div>
-    </section>
-
-    <section class="leaderboard">
-        <div class="heading">
-            <h1>leaderboard</h1>
-        </div>
-        <div class="ranks">
-            <table border="1">
-                <tr>
-                <th>Sr.no</th>
-                  <th>Name</th>
-                  <th>Score</th>
-                </tr>
-                <tr>
-                    <td>1</td>
-                  <td>Atharva Khewalkar</td>
-                  <td>100</td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                  <td>Anuj Walsepatil</td>
-                  <td>95</td>
-                </tr>
-                <tr>
-                    <td>3</td> 
-                  <td>Pratiksha Shinde</td>
-                  <td>90</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Sakashi Jadhav</td>
-                    <td>89</td>
-                  </tr>
-                  <tr>
-                    <td>5</td>
-                    <td>Ritesh Phadtare</td>
-                    <td>88</td>
-                  </tr>
-                  <tr>
-                    <td>6</td>
-                    <td>Athang Patel</td>
-                    <td>87</td>
-                  </tr>
-                  <tr>
-                    <td>7</td>
-                    <td>Namesh Gandhi</td>
-                    <td>86</td>
-                  </tr>
-                  <tr>
-                    <td>8</td>
-                    <td>Aniket Ghavte</td>
-                    <td>85</td>
-                  </tr>
-                  <tr>
-                    <td>9</td>
-                    <td>Tejas Auti</td>
-                    <td>84</td>
-                  </tr>
-                  <tr>
-                    <td>10</td>
-                    <td>Apurva Koshti</td>
-                    <td>83</td>
-                  </tr>
-                 
-              </table><br><br>
-              <p align="center">Congratulations to the Top 10 students..!!</p>
-
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">OOP TEST</h5>
+            <p class="card-text">OOP test on unit 2 contains
+              MCQ's and Theory Question Answers..
+            </p><br>
+            <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
+            <p>
+              Marks:30 <br>
+              Date: 14 jan 2023 <br>
+              Time:12 pm
+            </p>
+          </div>
         </div>
 
-    </section>
 
-    <script src="/static/home.js"></script>
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">LDCO TEST</h5>
+            <p class="card-text">LDCO test on unit 2 contains
+              MCQ's and Theory Question Answers..
+            </p><br>
+            <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
+            <p>
+              Marks:30 <br>
+              Date: 14 jan 2023 <br>
+              Time:12 pm
+            </p>
+          </div>
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">DM TEST</h5>
+            <p class="card-text">DM test on unit 2 contains
+              MCQ's and Theory Question Answers..
+            </p><br>
+            <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
+            <p>
+              Marks:30 <br>
+              Date: 14 jan 2023 <br>
+              Time:12 pm
+            </p>
+          </div>
+        </div>
+
+
+
+      </div>
+
+
+      <div class="upcoming-1">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">DSA PRACTICAL</h5>
+            <p class="card-text">DSA test on unit 2 contains
+              MCQ's and Theory Question Answers..
+            </p><br>
+            <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
+            <p>
+              Marks:30 <br>
+              Date: 14 jan 2023 <br>
+              Time:12 pm
+            </p>
+          </div>
+        </div>
+
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">OOP PRACTICAL</h5>
+            <p class="card-text">OOP test on unit 2 contains
+              MCQ's and Theory Question Answers..
+            </p><br>
+            <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
+            <p>
+              Marks:30 <br>
+              Date: 14 jan 2023 <br>
+              Time:12 pm
+            </p>
+          </div>
+        </div>
+
+
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">LDCO PRACTICAL</h5>
+            <p class="card-text">LDCO test on unit 2 contains
+              MCQ's and Theory Question Answers..
+            </p><br>
+            <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
+            <p>
+              Marks:30 <br>
+              Date: 14 jan 2023 <br>
+              Time:12 pm
+            </p>
+          </div>
+        </div>
+
+
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">DM PRACTICAL</h5>
+            <p class="card-text">DM test on unit 2 contains
+              MCQ's and Theory Question Answers..
+            </p><br>
+            <a href="#" class="btn btn-primary">Attempt Test</a><br><br>
+            <p>
+              Marks:30 <br>
+              Date: 14 jan 2023 <br>
+              Time:12 pm
+            </p>
+          </div>
+        </div>
+
+
+
+      </div>
+
+    </div>
+  </section>
+
+  <section class="leaderboard">
+    <div class="heading">
+      <h1>leaderboard</h1>
+    </div>
+    <div class="ranks">
+      <table border="1">
+        <tr>
+          <th>Sr.no</th>
+          <th>Name</th>
+          <th>Score</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Atharva Khewalkar</td>
+          <td>100</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Anuj Walsepatil</td>
+          <td>95</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Pratiksha Shinde</td>
+          <td>90</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Sakashi Jadhav</td>
+          <td>89</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Ritesh Phadtare</td>
+          <td>88</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Athang Patel</td>
+          <td>87</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Namesh Gandhi</td>
+          <td>86</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>Aniket Ghavte</td>
+          <td>85</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>Tejas Auti</td>
+          <td>84</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>Apurva Koshti</td>
+          <td>83</td>
+        </tr>
+
+      </table><br><br>
+      <p align="center">Congratulations to the Top 10 students..!!</p>
+
+    </div>
+
+  </section>
+  </div>
+</div>
+  <script src="/static/home.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+    integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+    crossorigin="anonymous"></script>
 </body>
+
 </html>
