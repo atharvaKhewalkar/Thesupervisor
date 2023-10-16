@@ -1,5 +1,36 @@
-.question {
-    display: flex;
+
+.question-box {
+    
     gap: 1rem;
+    box-shadow: 2px 2px 5px 1px black;
+    margin: 2rem;
+    padding: 2rem;
+    background-color: #f4e7db;
+}
+.main{
+   
+    padding: 2rem;
+    
+    background-color: #e5e5e5;
+}
+.butto{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.question-box p {
+    font-weight: 700;
 }
 
+.header{
+    text-align: center;
+    padding: 1rem;
+    background-color: black;
+    color: rgb(255, 255, 255);
+}
+.buttons{
+    display:flex ;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
