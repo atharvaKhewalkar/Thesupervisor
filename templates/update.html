@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Student Details</title>
+    <link rel="stylesheet" href="../static/eh.css">
+</head>
+<body>
+    <div class="page">
+        <div class="body">
+            <div class="heading">
+                <h1>Update Student Details</h1>
+            </div>
+            <div class="data">
+                <form method="POST" action="/update_student">  <!-- Point the form to the update_student route -->
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" required><br><br>
+
+                    <label for="rollno">Roll No:</label>
+                    <input type="text" name="rollno" required><br><br>
+                    
+                    <label for="age">Age:</label>
+                    <input type="number" name="age" required><br><br>
+            
+                    <label for="grade">Grade:</label>
+                    <input type="text" name="grade" required><br><br>
+            
+                    <input id="hel" type="submit" value="Update Student Data">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

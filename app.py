@@ -7,11 +7,11 @@ from flask_mail import Mail, Message
 app = Flask(__name__)
 
 # Set a secret key
-app.secret_key = 'IT2023@'  # Replace with a unique and secret key
+app.secret_key = 'ADBMS2023'  # Replace with a unique and secret key
 
 # Rest of your code
-app.config['MONGO_DBNAME'] = 'IT'
-app.config['MONGO_URI'] = 'mongodb://localhost:27017/IT'
+app.config['MONGO_DBNAME'] = 'ADBMS'
+app.config['MONGO_URI'] = 'mongodb://localhost:27017/ADBMS'
 
 app.config['MAIL_SERVER'] = 'smtp.googlemail.com'  # Replace with your email server details
 app.config['MAIL_PORT'] = 587  # Replace with your email server port
@@ -21,6 +21,7 @@ app.config['MAIL_PASSWORD'] = 'pexc sczh kjik exbv'  # Replace with your email p
 
 mail = Mail(app)
 mongo = PyMongo(app)
+std = mongo.db.studentsData
 
 @app.route("/")
 def index():
@@ -135,6 +136,60 @@ def teacherLogin():
 @app.route("/teacherDashoard")
 def teacherDashoard():
     return render_template('teacherDashboard.html')
+
+@app.route('/add_Data')
+def add_Data():
+    return render_template('student_details_entry.html')
+
+@app.route('/add_student', methods=['POST'])
+def add_student():
+    if request.method == 'POST':
+        student = {
+            'name': request.form['name'],
+            'rollno': request.form['rollno'],
+            'age': request.form['age'],
+            'grade': request.form['grade']
+        }
+        std.insert_one(student)
+        return redirect(url_for('show_students'))
+
+@app.route('/show_students')
+def show_students():
+    students = list(std.find())
+    return render_template('show_student_details.html', students=students)
+
+@app.route("/updateD")
+def updateD():
+    return render_template('update.html')
+
+@app.route('/update_student', methods=['POST'])
+def update_student():
+    if request.method == 'POST':
+        rollno = request.form['rollno']
+        student = {
+            'name': request.form['name'],
+            'age': request.form['age'],
+            'grade': request.form['grade']
+        }
+        
+        # Use the updateOne command to update the student data based on the rollno
+        std.update_one({'rollno': rollno}, {'$set': student})
+
+        return redirect(url_for('show_students'))
+
+
+@app.route("/deleteD")
+def deleteD():
+    return render_template('delete.html')
+
+@app.route("/delete_student", methods=['POST'])
+def delete_student():
+    if request.method == 'POST':
+        rollno = request.form['rollno']
+        # Use the deleteOne command to delete the student data based on the rollno
+        std.delete_one({'rollno': rollno})
+        return redirect(url_for('show_students'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)

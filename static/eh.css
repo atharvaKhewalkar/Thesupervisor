@@ -1,0 +1,50 @@
+body{
+    background: #F0F2F0;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #000C40, #F0F2F0);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #000C40, #F0F2F0); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+.page{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 250px;
+    
+}
+.body{
+    background-color: aliceblue;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 3px 4px 5px black;
+    border-radius: 2rem;
+    height: 40vh;
+    width: 50vh;
+    text-align: center;
+}
+.data{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.data input{
+    height: 1.2rem;
+    width: auto;
+    box-shadow: 1px 1px 0px gray;
+}
+.data label{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
+#hel{
+    background-color: #000C40;
+    color: aliceblue;
+    box-shadow: 2px 2px 2px rgb(0, 87, 128);
+    height: 3rem;
+    width: 8rem;
+    border-radius: 2rem;
+}
+#hel:hover{
+    box-shadow: 4px 4px 5px  black;
+    cursor: pointer;
+}
