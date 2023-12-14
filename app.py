@@ -13,19 +13,24 @@ app.secret_key = 'IT2023'  # Replace with a unique and secret key
 app.config['MONGO_DBNAME'] = 'IT'
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/IT'
 
-app.config['MAIL_SERVER'] = 'smtp.googlemail.com'  # Replace with your email server details
+# Replace with your email server details
+app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
 app.config['MAIL_PORT'] = 587  # Replace with your email server port
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'riteshphadtare32@gmail.com'  # Replace with your email username
-app.config['MAIL_PASSWORD'] = 'ahvq xbdz jrcw wfyc'  # Replace with your email password
+# Replace with your email username
+app.config['MAIL_USERNAME'] = 'riteshphadtare32@gmail.com'
+# Replace with your email password
+app.config['MAIL_PASSWORD'] = 'ahvq xbdz jrcw wfyc'
 
 mail = Mail(app)
 mongo = PyMongo(app)
 std = mongo.db.studentsData
 
+
 @app.route("/")
 def index():
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
@@ -38,9 +43,11 @@ def logout():
 def home():
     return render_template('index.html')
 
+
 @app.route('/test')
 def test():
     return render_template('test.html')
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -59,14 +66,14 @@ def login():
         if request.form['password'] == login_user['password']:
             if login_user.get('verified', False):
                 if user_type == 'student':
-                    return redirect(url_for('home'))
-                elif user_type == 'teacher':
-                    return redirect(url_for('teacherDashboard'))
+                    upcoming_test = list(mongo.db.test.find())
+                    return render_template('index.html', upcoming_tests=upcoming_test)
+            elif user_type == 'teacher':
+                return redirect(url_for('teacherDashboard'))
             else:
                 return 'Your email is not verified. Please check your email for a verification link.'
-    
-    return 'Invalid email or password combination'
 
+    return 'Invalid email or password combination'
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -91,13 +98,15 @@ def register():
             users.insert_one(new_user)
 
             # Send a verification email with a link containing the token
-            msg = Message('Email Verification', sender='riteshphadtare32@gmail.com', recipients=[request.form['email']])
+            msg = Message('Email Verification', sender='riteshphadtare32@gmail.com',
+                          recipients=[request.form['email']])
             msg.body = f"Please click on the following link to verify your email: {url_for('verify_email', token=token, _external=True)}"
             mail.send(msg)
 
             return 'Please check your email to verify your account.'
 
     return 'User with this email already exists.'
+
 
 @app.route('/verify_email/<token>', methods=['GET'])
 def verify_email(token):
@@ -106,17 +115,19 @@ def verify_email(token):
 
     if user:
         # Mark the user as verified and remove the token
-        users.update_one({'_id': user['_id']}, {'$set': {'verified': True}, '$unset': {'token': 1}})
+        users.update_one({'_id': user['_id']}, {
+                         '$set': {'verified': True}, '$unset': {'token': 1}})
         return 'Email verification successful. You can now log in.'
 
     return 'Invalid token or user not found.'
+
 
 @app.route('/signUpTeacher', methods=['POST', 'GET'])
 def signUpTeacher():
     if request.method == 'POST':
         teachers = mongo.db.teachers
         existing_user = teachers.find_one({'email': request.form['email']})
-        
+
         if existing_user is None:
             new_teacher = {
                 'name': request.form['username'],
@@ -125,17 +136,32 @@ def signUpTeacher():
                 'department': request.form['department']
             }
             teachers.insert_one(new_teacher)
-            return redirect(url_for('home'))
-    
+            return render_template('login.html')
+
     return 'User with this email already exists.'
+
 
 @app.route("/teacherLogin")
 def teacherLogin():
     return render_template('teacherlogin.html')
 
-@app.route("/teacherDashoard")
-def teacherDashoard():
+
+@app.route("/teacherDashboard")
+def teacherDashboard():
     return render_template('teacherDashboard.html')
+
+
+@app.route("/testCreation", methods=['GET', 'POST'])
+def testCreation():
+    if request.method == 'POST':
+        test = mongo.db.test
+
+        new_test = {
+            'subject': request.form['sub_name'],
+            'test_date': request.form['test_date']
+        }
+        test.insert_one(new_test)
+        return render_template('teacherDashboard.html', message='Created')
 
 
 if __name__ == "__main__":
