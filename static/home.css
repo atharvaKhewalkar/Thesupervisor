@@ -110,8 +110,11 @@ justify-content: center;
 
 .upcoming{
     display: flex;
+    flex-wrap: wrap;
     padding: 2rem;
+    width: 170vh;
     justify-content: space-between;
+    
 }
 .card{
     height: 40vh;
@@ -147,4 +150,6 @@ table {
   td {
     text-align: center;
   }
-  
+  .home{
+    width: 180vh;
+  }

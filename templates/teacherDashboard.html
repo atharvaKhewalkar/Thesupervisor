@@ -11,7 +11,10 @@
         <form method=POST action="{{ url_for('testCreation') }}">
             <input type="text" name="sub_name" placeholder="Enter the Subject">
             <input type="date" name="test_date" placeholder="Enter the date">
-            <input type="submit" placeholder="Submit">
+            <div onclick="test_created()">
+                <input type="submit" placeholder="Submit">
+            </div>
+            
         </form>
     </div>
     <script src="/static/home.js"></script>
