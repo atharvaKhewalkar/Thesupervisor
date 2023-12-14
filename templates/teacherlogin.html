@@ -8,9 +8,10 @@
 </head>
 <body>
     <section>
+        <h1 align="center">Teacher Registration</h1>
         <div class="content">
-            <form method=POST action="{{ url_for('signUpTeacher') }}">
-                <h1>Create Account</h1>
+            <form method=POST action="{{ url_for('signUpTeacher') }}" class="form">
+                <h1 align="center" >Create Account</h1>
                 <input type="text" name="username" placeholder="Name" />
                 
                 <select class="form-select" name="department" aria-label="Select Department">
