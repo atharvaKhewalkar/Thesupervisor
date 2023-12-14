@@ -1,0 +1,42 @@
+.navbar{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 12vh;
+    background-color: rgb(18, 18, 18);
+    color: aliceblue;
+    font-size: 1.5rem;
+}
+
+.navbar ul{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10rem;
+}
+h2{
+    padding: 3rem;
+}
+.navbar ul li{
+    list-style: none;
+}
+.navbar ul :hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+.testcreation{
+    display: flex;
+    flex-direction: column;
+    gap: 1.7rem;
+    justify-content: center;
+    align-items: center;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+form input{
+    width: 17rem;
+    height: 3.5rem;
+}
