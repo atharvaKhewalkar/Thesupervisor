@@ -148,7 +148,8 @@ def teacherLogin():
 
 @app.route("/teacherDashboard")
 def teacherDashboard():
-    return render_template('teacherDashboard.html')
+        upcoming_test = list(mongo.db.test.find())
+        return render_template('teacherDashboard.html',upcoming_tests=upcoming_test)
 
 
 @app.route("/testCreation", methods=['GET', 'POST'])
@@ -157,10 +158,14 @@ def testCreation():
         test = mongo.db.test
 
         new_test = {
-            'subject': request.form['sub_name'],
+            'subject': request.form['test_sub_name'],
+            'description': request.form['test_description'],
+            'marks': request.form['test_marks'],
+            'time': request.form['test_time'],
             'test_date': request.form['test_date']
         }
         test.insert_one(new_test)
+
         return render_template('teacherDashboard.html', message='Created')
 
 
