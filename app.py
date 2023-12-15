@@ -48,6 +48,10 @@ def home():
 def test():
     return render_template('test.html')
 
+@app.route('/score')
+def score():
+    return render_template('scores.html')
+
 
 @app.route('/login', methods=['POST'])
 def login():
