@@ -166,7 +166,28 @@ def testCreation():
         }
         test.insert_one(new_test)
 
-        return render_template('teacherDashboard.html', message='Created')
+        return render_template('question_addition.html', message='Created')
+
+
+
+@app.route('/add_question', methods=['GET', 'POST'])
+def add_question():
+    if request.method == 'POST':
+        question = {
+            'question_text': request.form['question_text'],
+            'options': [
+                request.form['option1'],
+                request.form['option2'],
+                request.form['option3'],
+                request.form['option4']
+            ],
+            'correct_option': request.form['correct_option']
+        }
+
+        questions_collection.insert_one(question)
+        return redirect(url_for('index'))
+
+    return render_template('add_question.html')
 
 
 if __name__ == "__main__":
