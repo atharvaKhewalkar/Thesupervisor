@@ -23,7 +23,16 @@
         </div>
     </section>
 
-    
+    <div class="testcreation">
+        <h2>Create Test</h2>
+        <form method="POST" action="{{ url_for('questionCount') }}">
+          <input type="number" name="count" placeholder="Question Count">
+
+                <input type="submit" placeholder="Submit">
+            
+        </form>
+    </div>
+
     <br><br><br><br>
 
     <section class="tests">

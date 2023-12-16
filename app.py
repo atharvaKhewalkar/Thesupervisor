@@ -8,7 +8,6 @@ from werkzeug.utils import secure_filename
 
 
 
-
 app = Flask(__name__)
 
 # Set a secret key
@@ -161,26 +160,36 @@ def teacherLogin():
     return render_template('teacherlogin.html')
 
 
-@app.route("/teacherDashboard")
+@app.route('/teacherDashboard')
 def teacherDashboard():
     upcoming_test = list(mongo.db.test.find())
-    return render_template('teacherDashboard.html', upcoming_tests=upcoming_test)
+    QUESTION_COUNT = 10  # Set the value according to your requirements
+    return render_template('teacherDashboard.html', upcoming_tests=upcoming_test, QUESTION_COUNT=QUESTION_COUNT)
+
+
+@app.route('/questionCount', methods=['GET', 'POST'])
+def questionCount():
+    qCount = 0  # Provide a default value
+    if request.method == 'POST':
+        qCount = int(request.form.get('count', 0))
+    return render_template('question_addition.html', qCount=qCount)
 
 
 
 
-@app.route('/createTest')
-def createTest():
-    return render_template('question_addition.html')
+
+# @app.route('/createTest')
+# def createTest():
+#     return render_template('question_addition.html')
 
 @app.route('/create_test', methods=['GET', 'POST'])
 def create_test():
     if request.method == 'POST':
         # Create a list to store multiple questions
         questions = []
-
+        c = int(request.form['que_count'])
         # Loop through the form data to get all questions
-        for i in range(1, 4):  # Assuming you want to handle 3 questions, adjust as needed
+        for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
             question_key = f'question_{i}'
             option1_key = f'option1_{i}'
             option2_key = f'option2_{i}'
@@ -215,7 +224,7 @@ def create_test():
         # Insert the new_test document into the database
         mongo.db.test.insert_one(new_test)
 
-        return render_template('question_addition.html')
+        return render_template('teacherDashboard.html')
         
 
 

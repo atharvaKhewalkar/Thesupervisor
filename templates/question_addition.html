@@ -9,7 +9,9 @@
 
 <body>
     <h1>Create Test</h1>
+    <p>Debug: qCount = {{ qCount }}</p>
     <form method="post" action="{{ url_for('create_test') }}" enctype="multipart/form-data">
+
 
         <label for="test_sub_name">Subject:</label>
         <input type="text" name="test_sub_name" id="test_sub_name" required>
@@ -26,20 +28,23 @@
         <label for="test_date">Date:</label>
         <input type="date" name="test_date" id="test_date" required><br><br>
 
-        {% for i in range(1, 4) %}
+        <label for="que_count">Question Count :</label>
+        <input type="number" name="que_count" id="que_count" required><br><br>
+        
+        {% for i in range(1, qCount + 1) %}
         <label for="question_text_{{ i }}">Question {{ i }}:</label><br>
         <input type="text" id="question_text_{{ i }}" name="question_{{ i }}"><br><br>
 
-        <label for="option1_{{ i }}">Option 1:</label>
-        <input type="text" id="option1_{{ i }}" name="option1_{{ i }}">
+        <label for="option1_{{ i }}">Option 1:</label><br>
+        <input type="text" id="option1_{{ i }}" name="option1_{{ i }}"><br><br>
 
-        <label for="option2_{{ i }}">Option 2:</label>
-        <input type="text" id="option2_{{ i }}" name="option2_{{ i }}">
+        <label for="option2_{{ i }}">Option 2:</label><br>
+        <input type="text" id="option2_{{ i }}" name="option2_{{ i }}"><br><br>
 
-        <label for="option3_{{ i }}">Option 3:</label>
-        <input type="text" id="option3_{{ i }}" name="option3_{{ i }}">
+        <label for="option3_{{ i }}">Option 3:</label><br>
+        <input type="text" id="option3_{{ i }}" name="option3_{{ i }}"><br><br>
 
-        <label for="option4_{{ i }}">Option 4:</label>
+        <label for="option4_{{ i }}">Option 4:</label><br>
         <input type="text" id="option4_{{ i }}" name="option4_{{ i }}"><br><br>
 
         <label for="correct_option_{{ i }}">Choose a Correct Option:</label>
@@ -61,4 +66,3 @@
 </body>
 
 </html>
-
