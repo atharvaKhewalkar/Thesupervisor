@@ -1,32 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Create Test</title>
 </head>
+
 <body>
-    <h1>Add Question</h1>
-    <form method="POST" action="{{ url_for('add_question') }}">
-        <label for="question_text">Question:</label><br>
-        <input type="text" id="question_text" name="question_text"><br><br>
+    <h1>Create Test</h1>
+    <form method="post" action="{{ url_for('create_test') }}" enctype="multipart/form-data">
 
-        <label for="option1">Option 1:</label><br>
-        <input type="text" id="option1" name="option1"><br><br>
+        <label for="test_sub_name">Subject:</label>
+        <input type="text" name="test_sub_name" id="test_sub_name" required>
 
-        <label for="option2">Option 2:</label><br>
-        <input type="text" id="option2" name="option2"><br><br>
+        <label for="test_description">Description:</label>
+        <textarea name="test_description" id="test_description" rows="4" required></textarea>
 
-        <label for="option3">Option 3:</label><br>
-        <input type="text" id="option3" name="option3"><br><br>
+        <label for="test_marks">Marks:</label>
+        <input type="number" name="test_marks" id="test_marks" required>
 
-        <label for="option4">Option 4:</label><br>
-        <input type="text" id="option4" name="option4"><br><br>
+        <label for="test_time">Time:</label>
+        <input type="time" name="test_time" id="test_time" required>
 
-        <label for="correct_option">Correct Option (1-4):</label><br>
-        <input type="text" id="correct_option" name="correct_option"><br><br>
+        <label for="test_date">Date:</label>
+        <input type="date" name="test_date" id="test_date" required><br><br>
 
-        <input type="submit" value="Submit">
+        {% for i in range(1, 4) %}
+        <label for="question_text_{{ i }}">Question {{ i }}:</label><br>
+        <input type="text" id="question_text_{{ i }}" name="question_{{ i }}"><br><br>
+
+        <label for="option1_{{ i }}">Option 1:</label>
+        <input type="text" id="option1_{{ i }}" name="option1_{{ i }}">
+
+        <label for="option2_{{ i }}">Option 2:</label>
+        <input type="text" id="option2_{{ i }}" name="option2_{{ i }}">
+
+        <label for="option3_{{ i }}">Option 3:</label>
+        <input type="text" id="option3_{{ i }}" name="option3_{{ i }}">
+
+        <label for="option4_{{ i }}">Option 4:</label>
+        <input type="text" id="option4_{{ i }}" name="option4_{{ i }}"><br><br>
+
+        <label for="correct_option_{{ i }}">Choose a Correct Option:</label>
+        <select id="correct_option_{{ i }}" name="correct_option_{{ i }}">
+            <option value="option1">Option1</option>
+            <option value="option2">Option2</option>
+            <option value="option3">Option3</option>
+            <option value="option4">Option4</option>
+        </select><br><br>
+        {% endfor %}
+
+        <!-- Your existing submit button -->
+        <input type="submit" value="Add Question">
     </form>
+
+
+
+
 </body>
+
 </html>
+

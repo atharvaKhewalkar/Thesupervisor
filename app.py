@@ -1,8 +1,13 @@
-from flask import Flask, render_template, url_for, request, session, redirect
+from flask import Flask, render_template, url_for, request, session, redirect, jsonify, send_from_directory
 from flask_pymongo import PyMongo
 import os
 import secrets
 from flask_mail import Mail, Message
+from werkzeug.utils import secure_filename
+
+
+
+
 
 app = Flask(__name__)
 
@@ -21,6 +26,8 @@ app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'riteshphadtare32@gmail.com'
 # Replace with your email password
 app.config['MAIL_PASSWORD'] = 'ahvq xbdz jrcw wfyc'
+app.config['UPLOAD_FOLDER'] = 'uploads'
+
 
 mail = Mail(app)
 mongo = PyMongo(app)
@@ -30,6 +37,11 @@ std = mongo.db.studentsData
 @app.route("/")
 def index():
     return render_template('login.html')
+
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 @app.route('/logout')
@@ -47,6 +59,7 @@ def home():
 @app.route('/test')
 def test():
     return render_template('test.html')
+
 
 @app.route('/score')
 def score():
@@ -87,7 +100,6 @@ def register():
         existing_user = users.find_one({'email': request.form['email']})
 
         if existing_user is None:
-            # Generate a unique token for email verification
             token = secrets.token_urlsafe(16)
             new_user = {
                 'name': request.form['username'],
@@ -96,12 +108,11 @@ def register():
                 'rollno': request.form['rollno'],
                 'email': request.form['email'],
                 'password': request.form['password'],
-                'token': token,  # Add a token field to store the verification token
-                'verified': False  # Initialize as not verified
+                'token': token,
+                'verified': False
             }
             users.insert_one(new_user)
 
-            # Send a verification email with a link containing the token
             msg = Message('Email Verification', sender='riteshphadtare32@gmail.com',
                           recipients=[request.form['email']])
             msg.body = f"Please click on the following link to verify your email: {url_for('verify_email', token=token, _external=True)}"
@@ -152,46 +163,69 @@ def teacherLogin():
 
 @app.route("/teacherDashboard")
 def teacherDashboard():
-        upcoming_test = list(mongo.db.test.find())
-        return render_template('teacherDashboard.html',upcoming_tests=upcoming_test)
+    upcoming_test = list(mongo.db.test.find())
+    return render_template('teacherDashboard.html', upcoming_tests=upcoming_test)
 
 
-@app.route("/testCreation", methods=['GET', 'POST'])
-def testCreation():
+
+
+@app.route('/createTest')
+def createTest():
+    return render_template('question_addition.html')
+
+@app.route('/create_test', methods=['GET', 'POST'])
+def create_test():
     if request.method == 'POST':
-        test = mongo.db.test
+        # Create a list to store multiple questions
+        questions = []
 
+        # Loop through the form data to get all questions
+        for i in range(1, 4):  # Assuming you want to handle 3 questions, adjust as needed
+            question_key = f'question_{i}'
+            option1_key = f'option1_{i}'
+            option2_key = f'option2_{i}'
+            option3_key = f'option3_{i}'
+            option4_key = f'option4_{i}'
+            correct_option_key = f'correct_option_{i}'
+
+            # Check if the question exists in the form data
+            if question_key in request.form:
+                # Create a dictionary for each question
+                question = {
+                    'question': request.form[question_key],
+                    'option1': request.form[option1_key],
+                    'option2': request.form[option2_key],
+                    'option3': request.form[option3_key],
+                    'option4': request.form[option4_key],
+                    'answer': request.form[correct_option_key]
+                }
+                # Append the question dictionary to the list
+                questions.append(question)
+
+        # Create the new_test dictionary with the list of questions
         new_test = {
             'subject': request.form['test_sub_name'],
             'description': request.form['test_description'],
             'marks': request.form['test_marks'],
             'time': request.form['test_time'],
-            'test_date': request.form['test_date']
-        }
-        test.insert_one(new_test)
-
-        return render_template('question_addition.html', message='Created')
-
-
-
-@app.route('/add_question', methods=['GET', 'POST'])
-def add_question():
-    if request.method == 'POST':
-        question = {
-            'question_text': request.form['question_text'],
-            'options': [
-                request.form['option1'],
-                request.form['option2'],
-                request.form['option3'],
-                request.form['option4']
-            ],
-            'correct_option': request.form['correct_option']
+            'test_date': request.form['test_date'],
+            'questions': questions  # Use 'questions' instead of 'question'
         }
 
-        questions_collection.insert_one(question)
-        return redirect(url_for('index'))
+        # Insert the new_test document into the database
+        mongo.db.test.insert_one(new_test)
 
-    return render_template('add_question.html')
+        return render_template('question_addition.html')
+        
+
+
+# def save_image(file):
+#     if file:
+#         filename = secure_filename(file.filename)
+#         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#         file.save(filepath)
+#         return url_for('uploaded_file', filename=filename)
+#     return None
 
 
 if __name__ == "__main__":

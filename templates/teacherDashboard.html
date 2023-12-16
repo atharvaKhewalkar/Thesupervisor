@@ -14,7 +14,7 @@
         <h1 align="center">Welcome to Teacher Dashboard</h1>
         <div class="navbar">
             <ul>
-                <li>Create Test</li>
+              <a href="/createTest"><li>Create Test</li></a>
                 <a href="/score"><li>Scores</li></a>
                 <li>Answers</li>
                 <li>Blah</li>
@@ -23,31 +23,8 @@
         </div>
     </section>
 
-
-
-
-
-
-
     
-    <div class="testcreation">
-        <h2>Create Test</h2>
-        <form method=POST action="{{ url_for('testCreation') }}">
-            <input type="text" name="test_sub_name" placeholder="Enter the Subject">
-            <input type="text" name="test_description" placeholder="Enter the description">
-            <input type="number" name="test_marks" placeholder="Enter the marks">
-            <input type="time" name="test_time" placeholder="Enter the time">
-            <input type="date" name="test_date" placeholder="Enter the date">
-
-            <div onclick="test_created()">
-                <input type="submit" placeholder="Submit">
-            </div>
-            
-        </form>
-    </div>
-
-
-<br><br><br><br>
+    <br><br><br><br>
 
     <section class="tests">
         <div class="heading">
