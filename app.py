@@ -207,6 +207,7 @@ def create_test():
 
         # Create the new_test dictionary with the list of questions
         new_test = {
+            'test_id': request.form['test_id'],
             'subject': request.form['test_sub_name'],
             'description': request.form['test_description'],
             'marks': request.form['test_marks'],
@@ -218,10 +219,63 @@ def create_test():
         # Insert the new_test document into the database
         mongo.db.test.insert_one(new_test)
 
-        return render_template('teacherDashboard.html')
+        return redirect(url_for('teacherDashboard'))
         
+# @app.route('/attempt_test')
+# def attempt_test():
+#     return render_template('attempt_test.html')     
+        
+@app.route('/attempt_test/<test_id>')
+def attempt_test(test_id):
+    # Fetch the specific test using the test_id from the database
+    # test = mongo.db.test.find_one({'_id': ObjectId(test_subject)})  # Assuming '_id' is the ObjectId of the test
 
+    test = mongo.db.test.find_one(
+    {
+        'test_id': test_id
+    }
+)
+    
+    if test:
+        # Assuming 'questions' is the key for the questions in the test document
+        test_questions = test.get('questions', [])
 
+        # Render the attempt test page with the test details and questions
+        return render_template('attempt_test.html', test=test, questions=test_questions)
+
+    return 'Test not found'
+
+@app.route('/submit_test/<test_id>', methods=['GET', 'POST'])
+def submit_test(test_id):
+    if request.method == 'POST':
+        # Retrieving the submitted test details from the database based on specified fields
+        test_details = mongo.db.test.find_one({'test_id':test_id})
+
+        if test_details is None:
+            return 'Test details not found'  # Handle case when no matching document is found
+        
+        # Ensure 'questions' field exists in test_details or assign an empty list as a default value
+        questions = test_details.get('questions', [])
+
+        # Retrieving the submitted answers from the form
+        submitted_answers_list = []
+        for question in questions:
+            question_number = question.get('question')
+            answer = request.form.get(f"answer_{question_number}")  # Assuming the name attribute for radio buttons is 'answer_<question_number>'
+            submitted_answers_list.append({'question_number': question_number, 'answer': answer})
+
+        # Storing submitted answers in the database
+        mongo.db.submitted_answers_collection.insert_one({
+            'test_id': test_id,  # Assuming the test details contain '_id' field
+            'answers': submitted_answers_list
+        })
+
+        # Redirect to a success page or render a success message
+        return 'Test submitted successfully!'  # You can redirect to a success page or render a template
+
+    return 'Invalid request method'
+    
+    
 # def save_image(file):
 #     if file:
 #         filename = secure_filename(file.filename)
