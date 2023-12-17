@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attempt Test</title>
+  <!-- Add any CSS styles or links here -->
+  <!-- For example, you can link Bootstrap or your custom CSS file -->
+  <link href="path/to/your/styles.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="container">
+    <!-- Display test details -->
+    <h1>{{ test.subject }}</h1>
+    <p>{{ test.description }}</p>
+    <!-- Add other test details like marks, time, etc. if available -->
+
+    <!-- Display test questions -->
+    <form method="POST" action="{{ url_for('submit_test',test_id=test.test_id) }}">
+      <!-- Loop through and display test questions -->
+      {% for question in questions %}
+        <div class="question">
+          <h3>Question {{ loop.index }}</h3>
+          <p>{{ question.question }}</p>
+          <!-- Display options for the question using radio buttons -->
+          <input type="radio" id="option1_{{ loop.index }}" name="answer_{{ loop.index }}" value="option1">
+          <label for="option1_{{ loop.index }}">{{ question.option1 }}</label><br>
+
+          <input type="radio" id="option2_{{ loop.index }}" name="answer_{{ loop.index }}" value="option2">
+          <label for="option2_{{ loop.index }}">{{ question.option2 }}</label><br>
+
+          <input type="radio" id="option3_{{ loop.index }}" name="answer_{{ loop.index }}" value="option3">
+          <label for="option3_{{ loop.index }}">{{ question.option3 }}</label><br>
+
+          <input type="radio" id="option4_{{ loop.index }}" name="answer_{{ loop.index }}" value="option4">
+          <label for="option4_{{ loop.index }}">{{ question.option4 }}</label><br>
+        </div>
+      {% endfor %}
+      
+      <!-- Submit button to submit the test -->
+      <button type="submit">Submit Test</button>
+    </form>
+  </div>
+</body>
+
+</html>

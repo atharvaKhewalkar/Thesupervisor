@@ -47,9 +47,9 @@
           <div class="card" style="width: 18rem;">
             <div class="card-body">
               <h5 class="card-title">{{ test.subject }}</h5>
+              <p class="card-text">{{ test.test_id }}</p><br>
               <p class="card-text">{{ test.description }}</p><br>
-              <a href="{{ test.link }}" class="btn btn-primary">Attempt Test</a><br><br>
-              <p>
+              <a href="{{ url_for('attempt_test', test_id=test.test_id) }}" class="btn btn-primary"> Attempt Test<a>    <p>
                 Marks: {{ test.marks }} <br>
                 Date: {{ test.test_date }} <br>
                 Time: {{ test.time }}
@@ -59,74 +59,6 @@
           {% endfor %}
         </div>
       </section>
-      <!-- <section class="leaderboard">
-        <div class="heading">
-          <h1>leaderboard</h1>
-        </div>
-        <div class="ranks">
-          <table border="1">
-            <tr>
-              <th>Sr.no</th>
-              <th>Name</th>
-              <th>Score</th>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>Atharva Khewalkar</td>
-              <td>100</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Anuj Walsepatil</td>
-              <td>95</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Pratiksha Shinde</td>
-              <td>90</td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>Sakashi Jadhav</td>
-              <td>89</td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>Ritesh Phadtare</td>
-              <td>88</td>
-            </tr>
-            <tr>
-              <td>6</td>
-              <td>Athang Patel</td>
-              <td>87</td>
-            </tr>
-            <tr>
-              <td>7</td>
-              <td>Namesh Gandhi</td>
-              <td>86</td>
-            </tr>
-            <tr>
-              <td>8</td>
-              <td>Aniket Ghavte</td>
-              <td>85</td>
-            </tr>
-            <tr>
-              <td>9</td>
-              <td>Tejas Auti</td>
-              <td>84</td>
-            </tr>
-            <tr>
-              <td>10</td>
-              <td>Apurva Koshti</td>
-              <td>83</td>
-            </tr>
-
-          </table><br><br>
-          <p align="center">Congratulations to the Top 10 students..!!</p>
-
-        </div>
-
-      </section> -->
     </div>
   </div>
   <script src="/static/home.js"></script>

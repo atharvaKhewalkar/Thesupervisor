@@ -9,9 +9,10 @@
 
 <body>
     <h1>Create Test</h1>
-    <p>Debug: qCount = {{ qCount }}</p>
     <form method="post" action="{{ url_for('create_test') }}" enctype="multipart/form-data">
 
+        <label for="test_id">Test ID:</label>
+        <input type="number" name="test_id" id="test_id" required>
 
         <label for="test_sub_name">Subject:</label>
         <input type="text" name="test_sub_name" id="test_sub_name" required>
