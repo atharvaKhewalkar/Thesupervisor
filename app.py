@@ -186,7 +186,7 @@ def create_test():
             option2_key = f'option2_{i}'
             option3_key = f'option3_{i}'
             option4_key = f'option4_{i}'
-            correct_option_key = f'correct_option_{i}' 
+            correct_option_key = f'correct_option_{i}'
             correct_option_value = request.form.get(f'correct_option_{i}')
 
 
@@ -260,12 +260,12 @@ def submit_test(test_id):
 
         # Ensure 'questions' field exists in test_details or assign an empty list as a default value
         questions = test_details.get('questions', [])
-
-        selected_answers = {}
-        for key, value in request.form.items():
-            if key.startswith('answer_'):
-                question_index = int(key.split('_')[1])
-                selected_answers[str(question_index)] = value
+        n=len(questions)
+        selected_answers = []
+        for i in range(1, n+1):  # Assuming you want to handle 3 questions, adjust as needed
+            correct_option_key = f'correct_option_{i}'
+            correct_option_value = request.form.get(f'correct_option_{i}')
+            selected_answers.append(correct_option_value)
 
         # original_answer = {}
         # for key, value in mongo.db.test('questions.'):
