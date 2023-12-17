@@ -79,9 +79,18 @@ def login():
     if login_user:
         if request.form['password'] == login_user['password']:
             if login_user.get('verified', False):
+                # Store user data in the session
+                session['user'] = {
+                    'name': login_user['name'],
+                    'email': login_user['email'],
+                    'rollno': login_user['rollno'],
+                    'department': login_user['department'],
+                }
+
                 if user_type == 'student':
                     upcoming_test = list(mongo.db.test.find())
                     return render_template('index.html', upcoming_tests=upcoming_test)
+
             elif user_type == 'teacher':
                 return redirect(url_for('teacherDashboard'))
             else:
@@ -178,6 +187,7 @@ def create_test():
     if request.method == 'POST':
         # Create a list to store multiple questions
         questions = []
+        # questions.append("null")
         c = int(request.form['que_count'])
         # Loop through the form data to get all questions
         for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
@@ -186,7 +196,6 @@ def create_test():
             option2_key = f'option2_{i}'
             option3_key = f'option3_{i}'
             option4_key = f'option4_{i}'
-            correct_option_key = f'correct_option_{i}'
             correct_option_value = request.form.get(f'correct_option_{i}')
 
 
@@ -248,11 +257,35 @@ def attempt_test(test_id):
 
     return 'Test not found'
 
+@app.route('/successfull_submition', methods=['GET', 'POST'])
+def successfull_submition():
+    # Retrieve values from URL parameters
+    test_details = request.args.getlist('test_details')
+    student_data = request.args.getlist('student_data')
+    submitted_answers = request.args.getlist('submitted_answers')
+    correct_answer = request.args.getlist('correct_answer')
+    print(submitted_answers)
+    print(correct_answer)
+    l = len(submitted_answers)
+
+    score = set(submitted_answers).intersection(correct_answer)
+
+    print(len(score))
+
+    mongo.db.result.insert_one({
+        'test_details': test_details,
+        'student_data': student_data,
+        'score': len(score)
+    })
+
+    return "Tadaaaaaa"
+
+
 
 @app.route('/submit_test/<test_id>', methods=['GET', 'POST'])
 def submit_test(test_id):
     if request.method == 'POST':
-        # Retrieving the submitted test details from the database based on specified fields
+        # Retrieve the submitted test details from the database based on specified fields
         test_details = mongo.db.test.find_one({'test_id': test_id})
 
         if test_details is None:
@@ -260,19 +293,37 @@ def submit_test(test_id):
 
         # Ensure 'questions' field exists in test_details or assign an empty list as a default value
         questions = test_details.get('questions', [])
-        n=len(questions)
-        selected_answers = []
-        for i in range(1, n+1):  # Assuming you want to handle 3 questions, adjust as needed
-            correct_option_key = f'correct_option_{i}'
-            correct_option_value = request.form.get(f'correct_option_{i}')
-            selected_answers.append(correct_option_value)
+        n = len(questions)
 
+        correct_answer = []
+
+        for i in range(1, n + 1):
+            answer_key = f'answer_{i}'
+            correct_answer.append(request.form.get(answer_key))
+
+
+        selected_answers = []
+
+        for i in range(1, n + 1):
+            selected_option_key = f'correct_option_{i}'
+            selected_option_value = request.form.get(selected_option_key)
+            selected_answers.append(selected_option_value)
+
+        # Store the student data in the session
+        student_data = {
+            'name': session.get('user').get('name'),  # Assuming you store user data in the session during login
+            'email': session.get('user').get('email'),
+            'rollno': session.get('user').get('rollno'),
+            'department': session.get('user').get('department'),
+        }
+
+        # Insert the new_test document into the database along with student data
         mongo.db.submitted_answers_collection.insert_one({
-            'test_id': test_id,  # Assuming the test details contain '_id' field
+            'test_id': test_id,
+            'student_data': student_data,
             'answers': selected_answers
         })
-
-        return 'Test submitted successfully!'
+        return redirect(url_for('successfull_submition', test_details=test_details, student_data=student_data, submitted_answers=selected_answers, correct_answer=correct_answer))        
 
     return 'Invalid request method'
 

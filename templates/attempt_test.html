@@ -21,32 +21,30 @@
     <form method="POST" action="{{ url_for('submit_test',test_id=test.test_id) }}">
       <!-- Loop through and display test questions -->
       {% for question in questions %}
-        <div class="question">
-          <h3>Question {{ loop.index }}</h3>
-          <p>{{ question.question }}</p>
-          <!-- Display options for the question using radio buttons -->
-          <input type="radio" id="option1_{{ loop.index }}" name="answer1_{{ loop.index }}" value="{{ question.option1 }}">
-          <label for="option1_{{ loop.index }}">{{ question.option1 }}</label><br>
 
-          <input type="radio" id="option2_{{ loop.index }}" name="answer2_{{ loop.index }}" value="{{ question.option2 }}">
-          <label for="option2_{{ loop.index }}">{{ question.option2 }}</label><br>
+      <div class="question">
 
-          <input type="radio" id="option3_{{ loop.index }}" name="answer3_{{ loop.index }}" value="{{ question.option3 }}">
-          <label for="option3_{{ loop.index }}">{{ question.option3 }}</label><br>
+        <h3>Question {{ (loop.index) }}</h3>
+        <p>{{ question.question }}</p>
+        <!-- Display options for the question using radio buttons -->
+        <label for="option1_{{ loop.index }}">1. {{ question.option1 }}</label><br>
+        <label for="option2_{{ loop.index }}">2. {{ question.option2 }}</label><br>
+        <label for="option3_{{ loop.index }}">3. {{ question.option3 }}</label><br>
+        <label for="option4_{{ loop.index }}">4. {{ question.option4 }}</label><br>
 
-          <input type="radio" id="option4_{{ loop.index }}" name="answer4_{{ loop.index }}" value="{{ question.option4 }}">
-          <label for="option4_{{ loop.index }}">{{ question.option4 }}</label><br>
-
-          <label for="correct_option_{{ loop.index }}">Choose a Correct Option:</label>
+        <label for="correct_option_{{ loop.index }}">Choose a Correct Option:</label>
         <select id="correct_option_{{ loop.index }}" name="correct_option_{{ loop.index }}">
-            <option value="option1_{{ loop.index }}">Option1</option>
-            <option value="option2_{{ loop.index }}">Option2</option>
-            <option value="option3_{{ loop.index }}">Option3</option>
-            <option value="option4_{{ loop.index }}">Option4</option>
+          <option value="option1_{{ loop.index }}">Option1</option>
+          <option value="option2_{{ loop.index }}">Option2</option>
+          <option value="option3_{{ loop.index }}">Option3</option>
+          <option value="option4_{{ loop.index }}">Option4</option>
         </select><br><br>
-        </div>
+        <input type="text" name="answer_{{ loop.index }}" id="correct_answer" value="{{ question.answer }}" style="display: none;">
+      </div>
+
       {% endfor %}
-      
+
+
       <!-- Submit button to submit the test -->
       <button type="submit">Submit Test</button>
     </form>
