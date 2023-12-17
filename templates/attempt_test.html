@@ -25,16 +25,16 @@
           <h3>Question {{ loop.index }}</h3>
           <p>{{ question.question }}</p>
           <!-- Display options for the question using radio buttons -->
-          <input type="radio" id="option1_{{ loop.index }}" name="answer_{{ loop.index }}" value="option1">
+          <input type="radio" id="option1_{{ loop.index }}" name="answer_{{ loop.index }}" value="{{ question.option1 }}">
           <label for="option1_{{ loop.index }}">{{ question.option1 }}</label><br>
 
-          <input type="radio" id="option2_{{ loop.index }}" name="answer_{{ loop.index }}" value="option2">
+          <input type="radio" id="option2_{{ loop.index }}" name="answer_{{ loop.index }}" value="{{ question.option2 }}">
           <label for="option2_{{ loop.index }}">{{ question.option2 }}</label><br>
 
-          <input type="radio" id="option3_{{ loop.index }}" name="answer_{{ loop.index }}" value="option3">
+          <input type="radio" id="option3_{{ loop.index }}" name="answer_{{ loop.index }}" value="{{ question.option3 }}">
           <label for="option3_{{ loop.index }}">{{ question.option3 }}</label><br>
 
-          <input type="radio" id="option4_{{ loop.index }}" name="answer_{{ loop.index }}" value="option4">
+          <input type="radio" id="option4_{{ loop.index }}" name="answer_{{ loop.index }}" value="{{ question.option4 }}">
           <label for="option4_{{ loop.index }}">{{ question.option4 }}</label><br>
         </div>
       {% endfor %}

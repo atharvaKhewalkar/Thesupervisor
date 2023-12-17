@@ -6,8 +6,6 @@ from flask_mail import Mail, Message
 from werkzeug.utils import secure_filename
 
 
-
-
 app = Flask(__name__)
 
 # Set a secret key
@@ -175,7 +173,6 @@ def questionCount():
     return render_template('question_addition.html', qCount=qCount)
 
 
-
 @app.route('/create_test', methods=['GET', 'POST'])
 def create_test():
     if request.method == 'POST':
@@ -185,25 +182,30 @@ def create_test():
         # Loop through the form data to get all questions
         for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
             question_key = f'question_{i}'
-            option1_key = f'option1_{i}'
+            option1_key = f'option1_{i}' 
             option2_key = f'option2_{i}'
             option3_key = f'option3_{i}'
             option4_key = f'option4_{i}'
-            correct_option_key = f'correct_option_{i}'
+            correct_option_key = f'correct_option_{i}' 
+            correct_option_value = request.form.get(f'correct_option_{i}')
+
+
+
+
 
             # Check if the question exists in the form data
             if question_key in request.form:
-                # Create a dictionary for each question
-                question = {
-                    'question': request.form[question_key],
-                    'option1': request.form[option1_key],
-                    'option2': request.form[option2_key],
-                    'option3': request.form[option3_key],
-                    'option4': request.form[option4_key],
-                    'answer': request.form[correct_option_key]
-                }
-                # Append the question dictionary to the list
-                questions.append(question)
+                    # Create a dictionary for each question
+                    question = {
+                        'question': request.form[question_key],
+                        'option1': request.form[option1_key],
+                        'option2': request.form[option2_key],
+                        'option3': request.form[option3_key],
+                        'option4': request.form[option4_key],
+                        'answer': correct_option_value  # Use correct_option_value directly
+                    }
+                    # Append the question dictionary to the list
+                    questions.append(question)
 
         # Create the new_test dictionary with the list of questions
         new_test = {
@@ -220,22 +222,23 @@ def create_test():
         mongo.db.test.insert_one(new_test)
 
         return redirect(url_for('teacherDashboard'))
-        
+
 # @app.route('/attempt_test')
 # def attempt_test():
-#     return render_template('attempt_test.html')     
-        
+#     return render_template('attempt_test.html')
+
+
 @app.route('/attempt_test/<test_id>')
 def attempt_test(test_id):
     # Fetch the specific test using the test_id from the database
     # test = mongo.db.test.find_one({'_id': ObjectId(test_subject)})  # Assuming '_id' is the ObjectId of the test
 
     test = mongo.db.test.find_one(
-    {
-        'test_id': test_id
-    }
-)
-    
+        {
+            'test_id': test_id
+        }
+    )
+
     if test:
         # Assuming 'questions' is the key for the questions in the test document
         test_questions = test.get('questions', [])
@@ -245,37 +248,44 @@ def attempt_test(test_id):
 
     return 'Test not found'
 
+
 @app.route('/submit_test/<test_id>', methods=['GET', 'POST'])
 def submit_test(test_id):
     if request.method == 'POST':
         # Retrieving the submitted test details from the database based on specified fields
-        test_details = mongo.db.test.find_one({'test_id':test_id})
+        test_details = mongo.db.test.find_one({'test_id': test_id})
 
         if test_details is None:
             return 'Test details not found'  # Handle case when no matching document is found
-        
+
         # Ensure 'questions' field exists in test_details or assign an empty list as a default value
         questions = test_details.get('questions', [])
 
-        # Retrieving the submitted answers from the form
-        submitted_answers_list = []
-        for question in questions:
-            question_number = question.get('question')
-            answer = request.form.get(f"answer_{question_number}")  # Assuming the name attribute for radio buttons is 'answer_<question_number>'
-            submitted_answers_list.append({'question_number': question_number, 'answer': answer})
+        selected_answers = {}
+        for key, value in request.form.items():
+            if key.startswith('answer_'):
+                question_index = int(key.split('_')[1])
+                selected_answers[str(question_index)] = value
+
+        # original_answer = {}
+        # for key, value in mongo.db.test('questions.'):
+        #     if key.startswith('answer_'):
+        #         question_index = int(key.split('_')[1])
+        #         selected_answers[str(question_index)] = value
 
         # Storing submitted answers in the database
         mongo.db.submitted_answers_collection.insert_one({
             'test_id': test_id,  # Assuming the test details contain '_id' field
-            'answers': submitted_answers_list
+            'answers': selected_answers
         })
 
         # Redirect to a success page or render a success message
-        return 'Test submitted successfully!'  # You can redirect to a success page or render a template
+        # You can redirect to a success page or render a template
+        return 'Test submitted successfully!'
 
     return 'Invalid request method'
-    
-    
+
+
 # def save_image(file):
 #     if file:
 #         filename = secure_filename(file.filename)
