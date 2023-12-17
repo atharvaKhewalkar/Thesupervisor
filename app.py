@@ -267,32 +267,14 @@ def submit_test(test_id):
                 question_index = int(key.split('_')[1])
                 selected_answers[str(question_index)] = value
 
-        # original_answer = {}
-        # for key, value in mongo.db.test('questions.'):
-        #     if key.startswith('answer_'):
-        #         question_index = int(key.split('_')[1])
-        #         selected_answers[str(question_index)] = value
-
-        # Storing submitted answers in the database
         mongo.db.submitted_answers_collection.insert_one({
             'test_id': test_id,  # Assuming the test details contain '_id' field
             'answers': selected_answers
         })
 
-        # Redirect to a success page or render a success message
-        # You can redirect to a success page or render a template
         return 'Test submitted successfully!'
 
     return 'Invalid request method'
-
-
-# def save_image(file):
-#     if file:
-#         filename = secure_filename(file.filename)
-#         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-#         file.save(filepath)
-#         return url_for('uploaded_file', filename=filename)
-#     return None
 
 
 if __name__ == "__main__":
