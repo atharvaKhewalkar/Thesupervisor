@@ -176,12 +176,6 @@ def questionCount():
 
 
 
-
-
-# @app.route('/createTest')
-# def createTest():
-#     return render_template('question_addition.html')
-
 @app.route('/create_test', methods=['GET', 'POST'])
 def create_test():
     if request.method == 'POST':
