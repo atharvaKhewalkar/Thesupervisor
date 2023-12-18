@@ -268,12 +268,13 @@ def successfull_submition():
     
     check_id=mongo.db.result.find_one({'test_id':test_id})
 
+
+    student_id = request.args.get('student_id')
+    submitted_answers = request.args.getlist('submitted_answers')
+    correct_answer = request.args.getlist('correct_answer')
+    l = len(submitted_answers)
+    score = set(submitted_answers).intersection(correct_answer)
     if check_id is None:
-        student_id = request.args.get('student_id')
-        submitted_answers = request.args.getlist('submitted_answers')
-        correct_answer = request.args.getlist('correct_answer')
-        l = len(submitted_answers)
-        score = set(submitted_answers).intersection(correct_answer)
         res={}
         
         res[student_id]=len(score)
@@ -283,8 +284,15 @@ def successfull_submition():
             'student_data': res
         })
     else:
-        res=check_id.student_data
-        res[student_id]=len(score)
+        res = check_id.get('student_data', {})  # Retrieve 'student_data' from the found document or initialize as an empty dictionary if not present
+        res[student_id] = len(score)
+
+        # Update the existing document in the collection with the modified 'student_data'
+        mongo.db.result.update_one(
+        {'test_id': test_id},
+        {'$set': {'student_data': res}}
+        )
+        
 
     return "Tadaaaaaa"
 
