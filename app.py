@@ -317,7 +317,6 @@ def submit_test(test_id):
             answer_key = f'answer_{i}'
             correct_answer.append(request.form.get(answer_key))
 
-
         selected_answers = []
 
         for i in range(1, n + 1):
@@ -325,19 +324,35 @@ def submit_test(test_id):
             selected_option_value = request.form.get(selected_option_key)
             selected_answers.append(selected_option_value)
 
-        # Store the student data in the session
-        
+        # Retrieve the existing document from the collection based on test_id
+        existing_submission = mongo.db.submitted_answers_collection.find_one({'test_id': test_id})
 
-        # Insert the new_test document into the database along with student data
-        mongo.db.submitted_answers_collection.insert_one({
-            'test_id': test_id,
-            'student_id': session.get('user').get('email'),
-            'answers': selected_answers
-        })
-        return redirect(url_for('successfull_submition', test_details=test_details,student_id=session.get('user').get('email'),submitted_answers=selected_answers, correct_answer=correct_answer))        
+        if existing_submission is None:
+            # If no existing document is found, create a new one
+            new_submission = {
+                'test_id': test_id,
+                'answers': {
+                    session.get('user').get('email'): selected_answers
+                }
+            }
+            mongo.db.submitted_answers_collection.insert_one(new_submission)
+        else:
+            # If an existing document is found, update it
+            existing_answers = existing_submission.get('answers', {})
+            existing_answers[session.get('user').get('email')] = selected_answers
+
+            mongo.db.submitted_answers_collection.update_one(
+                {'test_id': test_id},
+                {'$set': {'answers': existing_answers}}
+            )
+
+        return redirect(url_for('successfull_submition', test_details=test_details, student_id=session.get('user').get('email'), submitted_answers=selected_answers, correct_answer=correct_answer))
 
     return 'Invalid request method'
 
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+
