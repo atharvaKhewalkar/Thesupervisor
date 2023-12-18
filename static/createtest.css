@@ -67,7 +67,8 @@ form textarea{
 }
 .main{
     display: flex;
-    flex-direction: row;  
+    flex-direction: row;
+    padding-bottom: 20px;
 }
 .opt{
     display: flex;

@@ -4,6 +4,7 @@ import os
 import secrets
 from flask_mail import Mail, Message
 from werkzeug.utils import secure_filename
+from bson import ObjectId
 
 
 app = Flask(__name__)
@@ -261,22 +262,29 @@ def attempt_test(test_id):
 def successfull_submition():
     # Retrieve values from URL parameters
     test_details = request.args.getlist('test_details')
-    student_data = request.args.getlist('student_data')
-    submitted_answers = request.args.getlist('submitted_answers')
-    correct_answer = request.args.getlist('correct_answer')
-    print(submitted_answers)
-    print(correct_answer)
-    l = len(submitted_answers)
+    test_details_str = test_details[0]
+    test_details_dict = eval(test_details_str)
+    test_id = test_details_dict.get('test_id')
+    
+    check_id=mongo.db.result.find_one({'test_id':test_id})
 
-    score = set(submitted_answers).intersection(correct_answer)
-
-    print(len(score))
-
-    mongo.db.result.insert_one({
-        'test_details': test_details,
-        'student_data': student_data,
-        'score': len(score)
-    })
+    if check_id is None:
+        student_id = request.args.get('student_id')
+        submitted_answers = request.args.getlist('submitted_answers')
+        correct_answer = request.args.getlist('correct_answer')
+        l = len(submitted_answers)
+        score = set(submitted_answers).intersection(correct_answer)
+        res={}
+        
+        res[student_id]=len(score)
+        
+        mongo.db.result.insert_one({
+            'test_id': test_id,
+            'student_data': res
+        })
+    else:
+        res=check_id.student_data
+        res[student_id]=len(score)
 
     return "Tadaaaaaa"
 
@@ -310,20 +318,15 @@ def submit_test(test_id):
             selected_answers.append(selected_option_value)
 
         # Store the student data in the session
-        student_data = {
-            'name': session.get('user').get('name'),  # Assuming you store user data in the session during login
-            'email': session.get('user').get('email'),
-            'rollno': session.get('user').get('rollno'),
-            'department': session.get('user').get('department'),
-        }
+        
 
         # Insert the new_test document into the database along with student data
         mongo.db.submitted_answers_collection.insert_one({
             'test_id': test_id,
-            'student_data': student_data,
+            'student_id': session.get('user').get('email'),
             'answers': selected_answers
         })
-        return redirect(url_for('successfull_submition', test_details=test_details, student_data=student_data, submitted_answers=selected_answers, correct_answer=correct_answer))        
+        return redirect(url_for('successfull_submition', test_details=test_details,student_id=session.get('user').get('email'),submitted_answers=selected_answers, correct_answer=correct_answer))        
 
     return 'Invalid request method'
 
