@@ -6,11 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Test</title>
 </head>
-
+ 
 <body>
-    <h1>Create Test</h1>
-    <form method="post" action="{{ url_for('create_test') }}" enctype="multipart/form-data">
+    <link rel="stylesheet" href="/static/createtest.css">
+    <section class="createtest">
 
+    
+    <h1 align="center">Create Test</h1>
+    <form method="post" action="{{ url_for('create_test') }}" enctype="multipart/form-data">
+        <div class="inputf">
+
+        
         <label for="test_id">Test ID:</label>
         <input type="number" name="test_id" id="test_id" required>
 
@@ -31,22 +37,32 @@
 
         <label for="que_count">Question Count :</label>
         <input type="number" name="que_count" id="que_count" required><br><br>
-        
-        {% for i in range(1, qCount + 1) %}
-        <label for="question_text_{{ i }}">Question {{ i }}:</label><br>
-        <input type="text" id="question_text_{{ i }}" name="question_{{ i }}"><br><br>
 
+    </div>
+        <br>
+        {% for i in range(1, qCount + 1) %}
+        <div class="main">
+
+        
+        <div class="questions">
+            <div class="series"> <label for="question_text_{{ i }}">Question {{ i }}:</label>
+                <textarea type="text" id="question_text_{{ i }}" name="question_{{ i }}"></textarea>    <br>
+            </div>
+       <br>
+        <div class="opt">
+
+        
         <label for="option1_{{ i }}">Option 1:</label><br>
-        <input type="text" id="option1_{{ i }}" name="option1_{{ i }}"><br><br>
+        <input type="text" id="option1_{{ i }}" name="option1_{{ i }}">
 
         <label for="option2_{{ i }}">Option 2:</label><br>
-        <input type="text" id="option2_{{ i }}" name="option2_{{ i }}"><br><br>
+        <input type="text" id="option2_{{ i }}" name="option2_{{ i }}">
 
         <label for="option3_{{ i }}">Option 3:</label><br>
-        <input type="text" id="option3_{{ i }}" name="option3_{{ i }}"><br><br>
+        <input type="text" id="option3_{{ i }}" name="option3_{{ i }}">
 
         <label for="option4_{{ i }}">Option 4:</label><br>
-        <input type="text" id="option4_{{ i }}" name="option4_{{ i }}"><br><br>
+        <input type="text" id="option4_{{ i }}" name="option4_{{ i }}">
 
         <label for="correct_option_{{ i }}">Choose a Correct Option:</label>
         <select id="correct_option_{{ i }}" name="correct_option_{{ i }}">
@@ -54,15 +70,24 @@
             <option value="option2_{{ i }}">Option2</option>
             <option value="option3_{{ i }}">Option3</option>
             <option value="option4_{{ i }}">Option4</option>
-        </select><br><br>
-        {% endfor %}
+        </select>
+       
+    </div>
 
+    </div>
+</div>
+        {% endfor %}
+        <br>
+        <div class="button">
+            <input type="submit" value="Add Question">
+        </div>
         <!-- Your existing submit button -->
-        <input type="submit" value="Add Question">
+       
+    
     </form>
 
 
-
+</section>
 
 </body>
 
