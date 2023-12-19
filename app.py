@@ -294,7 +294,7 @@ def successfull_submition():
         )
         
 
-    return "Tadaaaaaa"
+    return redirect(url_for('result',test_id=test_id,student_id=student_id,test_details=test_details))
 
 
 
@@ -349,6 +349,34 @@ def submit_test(test_id):
         return redirect(url_for('successfull_submition', test_details=test_details, student_id=session.get('user').get('email'), submitted_answers=selected_answers, correct_answer=correct_answer))
 
     return 'Invalid request method'
+
+
+@app.route('/result', methods=['GET', 'POST'])
+def result():
+    test_details = request.args.getlist('test_details')
+    test_details_str = test_details[0]
+    test_details_dict = eval(test_details_str)
+    print(test_details_dict)
+    test_id = test_details_dict.get('test_id')
+    print(test_id)
+    marks = test_details_dict.get('marks')  # Assuming 'marks' is a field in the 'test_details'
+    subject = test_details_dict.get('subject')  # Assuming 'subject' is a field in the 'test_details'
+    
+    check_var = mongo.db.result.find_one({'test_id': test_id})
+    print(check_var)
+    if check_var is None:
+        return "Test details not found"
+    else:
+        student_data = check_var.get('student_data', {})
+        student_id = session.get('user').get('email')
+        
+        if student_id in student_data:
+            value = student_data[student_id]
+            return render_template('result.html', test_id=test_id, score=value, marks=marks, subject=subject, student_id=student_id)
+        else:
+            return "Test not given"
+    
+    
 
 
 if __name__ == "__main__":
