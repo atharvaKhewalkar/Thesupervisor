@@ -26,7 +26,8 @@ def logout():
 
 @bp.route('/home')
 def home():
-    return render_template('html/index.html')
+    upcoming_test = list(mongo.db.test.find())
+    return render_template('html/index.html', upcoming_tests=upcoming_test)
 
 
 @bp.route('/test')
@@ -215,18 +216,22 @@ def create_test():
 
 @bp.route('/attempt_test/<test_id>')
 def attempt_test(test_id):
-    # Fetch the specific test using the test_id from the database
-    # test = mongo.db.test.find_one({'_id': ObjectId(test_subject)})  # Assuming '_id' is the ObjectId of the test
+    # Check if the user has already attempted this test
+    if 'attempted_tests' not in session:
+        session['attempted_tests'] = []
 
-    test = mongo.db.test.find_one(
-        {
-            'test_id': test_id
-        }
-    )
+    if test_id in session['attempted_tests']:
+        return "You have already attempted this test."
+
+    # Fetch the specific test using the test_id from the database
+    test = mongo.db.test.find_one({'test_id': test_id})
 
     if test:
         # Assuming 'questions' is the key for the questions in the test document
         test_questions = test.get('questions', [])
+
+        # Mark the test as attempted for this user
+        session['attempted_tests'].append(test_id)
 
         # Render the attempt test page with the test details and questions
         return render_template('html/attempt_test.html', test=test, questions=test_questions)
@@ -268,9 +273,8 @@ def successfull_submition():
         {'$set': {'student_data': res}}
         )
         
-
-    return redirect(url_for('main.result',test_id=test_id,student_id=student_id,test_details=test_details))
-
+    session.pop('attempted_tests', None)
+    return redirect(url_for('main.result', test_id=test_id, student_id=student_id, test_details=test_details))
 
 
 @bp.route('/submit_test/<test_id>', methods=['GET', 'POST'])
