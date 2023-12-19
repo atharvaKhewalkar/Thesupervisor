@@ -26,16 +26,32 @@ def logout():
 
 @bp.route('/home')
 def home():
-    upcoming_test = list(mongo.db.test.find())
-    return render_template('html/index.html', upcoming_tests=upcoming_test)
+        upcoming_test = list(mongo.db.test.find())
+        submitted_answers = list(mongo.db.submitted_answers_collection.find({}, {'answers': 1,'test_id':1, '_id': 0}))
+        upcoming_test_ids = list(mongo.db.test.find({},{'test_id':1,'_id':0}))
+        
+        ids_toremove=[]
+        for test in upcoming_test_ids:
+            id=test['test_id']
+            keys_from_answers = []
+            for i in submitted_answers:
+                res=i['test_id']
+                if(id==res):
+                    ans=i['answers']
+                    keys_from_answers.extend(ans.keys())
+                    temp=keys_from_answers
+                    for j in temp:
+                        if(j==session.get('user').get('email')):
+                            ids_toremove.append(res)
+    
+        upcoming_test = [test for test in upcoming_test if test.get('test_id') not in ids_toremove]
+        return render_template('html/index.html', upcoming_tests=upcoming_test)
 
 
 @bp.route('/test')
 def test():
     return render_template('html/test.html')
 
-def remove_dict_by_test_id(data_list, test_id):
-    return [item for item in data_list if item.get("test_id") != test_id]
 
 @bp.route('/login', methods=['POST'])
 def login():
