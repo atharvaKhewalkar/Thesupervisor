@@ -34,11 +34,8 @@ def home():
 def test():
     return render_template('html/test.html')
 
-
-@bp.route('/score')
-def score():
-    return render_template('html/scores.html')
-
+def remove_dict_by_test_id(data_list, test_id):
+    return [item for item in data_list if item.get("test_id") != test_id]
 
 @bp.route('/login', methods=['POST'])
 def login():
@@ -66,6 +63,24 @@ def login():
 
                 if user_type == 'student':
                     upcoming_test = list(mongo.db.test.find())
+                    submitted_answers = list(mongo.db.submitted_answers_collection.find({}, {'answers': 1,'test_id':1, '_id': 0}))
+                    upcoming_test_ids = list(mongo.db.test.find({},{'test_id':1,'_id':0}))
+                    
+                    ids_toremove=[]
+                    for test in upcoming_test_ids:
+                        id=test['test_id']
+                        keys_from_answers = []
+                        for i in submitted_answers:
+                            res=i['test_id']
+                            if(id==res):
+                                ans=i['answers']
+                                keys_from_answers.extend(ans.keys())
+                                temp=keys_from_answers
+                                for j in temp:
+                                    if(j==login_user['email']):
+                                        ids_toremove.append(res)
+                
+                    upcoming_test = [test for test in upcoming_test if test.get('test_id') not in ids_toremove]
                     return render_template('html/index.html', upcoming_tests=upcoming_test)
 
             elif user_type == 'teacher':
@@ -74,7 +89,6 @@ def login():
                 return 'Your email is not verified. Please check your email for a verification link.'
 
     return 'Invalid email or password combination'
-
 
 @bp.route('/register', methods=['POST', 'GET'])
 def register():
@@ -213,25 +227,20 @@ def create_test():
 # def attempt_test():
 #     return render_template('html/attempt_test.html')
 
-
 @bp.route('/attempt_test/<test_id>')
 def attempt_test(test_id):
-    # Check if the user has already attempted this test
-    if 'attempted_tests' not in session:
-        session['attempted_tests'] = []
-
-    if test_id in session['attempted_tests']:
-        return "You have already attempted this test."
-
     # Fetch the specific test using the test_id from the database
-    test = mongo.db.test.find_one({'test_id': test_id})
+    # test = mongo.db.test.find_one({'_id': ObjectId(test_subject)})  # Assuming '_id' is the ObjectId of the test
+
+    test = mongo.db.test.find_one(
+        {
+            'test_id': test_id
+        }
+    )
 
     if test:
         # Assuming 'questions' is the key for the questions in the test document
         test_questions = test.get('questions', [])
-
-        # Mark the test as attempted for this user
-        session['attempted_tests'].append(test_id)
 
         # Render the attempt test page with the test details and questions
         return render_template('html/attempt_test.html', test=test, questions=test_questions)
@@ -273,8 +282,8 @@ def successfull_submition():
         {'$set': {'student_data': res}}
         )
         
-    session.pop('attempted_tests', None)
-    return redirect(url_for('main.result', test_id=test_id, student_id=student_id, test_details=test_details))
+
+    return redirect(url_for('main.result',test_id=test_id,student_id=student_id,test_details=test_details))
 
 
 @bp.route('/submit_test/<test_id>', methods=['GET', 'POST'])
