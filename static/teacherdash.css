@@ -2,20 +2,31 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 12vh;
+    flex-direction: column;
     background-color: rgb(18, 18, 18);
     color: aliceblue;
     font-size: 1.5rem;
+    width: 40%;
+    height: 100%;
+}
+.main{
+    display: flex;
+}
+.nd{
+    display: flex;
+    flex-direction: column;
+
 }
 
 .navbar ul{
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     gap: 10rem;
 }
 h2{
-    padding: 2rem;
+    padding: 2rem; 
 }
 .navbar ul li{
     list-style: none;
