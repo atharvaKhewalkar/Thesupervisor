@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>THE SUPERVISOR</title>
-    <link rel="stylesheet" href="/static/login.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+</head>
     
 </head>
 
@@ -20,7 +21,7 @@
     </div>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form method="POST" action="{{ url_for('register') }}">
+            <form method="POST" action="{{ url_for('main.register') }}">
                 <h1>Create Account</h1>
                 <input type="text" name="username" placeholder="Name" />
                 <select class="form-select" name="year" aria-label="Select Year">
@@ -47,7 +48,7 @@
             
         </div>
         <div class="form-container sign-in-container">
-            <form method="POST" action="{{ url_for('login') }}">
+            <form method="POST" action="{{ url_for('main.login') }}">
                 <h1>Sign in</h1>
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Password" />
@@ -85,7 +86,7 @@
 
 
 
-    <script src="{{url_for('static', filename='login.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 </body>
 
 </html>

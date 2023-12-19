@@ -5,15 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Test</title>
+    
 </head>
 
 <body>
-    <link rel="stylesheet" href="/static/createtest.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/createtest.css') }}">
     <section class="createtest">
-
-
         <h1 align="center">Create Test</h1>
-        <form method="post" action="{{ url_for('create_test') }}" enctype="multipart/form-data">
+        <form method="post" action="{{ url_for('main.create_test') }}" enctype="multipart/form-data">
             <div class="inputf">
 
 

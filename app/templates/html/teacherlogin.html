@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="/static/teacherlogin.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/teacherlogin.css') }}">
 </head>
 <body>
     <section>
         <h1 align="center">Teacher Registration</h1>
         <div class="content">
-            <form method=POST action="{{ url_for('signUpTeacher') }}" class="form">
+            <form method=POST action="{{ url_for('main.signUpTeacher') }}" class="form">
                 <h1 align="center" >Create Account</h1>
                 <input type="text" name="username" placeholder="Name" />
                 
@@ -34,6 +34,6 @@
 
 
 
-    <script src="{{url_for('static', filename='teacherlogin.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/teacherlogin.js') }}"></script>
 </body>
 </html>
