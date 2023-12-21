@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test creation</title>
+</head>
+
+<body>
+
+    <div class="testcreation">
+        <h2>Create Test</h2>
+        <form method="POST" action="{{ url_for('main.questionCount') }}">
+            <input type="number" name="count" placeholder="Question Count"><br>
+            <input type="radio" name="que_type" value="mcq"> MCQ<br>
+            <input type="radio" name="que_type" value="paragraph">paragraph<br>
+            <input type="submit" placeholder="Submit">
+
+        </form>
+    </div>
+
+</body>
+
+</html>

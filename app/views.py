@@ -180,13 +180,22 @@ def teacherDashboard():
     QUESTION_COUNT = 10  # Set the value according to your requirements
     return render_template('html/teacherDashboard.html', upcoming_tests=upcoming_test, QUESTION_COUNT=QUESTION_COUNT)
 
+@bp.route('/typeofque')
+def typeofque():
+    return render_template('html/typeOfQues.html')
 
 @bp.route('/questionCount', methods=['GET', 'POST'])
 def questionCount():
     qCount = 0  # Provide a default value
-    if request.method == 'POST':
+    selected_option = request.form.get('radiobutton_name')
+    
+    if request.method == 'POST':    
         qCount = int(request.form.get('count', 0))
-    return render_template('html/question_addition.html', qCount=qCount)
+        
+        if selected_option=="mcq":
+            return render_template('html/question_addition.html', qCount=qCount)
+        else:
+            return render_template('html/paragraph.html', qCount=qCount)
 
 
 @bp.route('/create_test', methods=['GET', 'POST'])
@@ -204,10 +213,6 @@ def create_test():
             option3_key = f'option3_{i}'
             option4_key = f'option4_{i}'
             correct_option_value = request.form.get(f'correct_option_{i}')
-
-
-
-
 
             # Check if the question exists in the form data
             if question_key in request.form:

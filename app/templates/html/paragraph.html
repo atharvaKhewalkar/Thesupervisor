@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Test</title>
+    
+</head>
+
+<body>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/createtest.css') }}">
+    <section class="createtest">
+        <h1 align="center">Create Test</h1>
+        <form method="post" action="{{ url_for('main.create_test') }}" enctype="multipart/form-data">
+            <div class="inputf">
+
+
+                <label for="test_id">Test ID:</label>
+                <input type="number" name="test_id" id="test_id" required>
+
+                <label for="test_sub_name">Subject:</label>
+                <input type="text" name="test_sub_name" id="test_sub_name" required>
+
+                <label for="test_description">Description:</label>
+                <textarea name="test_description" id="test_description" rows="4" required></textarea>
+
+                <label for="test_marks">Marks:</label>
+                <input type="number" name="test_marks" id="test_marks" required>
+
+                <label for="test_time">Time:</label>
+                <input type="time" name="test_time" id="test_time" required>
+
+                <label for="test_date">Date:</label>
+                <input type="date" name="test_date" id="test_date" required><br><br>
+
+                <label for="que_count">Question Count :</label>
+                <input type="number" name="que_count" id="que_count" required><br><br>
+
+            </div>
+            <br>
+            {% for i in range(1, qCount + 1) %}
+            <div class="main">
+                <div class="questions">
+                    <div class="series"> <label for="question_text_{{ i }}">Question {{ i }}:</label>
+                        <textarea type="text" id="question_text_{{ i }}" name="question_{{ i }}"></textarea> <br>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            {% endfor %}
+            <br>
+            <div class="button">
+                <input type="submit" value="Add Question">
+            </div>
+            <!-- Your existing submit button -->
+
+
+        </form>
+
+
+    </section>
+
+</body>
+
+</html>
