@@ -29,6 +29,10 @@ def home():
         upcoming_test = list(mongo.db.test.find())
         submitted_answers = list(mongo.db.submitted_answers_collection.find({}, {'answers': 1,'test_id':1, '_id': 0}))
         upcoming_test_ids = list(mongo.db.test.find({},{'test_id':1,'_id':0}))
+
+        upcoming_test_para = list(mongo.db.test_paragraph.find())
+        submitted_answers_para = list(mongo.db.submitted_answers_collection_para.find({}, {'answers': 1,'test_id':1, '_id': 0}))
+        upcoming_test_ids_para = list(mongo.db.test_paragraph.find({},{'test_id':1,'_id':0}))
         
         ids_toremove=[]
         for test in upcoming_test_ids:
@@ -43,9 +47,25 @@ def home():
                     for j in temp:
                         if(j==session.get('user').get('email')):
                             ids_toremove.append(res)
+        
+        ids_toremove_para=[]
+        for test in upcoming_test_ids_para:
+            id_para=test['test_id']
+            keys_from_answers_para = []
+            for i in submitted_answers_para:
+                res_para=i['test_id']
+                if(id_para==res_para):
+                    ans_para=i['answers']
+                    keys_from_answers_para.extend(ans_para.keys())
+                    temp_para=keys_from_answers_para
+                    for j in temp_para:
+                        if(j==session.get('user').get('email')):
+                            ids_toremove_para.append(res_para)
     
         upcoming_test = [test for test in upcoming_test if test.get('test_id') not in ids_toremove]
-        return render_template('html/index.html', upcoming_tests=upcoming_test)
+        upcoming_test_para = [test for test in upcoming_test_para if test.get('test_id') not in ids_toremove_para]
+
+        return render_template('html/index.html', upcoming_tests=upcoming_test,upcoming_test_para=upcoming_test_para)
 
 
 @bp.route('/test')
@@ -81,6 +101,10 @@ def login():
                     upcoming_test = list(mongo.db.test.find())
                     submitted_answers = list(mongo.db.submitted_answers_collection.find({}, {'answers': 1,'test_id':1, '_id': 0}))
                     upcoming_test_ids = list(mongo.db.test.find({},{'test_id':1,'_id':0}))
+
+                    upcoming_test_para = list(mongo.db.test_paragraph.find())
+                    submitted_answers_para = list(mongo.db.submitted_answers_collection_para.find({}, {'answers': 1,'test_id':1, '_id': 0}))
+                    upcoming_test_ids_para = list(mongo.db.test_paragraph.find({},{'test_id':1,'_id':0}))
                     
                     ids_toremove=[]
                     for test in upcoming_test_ids:
@@ -93,11 +117,27 @@ def login():
                                 keys_from_answers.extend(ans.keys())
                                 temp=keys_from_answers
                                 for j in temp:
-                                    if(j==login_user['email']):
+                                    if(j==session.get('user').get('email')):
                                         ids_toremove.append(res)
+                    
+                    ids_toremove_para=[]
+                    for test in upcoming_test_ids_para:
+                        id_para=test['test_id']
+                        keys_from_answers_para = []
+                        for i in submitted_answers_para:
+                            res_para=i['test_id']
+                            if(id_para==res_para):
+                                ans_para=i['answers']
+                                keys_from_answers_para.extend(ans_para.keys())
+                                temp_para=keys_from_answers_para
+                                for j in temp_para:
+                                    if(j==session.get('user').get('email')):
+                                        ids_toremove_para.append(res_para)
                 
                     upcoming_test = [test for test in upcoming_test if test.get('test_id') not in ids_toremove]
-                    return render_template('html/index.html', upcoming_tests=upcoming_test)
+                    upcoming_test_para = [test for test in upcoming_test_para if test.get('test_id') not in ids_toremove_para]
+
+                    return render_template('html/index.html', upcoming_tests=upcoming_test,upcoming_test_para=upcoming_test_para)
 
             elif user_type == 'teacher':
                 return redirect(url_for('main.teacherDashboard'))
@@ -198,8 +238,8 @@ def questionCount():
             return render_template('html/paragraph.html', qCount=qCount)
 
 
-@bp.route('/create_test', methods=['GET', 'POST'])
-def create_test():
+@bp.route('/create_test_mcq', methods=['GET', 'POST'])
+def create_test_mcq():
     if request.method == 'POST':
         # Create a list to store multiple questions
         questions = []
@@ -243,30 +283,68 @@ def create_test():
         mongo.db.test.insert_one(new_test)
 
         return redirect(url_for('main.teacherDashboard'))
+    
+@bp.route('/create_test_paragraph', methods=['GET', 'POST'])
+def create_test_paragraph():
+    if request.method == 'POST':
 
-# @bp.route('/attempt_test')
-# def attempt_test():
-#     return render_template('html/attempt_test.html')
+        questions = []
+
+        c = int(request.form['que_count'])
+        for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
+            question_key = f'question_{i}'
+
+            # Check if the question exists in the form data
+            if question_key in request.form:
+                    # Create a dictionary for each question
+                    question = {
+                        'question': request.form[question_key],
+                    }
+                    # Append the question dictionary to the list
+                    questions.append(question)
+
+        # Create the new_test dictionary with the list of questions
+        new_test = {
+            'test_id': request.form['test_id'],
+            'subject': request.form['test_sub_name'],
+            'description': request.form['test_description'],
+            'marks': request.form['test_marks'],
+            'time': request.form['test_time'],
+            'test_date': request.form['test_date'],
+            'questions': questions
+        }
+
+        # Insert the new_test document into the database
+        mongo.db.test_paragraph.insert_one(new_test)
+
+        return redirect(url_for('main.teacherDashboard'))
+
 
 @bp.route('/attempt_test/<test_id>')
 def attempt_test(test_id):
-    # Fetch the specific test using the test_id from the database
-    # test = mongo.db.test.find_one({'_id': ObjectId(test_subject)})  # Assuming '_id' is the ObjectId of the test
-
     test = mongo.db.test.find_one(
         {
             'test_id': test_id
         }
     )
-
     if test:
-        # Assuming 'questions' is the key for the questions in the test document
         test_questions = test.get('questions', [])
-
-        # Render the attempt test page with the test details and questions
         return render_template('html/attempt_test.html', test=test, questions=test_questions)
-
     return 'Test not found'
+
+
+@bp.route('/attempt_test_para/<test_id>')
+def attempt_test_para(test_id):
+    test = mongo.db.test_paragraph.find_one(
+        {
+            'test_id': test_id
+        }
+    )
+    if test:
+        test_questions = test.get('questions', [])
+        return render_template('html/attempt_test_paragraph.html', test=test, questions=test_questions)
+    return 'Test not found'
+
 
 @bp.route('/successfull_submition', methods=['GET', 'POST'])
 def successfull_submition():
@@ -356,6 +434,51 @@ def submit_test(test_id):
             )
 
         return redirect(url_for('main.successfull_submition', test_details=test_details, student_id=session.get('user').get('email'), submitted_answers=selected_answers, correct_answer=correct_answer))
+
+    return 'Invalid request method'
+
+@bp.route('/submit_test_para/<test_id>', methods=['GET', 'POST'])
+def submit_test_para(test_id):
+    if request.method == 'POST':
+        # Retrieve the submitted test details from the database based on specified fields
+        test_details = mongo.db.test_paragraph.find_one({'test_id': test_id})
+
+        if test_details is None:
+            return 'Test details not found'  # Handle case when no matching document is found
+
+        # Ensure 'questions' field exists in test_details or assign an empty list as a default value
+        questions = test_details.get('questions', [])
+        n = len(questions)
+
+        para_answers = []
+
+        for i in range(1, n + 1):
+            para_answers_key = f'answer_{i}'
+            para_answers_value = request.form.get(para_answers_key)
+            para_answers.append(para_answers_value)
+
+        # Retrieve the existing document from the collection based on test_id
+        existing_submission = mongo.db.submitted_answers_collection_para.find_one({'test_id': test_id})
+
+        if existing_submission is None:
+            # If no existing document is found, create a new one
+            new_submission = {
+                'test_id': test_id,
+                'answers': {
+                    session.get('user').get('email'): para_answers
+                }
+            }
+            mongo.db.submitted_answers_collection_para.insert_one(new_submission)
+        else:
+            # If an existing document is found, update it
+            existing_answers = existing_submission.get('answers', {})
+            existing_answers[session.get('user').get('email')] = para_answers
+
+            mongo.db.submitted_answers_collection_para.update_one(
+                {'test_id': test_id},
+                {'$set': {'answers': existing_answers}}
+            )
+        return redirect(url_for('main.home'))
 
     return 'Invalid request method'
 

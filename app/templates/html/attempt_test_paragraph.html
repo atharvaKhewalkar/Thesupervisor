@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attempt Test</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/attempt_test.css') }}">
+  
+</head>
+
+<body>
+  <div class="container">
+    <h1>{{ test.subject }}</h1>
+    <p>{{ test.description }}</p>
+
+    <form method="POST" action="{{ url_for('main.submit_test_para',test_id=test.test_id) }}">
+      {% for question in questions %}
+
+      <div class="question">
+
+        <h3>Question {{ (loop.index) }}</h3>
+        <p>{{ question.question }}</p>
+        
+        <textarea type="test" name="answer_{{ loop.index }}" id="answer_{{ loop.index }}"></textarea>
+      </div>
+
+      {% endfor %}
+
+
+      <!-- Submit button to submit the test -->
+      <button type="submit">Submit Test</button>
+    </form>
+  </div>
+</body>
+
+</html>
