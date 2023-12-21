@@ -311,6 +311,7 @@ def create_test_paragraph():
             'marks': request.form['test_marks'],
             'time': request.form['test_time'],
             'test_date': request.form['test_date'],
+            'teacher_email':session.get('user').get('email'),
             'questions': questions
         }
 
@@ -482,7 +483,13 @@ def submit_test_para(test_id):
 
     return 'Invalid request method'
 
-
+@bp.route('/para_ans')
+def para_ans():
+    temail=session.get('user').get('email')
+    res=list(mongo.db.test_paragraph.find({'teacher_email':temail}))
+    return render_template('html/answers_checking.html',tests=res)
+    
+    
 @bp.route('/result', methods=['GET', 'POST'])
 def result():
     test_details = request.args.getlist('test_details')
@@ -507,3 +514,15 @@ def result():
             return render_template('html/result.html', test_id=test_id, score=value, marks=marks, subject=subject, student_id=student_id)
         else:
             return "Test not given"
+        
+@bp.route('/stu_attempted_tests/<test_id>', methods=['GET', 'POST'])
+def stu_attempted_tests(test_id):
+    check=mongo.db.submitted_answers_collection_para.find_one({'test_id':test_id})
+    
+    if test_details is None:
+            return 'No one has given the test'
+    
+    ans = check.get('answers', [])
+    print(ans)
+    return "heyyyyyyyyyyy"
+    
