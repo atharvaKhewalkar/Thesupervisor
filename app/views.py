@@ -140,7 +140,18 @@ def login():
                     return render_template('html/index.html', upcoming_tests=upcoming_test,upcoming_test_para=upcoming_test_para)
 
             elif user_type == 'teacher':
-                return redirect(url_for('main.teacherDashboard'))
+                if login_user:
+                    if request.form['password'] == login_user['password']:
+                        # Store teacher data in the session
+                        session['user'] = {
+                            'name': login_user['name'],
+                            'email': login_user['email'],
+                            'department': login_user['department'],
+                            # Add other teacher-related information as needed
+                        }
+                        return redirect(url_for('main.teacherDashboard'))
+                        
+                return 'Invalid email or password combination'
             else:
                 return 'Your email is not verified. Please check your email for a verification link.'
 
@@ -227,7 +238,7 @@ def typeofque():
 @bp.route('/questionCount', methods=['GET', 'POST'])
 def questionCount():
     qCount = 0  # Provide a default value
-    selected_option = request.form.get('radiobutton_name')
+    selected_option = request.form.get('que_type')
     
     if request.method == 'POST':    
         qCount = int(request.form.get('count', 0))
@@ -519,9 +530,8 @@ def result():
 def stu_attempted_tests(test_id):
     check=mongo.db.submitted_answers_collection_para.find_one({'test_id':test_id})
     
-    if test_details is None:
+    if check is None:
             return 'No one has given the test'
-    
     ans = check.get('answers', [])
     print(ans)
     return "heyyyyyyyyyyy"
