@@ -1,3 +1,5 @@
+<!-- teacher_check_answer.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,22 +11,32 @@
     <h1>Checking Answers for Test {{ test_id }}</h1>
     <h2>Student: {{ student_email }}</h2>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Question</th>
-                <th>Student's Answer</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for answer in student_answers %}
+    <form method="POST" action="{{ url_for('main.submit_scores', test_id=test_id, student_email=student_email) }}">
+        <table border="1">
+            <thead>
                 <tr>
-                    <td>Question {{ loop.index }}</td>
-                    <td>{{ answer }}</td>
+                    <th>Question</th>
+                    <th>Submitted Answer</th>
+                    <th>Score</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for index in range(questions|length) %}
+                    <tr>
+                        <td>Question {{ index + 1 }}: {{ questions[index].get('question', 'N/A') }}</td>
+                        <td>{{ student_answers[index] }}</td>
+                        <td>
+                            <input type="number" name="scores"> 
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <br>
+    
+        <button type="submit">Submit Scores</button>
+    </form>
 
     <br>
 
