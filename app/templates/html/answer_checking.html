@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Answer Checking</title>
+</head>
+<body>
+    <h1>Answer Checking - Test {{ test_id }}</h1>
+    
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Student Email</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for email in stud_email %}
+                <tr>
+                    <td>{{ email }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('main.check_answer', test_id=test_id, student_email=email) }}">
+                            <button type="submit">Check Answer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

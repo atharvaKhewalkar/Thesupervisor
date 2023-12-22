@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Student Answer</title>
+</head>
+<body>
+    <h1>Checking Answers for Test {{ test_id }}</h1>
+    <h2>Student: {{ student_email }}</h2>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Student's Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for answer in student_answers %}
+                <tr>
+                    <td>Question {{ loop.index }}</td>
+                    <td>{{ answer }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+
+    <!-- Add any additional content or feedback form for the teacher here -->
+
+    <br>
+
+    <a href="{{ url_for('main.stu_attempted_tests', test_id=test_id) }}">Back to Student List</a>
+</body>
+</html>

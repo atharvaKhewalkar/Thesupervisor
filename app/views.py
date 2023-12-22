@@ -498,7 +498,7 @@ def submit_test_para(test_id):
 def para_ans():
     temail=session.get('user').get('email')
     res=list(mongo.db.test_paragraph.find({'teacher_email':temail}))
-    return render_template('html/answers_checking.html',tests=res)
+    return render_template('html/test_to_be_checked.html',tests=res)
     
     
 @bp.route('/result', methods=['GET', 'POST'])
@@ -533,6 +533,24 @@ def stu_attempted_tests(test_id):
     if check is None:
             return 'No one has given the test'
     ans = check.get('answers', [])
-    print(ans)
-    return "heyyyyyyyyyyy"
+    stud_email = []
+    for i in ans:
+        print(stud_email.append(i))
+    
+    return render_template('html/answer_checking.html', test_id=test_id, stud_email=stud_email)
+
+
+@bp.route('/check_answer/<test_id>/<student_email>', methods=['GET', 'POST'])
+def check_answer(test_id, student_email):
+    # Retrieve the submitted answers for the specified test and student
+    submission = mongo.db.submitted_answers_collection_para.find_one({'test_id': test_id})
+    
+    if submission:
+        answers = submission.get('answers', {})
+        student_answers = answers.get(student_email, [])
+
+        # Add logic here to render a page with the student's answers for the teacher to check
+        return render_template('html/teacher_check_answer.html', test_id=test_id, student_email=student_email, student_answers=student_answers)
+    
+    return 'No submission found for the specified test and student.'
     
