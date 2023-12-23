@@ -506,14 +506,11 @@ def result():
     test_details = request.args.getlist('test_details')
     test_details_str = test_details[0]
     test_details_dict = eval(test_details_str)
-    print(test_details_dict)
     test_id = test_details_dict.get('test_id')
-    print(test_id)
     marks = test_details_dict.get('marks')  # Assuming 'marks' is a field in the 'test_details'
     subject = test_details_dict.get('subject')  # Assuming 'subject' is a field in the 'test_details'
     
     check_var = mongo.db.result.find_one({'test_id': test_id})
-    print(check_var)
     if check_var is None:
         return "Test details not found"
     else:
@@ -535,8 +532,15 @@ def stu_attempted_tests(test_id):
     ans = check.get('answers', [])
     stud_email = []
     for i in ans:
-        print(stud_email.append(i))
+        stud_email.append(i)
     
+    answer_details=mongo.db.student_score_para.find_one({'test_id':test_id})
+    if answer_details is None:
+        return render_template('html/answer_checking.html', test_id=test_id, stud_email=stud_email)
+    else:
+        submitted_answer_student_id=answer_details.get('student_data',[])
+        email_to_rem=submitted_answer_student_id.keys()
+        stud_email = [email for email in stud_email if email not in email_to_rem]
     return render_template('html/answer_checking.html', test_id=test_id, stud_email=stud_email)
 
 
