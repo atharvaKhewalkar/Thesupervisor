@@ -24,6 +24,70 @@ def logout():
     return redirect(url_for('main.index'))
 
 
+@bp.route('/profile')
+def profile():
+    # Check if the user is logged in
+    if 'user' in session:
+        # Get the email of the logged-in user
+        email = session['user']['email']
+
+        # Fetch student details from the users collection based on the email
+        student_details = mongo.db.users.find_one({'email': email})
+
+        # Fetch scores for attempted tests
+        mcq_scores = list(mongo.db.result.find())
+
+        # Initialize lists to store test IDs and corresponding scores
+        test_ids = []
+        test_scores = []
+
+        # Iterate through the scores to find relevant data for the logged-in user
+        for score in mcq_scores:
+            stud_data = score.get('student_data', {})
+            test_id = score.get('test_id', '')
+
+            # Check if the logged-in user has attempted the test
+            if email in stud_data:
+                stu_score = stud_data[email]
+                test_ids.append(test_id)
+                test_scores.append(stu_score)
+
+        if student_details:
+            # Pass student details, test IDs, and test scores to the template
+            return render_template('html/stud_profile.html', student_details=student_details, test_ids=test_ids, test_scores=test_scores)
+        else:
+            return 'Student details not found'
+    else:
+        return redirect(url_for('main.index'))
+
+
+    
+@bp.route('/edit_profile', methods=['POST'])
+def edit_profile():
+    if 'user' in session:
+        email = session['user']['email']
+        users_collection = mongo.db.users
+
+        # Fetch user details from the collection based on email
+        user_details = users_collection.find_one({'email': email})
+
+        if user_details:
+            # Update user details based on the submitted form
+            user_details['name'] = request.form.get('name')
+            # Repeat similar lines for other details like email, year, department, etc.
+
+            # Update the document in the collection
+            users_collection.update_one({'email': email}, {'$set': user_details})
+
+            # Redirect to the profile page after updating
+            return redirect(url_for('main.profile'))
+        else:
+            return 'User details not found'
+    else:
+        return redirect(url_for('main.index'))
+    
+
+
 @bp.route('/home')
 def home():
         upcoming_test = list(mongo.db.test.find())
