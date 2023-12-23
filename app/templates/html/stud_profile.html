@@ -102,10 +102,13 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-9">
-                        {% for index in range(test_ids|length) %}
-                        <div class="card mb-2">
+                        {% for index in range(test_scores|length) %}
+                        <div class="cardo mb-2">
                             <div class="card-body">
-                                <p class="card-text">Test ID: {{ test_ids[index] }}</p>
+                                <p class="card-text">Test ID: {{ test_details[index].test_id }}</p>
+                                <p class="card-text">subject: {{ test_details[index].subject }}</p>
+                                <p class="card-text">marks: {{ test_details[index].marks }}</p>
+                                <p class="card-text">Test date: {{ test_details[index].test_date }}</p>
                                 <p class="card-text">Score: {{ test_scores[index] }}</p>
                             </div>
                         </div>
