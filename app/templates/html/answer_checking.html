@@ -4,11 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Answer Checking</title>
+    <!-- Link your custom CSS file -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/answer_checking.css') }}">
 </head>
 <body>
     <h1>Answer Checking - Test {{ test_id }}</h1>
     
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>Student Email</th>
