@@ -5,11 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Test</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/createtest.css') }}">
     
 </head>
 
 <body>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/createtest.css') }}">
     <section class="createtest">
         <h1 align="center">Create Test</h1>
         <form method="post" action="{{ url_for('main.create_test_mcq') }}" enctype="multipart/form-data">

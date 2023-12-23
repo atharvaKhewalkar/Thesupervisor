@@ -60,3 +60,12 @@ form input{
     justify-content: space-between;
     
 }
+a{
+    text-decoration: none;
+    color: aliceblue;
+    
+}
+a:hover{
+    text-decoration: none;
+    
+}

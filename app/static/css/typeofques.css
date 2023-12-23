@@ -1,0 +1,61 @@
+/* Reset default margin and padding */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+/* Apply a background color to the body */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Center the form */
+.testcreation {
+    margin: 50px auto;
+    max-width: 400px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    text-align: center;
+}
+
+/* Style the heading */
+h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Style form inputs */
+input[type="number"],
+input[type="submit"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    width: calc(100% - 22px); /* Adjust width to accommodate padding and borders */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    transition: border-color 0.3s ease;
+}
+
+/* Change border color on input focus */
+input[type="number"]:focus,
+input[type="radio"]:focus,
+input[type="submit"]:focus {
+    outline: none;
+    border-color: #6c63ff;
+}
+
+/* Style the submit button */
+input[type="submit"] {
+    background-color: #6c63ff;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Hover effect for the submit button */
+input[type="submit"]:hover {
+    background-color: #5248d6;
+}
+
