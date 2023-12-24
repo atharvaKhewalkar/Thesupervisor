@@ -2,7 +2,9 @@ from flask import Blueprint, render_template, session, request, redirect, url_fo
 from flask_mail import Message
 import secrets
 from bson import ObjectId
-
+import os
+from werkzeug.utils import secure_filename
+from . import app 
 from . import mongo, mail 
 
 bp = Blueprint('main', __name__)
@@ -15,6 +17,11 @@ def index():
 # @bp.route('/uploads/<filename>')
 # def uploaded_file(filename):
 #     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @bp.route('/logout')
@@ -228,6 +235,13 @@ def register():
         existing_user = users.find_one({'email': request.form['email']})
 
         if existing_user is None:
+            # Handle file upload
+            file = request.files['file']
+            if file and allowed_file(file.filename):
+                # Generate a secure filename based on the student name
+                filename = secure_filename(request.form['username'] + '.jpg')
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
             token = secrets.token_urlsafe(16)
             new_user = {
                 'name': request.form['username'],
@@ -237,7 +251,8 @@ def register():
                 'email': request.form['email'],
                 'password': request.form['password'],
                 'token': token,
-                'verified': False
+                'verified': False,
+                'profile_image': filename  # Save the filename in the database
             }
             users.insert_one(new_user)
 
@@ -249,6 +264,7 @@ def register():
             return 'Please check your email to verify your account.'
 
     return 'User with this email already exists.'
+
 
 
 @bp.route('/verify_email/<token>', methods=['GET'])

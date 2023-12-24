@@ -2,6 +2,7 @@
 from flask import Flask
 from flask_mail import Mail
 from flask_pymongo import PyMongo
+import os
 
 app = Flask(__name__)
 
@@ -22,12 +23,15 @@ app.config['MAIL_USERNAME'] = 'riteshphadtare32@gmail.com'
 app.config['MAIL_PASSWORD'] = 'ahvq xbdz jrcw wfyc'
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
+upload_folder = app.config['UPLOAD_FOLDER']
+if not os.path.exists(upload_folder):
+    os.makedirs(upload_folder)
+
 mail = Mail(app)
 mongo = PyMongo(app)
 
-from app.views import bp  # Import the Blueprint
-
-app.register_blueprint(bp, url_prefix='/')  # Register the Blueprint with a prefix
+from app.views import bp
+app.register_blueprint(bp, url_prefix='/')
 
 if __name__ == "__main__":
     app.run(debug=True)

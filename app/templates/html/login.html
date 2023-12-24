@@ -21,7 +21,7 @@
     </div>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form method="POST" action="{{ url_for('main.register') }}">
+            <form method="POST" action="{{ url_for('main.register') }}" enctype="multipart/form-data">
                 <h1>Create Account</h1>
                 <input type="text" name="username" placeholder="Name" />
                 <select class="form-select" name="year" aria-label="Select Year">
@@ -43,6 +43,7 @@
                 
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Password" />
+                <input type="file" name="file" accept="image/*" required>
                 <button>Sign Up</button>
             </form>
             
