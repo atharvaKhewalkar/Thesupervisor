@@ -346,112 +346,120 @@ def questionCount():
 @bp.route('/create_test_mcq', methods=['GET', 'POST'])
 def create_test_mcq():
     if request.method == 'POST':
-        # Create a list to store multiple questions
-        questions = []
-        # questions.append("null")
-        c = int(request.form['que_count'])
         test_id= request.form['test_id']
-        # Loop through the form data to get all questions
-        for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
-            question_key = f'question_{i}'
-            option1_key = f'option1_{i}' 
-            option2_key = f'option2_{i}'
-            option3_key = f'option3_{i}'
-            option4_key = f'option4_{i}'
-            correct_option_value = request.form.get(f'correct_option_{i}')
+        check_id = mongo.db.test.find_one({'test_id': test_id})
+        if check_id is None:
+            # Create a list to store multiple questions
+            questions = []
+            # questions.append("null")
+            c = int(request.form['que_count'])
+            
+            # Loop through the form data to get all questions
+            for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
+                question_key = f'question_{i}'
+                option1_key = f'option1_{i}' 
+                option2_key = f'option2_{i}'
+                option3_key = f'option3_{i}'
+                option4_key = f'option4_{i}'
+                correct_option_value = request.form.get(f'correct_option_{i}')
 
-            # Check if the question exists in the form data
-            if question_key in request.form:
-                    # Create a dictionary for each question
-                    question = {
-                        'question': request.form[question_key],
-                        'option1': request.form[option1_key],
-                        'option2': request.form[option2_key],
-                        'option3': request.form[option3_key],
-                        'option4': request.form[option4_key],
-                        'answer': correct_option_value  # Use correct_option_value directly
-                    }
-                    
-                    file_key = f'file_{i}'
-                    if file_key in request.files:
-                        file = request.files[file_key]
-                        if file.filename != '':
-                            # Ensure secure filename to prevent security risks
-                            filename = secure_filename(file.filename)
-                            # Save the file to the upload folder
-                            file_path = f"{test_id}_{file_key}.jpg"
-                            # Add the image path to the question dictionary
-                            file_save_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{test_id}_{file_key}.jpg")
-                            file.save(file_save_path)
-                            question['image_path'] = file_path
-                    # Append the question dictionary to the list
-                    questions.append(question)
+                # Check if the question exists in the form data
+                if question_key in request.form:
+                        # Create a dictionary for each question
+                        question = {
+                            'question': request.form[question_key],
+                            'option1': request.form[option1_key],
+                            'option2': request.form[option2_key],
+                            'option3': request.form[option3_key],
+                            'option4': request.form[option4_key],
+                            'answer': correct_option_value  # Use correct_option_value directly
+                        }
+                        
+                        file_key = f'file_{i}'
+                        if file_key in request.files:
+                            file = request.files[file_key]
+                            if file.filename != '':
+                                # Ensure secure filename to prevent security risks
+                                filename = secure_filename(file.filename)
+                                # Save the file to the upload folder
+                                file_path = f"{test_id}_{file_key}.jpg"
+                                # Add the image path to the question dictionary
+                                file_save_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{test_id}_{file_key}.jpg")
+                                file.save(file_save_path)
+                                question['image_path'] = file_path
+                        # Append the question dictionary to the list
+                        questions.append(question)
 
-        # Create the new_test dictionary with the list of questions
-        new_test = {
-            'test_id': test_id,
-            'subject': request.form['test_sub_name'],
-            'description': request.form['test_description'],
-            'marks': request.form['test_marks'],
-            'time': request.form['test_time'],
-            'test_date': request.form['test_date'],
-            'questions': questions  # Use 'questions' instead of 'question'
-        }
+            # Create the new_test dictionary with the list of questions
+            new_test = {
+                'test_id': test_id,
+                'subject': request.form['test_sub_name'],
+                'description': request.form['test_description'],
+                'marks': request.form['test_marks'],
+                'time': request.form['test_time'],
+                'test_date': request.form['test_date'],
+                'questions': questions  # Use 'questions' instead of 'question'
+            }
 
-        # Insert the new_test document into the database
-        mongo.db.test.insert_one(new_test)
+            # Insert the new_test document into the database
+            mongo.db.test.insert_one(new_test)
 
-        return redirect(url_for('main.teacherDashboard'))
+            return redirect(url_for('main.teacherDashboard'))
+        else:
+            return "Test ID already present, change the ID"
     
 @bp.route('/create_test_paragraph', methods=['GET', 'POST'])
 def create_test_paragraph():
     if request.method == 'POST':
+        test_id= request.form['test_id']
+        check_id = mongo.db.test_paragraph.find_one({'test_id': test_id})
+        if check_id is None:
+            questions = []
 
-        questions = []
+            c = int(request.form['que_count'])
+            test_id=request.form['test_id']
+            for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
+                question_key = f'question_{i}'
 
-        c = int(request.form['que_count'])
-        test_id=request.form['test_id']
-        for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
-            question_key = f'question_{i}'
+                # Check if the question exists in the form data
+                if question_key in request.form:
+                        # Create a dictionary for each question
+                        question = {
+                            'question': request.form[question_key],
+                        }
+                        # Append the question dictionary to the list
+                        file_key = f'file_{i}'
+                        if file_key in request.files:
+                            file = request.files[file_key]
+                            if file.filename != '':
+                                # Ensure secure filename to prevent security risks
+                                filename = secure_filename(file.filename)
+                                # Save the file to the upload folder
+                                file_path = f"{test_id}_{file_key}.jpg"
+                                # Add the image path to the question dictionary
+                                file_save_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{test_id}_{file_key}.jpg")
+                                file.save(file_save_path)
+                                question['image_path'] = file_path
+                        questions.append(question)
 
-            # Check if the question exists in the form data
-            if question_key in request.form:
-                    # Create a dictionary for each question
-                    question = {
-                        'question': request.form[question_key],
-                    }
-                    # Append the question dictionary to the list
-                    file_key = f'file_{i}'
-                    if file_key in request.files:
-                        file = request.files[file_key]
-                        if file.filename != '':
-                            # Ensure secure filename to prevent security risks
-                            filename = secure_filename(file.filename)
-                            # Save the file to the upload folder
-                            file_path = f"{test_id}_{file_key}.jpg"
-                            # Add the image path to the question dictionary
-                            file_save_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{test_id}_{file_key}.jpg")
-                            file.save(file_save_path)
-                            question['image_path'] = file_path
-                    questions.append(question)
+            # Create the new_test dictionary with the list of questions
+            new_test = {
+                'test_id': request.form['test_id'],
+                'subject': request.form['test_sub_name'],
+                'description': request.form['test_description'],
+                'marks': request.form['test_marks'],
+                'time': request.form['test_time'],
+                'test_date': request.form['test_date'],
+                'teacher_email':session.get('user').get('email'),
+                'questions': questions
+            }
 
-        # Create the new_test dictionary with the list of questions
-        new_test = {
-            'test_id': request.form['test_id'],
-            'subject': request.form['test_sub_name'],
-            'description': request.form['test_description'],
-            'marks': request.form['test_marks'],
-            'time': request.form['test_time'],
-            'test_date': request.form['test_date'],
-            'teacher_email':session.get('user').get('email'),
-            'questions': questions
-        }
+            # Insert the new_test document into the database
+            mongo.db.test_paragraph.insert_one(new_test)
 
-        # Insert the new_test document into the database
-        mongo.db.test_paragraph.insert_one(new_test)
-
-        return redirect(url_for('main.teacherDashboard'))
-
+            return redirect(url_for('main.teacherDashboard'))
+        else:
+            return "Test ID already present, change the ID"
 
 @bp.route('/attempt_test/<test_id>')
 def attempt_test(test_id):
