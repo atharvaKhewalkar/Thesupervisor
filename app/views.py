@@ -346,6 +346,7 @@ def create_test_mcq():
         questions = []
         # questions.append("null")
         c = int(request.form['que_count'])
+        test_id= request.form['test_id']
         # Loop through the form data to get all questions
         for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
             question_key = f'question_{i}'
@@ -366,12 +367,24 @@ def create_test_mcq():
                         'option4': request.form[option4_key],
                         'answer': correct_option_value  # Use correct_option_value directly
                     }
+                    
+                    file_key = f'file_{i}'
+                    if file_key in request.files:
+                        file = request.files[file_key]
+                        if file.filename != '':
+                            # Ensure secure filename to prevent security risks
+                            filename = secure_filename(file.filename)
+                            # Save the file to the upload folder
+                            file_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{test_id}_{file_key}.jpg")
+                            # Add the image path to the question dictionary
+                            file.save(file_path)
+                            question['image_path'] = file_path
                     # Append the question dictionary to the list
                     questions.append(question)
 
         # Create the new_test dictionary with the list of questions
         new_test = {
-            'test_id': request.form['test_id'],
+            'test_id': test_id,
             'subject': request.form['test_sub_name'],
             'description': request.form['test_description'],
             'marks': request.form['test_marks'],
