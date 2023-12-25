@@ -21,7 +21,9 @@
 
         <h3>Question {{ (loop.index) }}</h3>
         <p>{{ question.question }}</p>
-        
+        {% if question.image_path %}
+        <img src="{{ url_for('download_file', filename= question.image_path) }}" alt="Question Image" style="height: 80%; width: 80%;"><br>
+        {% endif %}
         <textarea type="test" name="answer_{{ loop.index }}" id="answer_{{ loop.index }}"></textarea>
       </div>
 

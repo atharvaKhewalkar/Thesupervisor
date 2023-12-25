@@ -410,6 +410,7 @@ def create_test_paragraph():
         questions = []
 
         c = int(request.form['que_count'])
+        test_id=request.form['test_id']
         for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
             question_key = f'question_{i}'
 
@@ -420,6 +421,18 @@ def create_test_paragraph():
                         'question': request.form[question_key],
                     }
                     # Append the question dictionary to the list
+                    file_key = f'file_{i}'
+                    if file_key in request.files:
+                        file = request.files[file_key]
+                        if file.filename != '':
+                            # Ensure secure filename to prevent security risks
+                            filename = secure_filename(file.filename)
+                            # Save the file to the upload folder
+                            file_path = f"{test_id}_{file_key}.jpg"
+                            # Add the image path to the question dictionary
+                            file_save_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{test_id}_{file_key}.jpg")
+                            file.save(file_save_path)
+                            question['image_path'] = file_path
                     questions.append(question)
 
         # Create the new_test dictionary with the list of questions
