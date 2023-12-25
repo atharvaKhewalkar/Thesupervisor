@@ -25,7 +25,7 @@ def allowed_file(filename):
 
 @app.route('/uploads/<path:filename>')
 def download_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+    return send_from_directory("uploads", filename)
 
 
 @bp.route('/logout')
@@ -381,7 +381,8 @@ def create_test_mcq():
                             # Save the file to the upload folder
                             file_path = f"{test_id}_{file_key}.jpg"
                             # Add the image path to the question dictionary
-                            file.save(file_path)
+                            file_save_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{test_id}_{file_key}.jpg")
+                            file.save(file_save_path)
                             question['image_path'] = file_path
                     # Append the question dictionary to the list
                     questions.append(question)
