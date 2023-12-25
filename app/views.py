@@ -532,11 +532,12 @@ def submit_test(test_id):
         n = len(questions)
 
         correct_answer = []
-
-        for i in range(1, n + 1):
-            answer_key = f'answer_{i}'
-            correct_answer.append(request.form.get(answer_key))
-
+        for i in range(0, n):
+            single_question=questions[i]
+            ans=single_question.get('answer')
+            correct_answer.append(ans)
+            
+        
         selected_answers = []
 
         for i in range(1, n + 1):
