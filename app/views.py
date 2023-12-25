@@ -348,6 +348,7 @@ def create_test_mcq():
     if request.method == 'POST':
         test_id= request.form['test_id']
         check_id = mongo.db.test.find_one({'test_id': test_id})
+        c = int(request.form['que_count'])
         if check_id is None:
             # Create a list to store multiple questions
             questions = []
@@ -406,7 +407,7 @@ def create_test_mcq():
 
             return redirect(url_for('main.teacherDashboard'))
         else:
-            return "Test ID already present, change the ID"
+            return render_template('html/question_addition.html', qCount=c, test_id_exists=True)
     
 @bp.route('/create_test_paragraph', methods=['GET', 'POST'])
 def create_test_paragraph():
