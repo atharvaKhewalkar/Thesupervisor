@@ -25,7 +25,7 @@
         <h3>Question {{ (loop.index) }}</h3>
         <p>{{ question.question }}</p>
         {% if question.image_path %}
-          <img src="https://imgs.search.brave.com/xdNXm67gC5kv6_wRPhHvv_BzIu_ouMkgL-TmKcZBoag/rs:fit:560:320:1/g:ce/aHR0cHM6Ly91cGxv/YWQud2lraW1lZGlh/Lm9yZy93aWtpcGVk/aWEvY29tbW9ucy90/aHVtYi85Lzk5L0Vs/b25fTXVza19Db2xv/cmFkb18yMDIyXyUy/OGNyb3BwZWQyJTI5/LmpwZy81MTJweC1F/bG9uX011c2tfQ29s/b3JhZG9fMjAyMl8l/Mjhjcm9wcGVkMiUy/OS5qcGc" alt="Question Image" style="height: 100px; width: 100px;">
+        <img src="{{ url_for('download_file', filename= question.image_path) }}" alt="Question Image" style="height: 300px; width: 300px;">
         {% endif %}
         <!-- Display options for the question using radio buttons -->
         <label for="option1_{{ loop.index }}">1. {{ question.option1 }}</label><br>

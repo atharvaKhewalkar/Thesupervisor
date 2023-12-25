@@ -23,6 +23,10 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@app.route('/uploads/<path:filename>')
+def download_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 
 @bp.route('/logout')
 def logout():
@@ -375,7 +379,7 @@ def create_test_mcq():
                             # Ensure secure filename to prevent security risks
                             filename = secure_filename(file.filename)
                             # Save the file to the upload folder
-                            file_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{test_id}_{file_key}.jpg")
+                            file_path = f"{test_id}_{file_key}.jpg"
                             # Add the image path to the question dictionary
                             file.save(file_path)
                             question['image_path'] = file_path
