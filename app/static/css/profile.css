@@ -1,8 +1,27 @@
+*{
+    margin: 0;
+    font-family: 'Comfortaa', sans-serif;
+font-family: 'Kalam', cursive;
+font-family: 'KoHo', sans-serif;
+font-family: 'Mina', sans-serif;
+font-family: 'Quantico', sans-serif;
+font-family: 'Space Grotesk', sans-serif;
+}
+.head{
+    padding: 1%;
+    margin: 0%;
+    text-align: center;
+    color: aliceblue;
+    background-color: rgb(3, 0, 23);
+}
+
+
 body{
     margin-top:20px;
     color: #1a202c;
     text-align: left;
-    background-color: #2473da;    
+    background-color: #2473da;  
+    
 }
 .main-body {
     padding: 15px;
@@ -26,6 +45,7 @@ body{
     flex: 1 1 auto;
     min-height: 1px;
     padding: 1rem;
+    
 }
 
 .gutters-sm {
@@ -53,12 +73,40 @@ body{
 
 .cardo{
     width: 30vh;
-    box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
+    box-shadow: 1px 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
 
 }
 
-.row{
+.ro{
     display: flex;
+    flex-direction: row;
+    width: 170vh;
+    box-shadow: 1px 3px 4px 5px rgba(0, 0, 0, 0.559);
+    padding: 1rem;
 
 }
 
+
+.col-sm-9{
+    display: flex;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+.but-1{
+    align-items: center;
+    background-color: #1a202c;
+    color: aliceblue;
+    border-radius: 1rem;
+    width: 20vh;
+    display: flex;
+    justify-content: center;
+    box-shadow: 1px 3px 1px 2px rgba(0, 12, 76, 0.559);
+    cursor: pointer;
+}
+.button{
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
