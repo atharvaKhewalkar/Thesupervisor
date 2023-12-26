@@ -1,16 +1,23 @@
 *{
     margin: 0;
+    font-family: 'Comfortaa', sans-serif;
+font-family: 'Kalam', cursive;
+font-family: 'KoHo', sans-serif;
+font-family: 'Mina', sans-serif;
+font-family: 'Quantico', sans-serif;
+font-family: 'Space Grotesk', sans-serif;
 }
 .head{
-    padding: 0%;
+    padding: 1.5%;
     margin: 0%;
     text-align: center;
     color: aliceblue;
-    background-color: black;
+    background-color: rgb(3, 0, 23);
 }
 .main{
     display: flex;
-    margin-top: 0%
+    margin-top: 0%;
+    
 }
 .Navbar{
     
@@ -19,18 +26,21 @@
     background-color: #000000;
     color: aliceblue;
     text-decoration: none;
-    width: 20%;
-    text-align: left;
-    position: sticky;
-
+    align-items: center;
+    width: 15%;
+    height: 190vh;
+    text-align: center;
+    /* position: absolute; */
+    padding-top: 7%;
+    margin: 0%;
+   
 
 }
 .Navbar ul{
-    
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    font-size: 1.4rem;   
+    gap: 10rem;
+    font-size: 1.4rem;    
 }
 
 .Navbar ul li{
@@ -42,20 +52,26 @@
 }
 .Navbar ul li :hover{
     cursor: pointer;
+    
 }
-
+.Navbar ul :hover{
+    color: rgb(250, 87, 87);
+}
 .home{
     height: 89vh;
     background: rgb(26, 26, 26);
-display: flex;
-align-items: center;
-justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
 }
+
 
 .wrapper{
     display:flex;
     flex-direction: column;
     margin-right: 200px;
+    width: 125vh;
 }
 .wrapper .static-txt{
     font-size: 100px;
@@ -78,6 +94,7 @@ justify-content: center;
 .dynamic-txt li span::after{
     content: "";
     left: 0;
+    right: 0;
     background: rgb(26, 26, 26);
     position: absolute;
     height: 100%;
@@ -88,13 +105,15 @@ justify-content: center;
 @keyframes typing{
     100%{
         left: 100%;
-        margin-right: 30px;
+       
+        
     }
 }
 
 
 .tests{
-    height: 110vh;
+    height: 101vh;
+    background-color: rgba(211, 211, 211, 0.814);
 }
 .heading{
     padding-top: 3rem;
@@ -114,6 +133,7 @@ justify-content: center;
     padding: 2rem;
     width: 170vh;
     justify-content: space-between;
+    flex-direction: row;
     
 }
 .card{
@@ -121,11 +141,11 @@ justify-content: center;
 }
 
 
-.leaderboard{
+/* .leaderboard{
     height: 100vh;
     background: rgb(26, 26, 26);
     color: aliceblue;    
-}
+} */
 .ranks{
     padding: 3rem;
 }
@@ -152,4 +172,5 @@ table {
   }
   .home{
     width: 180vh;
+    
   }
