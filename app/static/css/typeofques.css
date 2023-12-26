@@ -4,6 +4,15 @@ html, body {
     padding: 0;
 }
 
+*{
+    margin: 0;
+    font-family: 'Comfortaa', sans-serif;
+font-family: 'Kalam', cursive;
+font-family: 'KoHo', sans-serif;
+font-family: 'Mina', sans-serif;
+font-family: 'Quantico', sans-serif;
+font-family: 'Space Grotesk', sans-serif;
+}
 /* Apply a background color to the body */
 body {
     font-family: 'Arial', sans-serif;
@@ -56,6 +65,6 @@ input[type="submit"] {
 
 /* Hover effect for the submit button */
 input[type="submit"]:hover {
-    background-color: #5248d6;
+    background: rgb(26, 26, 26);
 }
 

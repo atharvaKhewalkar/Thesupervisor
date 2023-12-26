@@ -7,13 +7,24 @@
     <title>Create Test</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/createtest.css') }}">
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&family=Kalam&family=KoHo:wght@200&family=Mina&family=Quantico&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
     
 </head>
 
 <body>
+    <div class="head"> 
+        <h1>Create Test</h1>
+    </div>
     <section class="createtest">
-        <h1 align="center">Create Test</h1>
-
+        
+        
+ 
         {% if test_id_exists %}
         <script>
             alert("Test ID already present, change the ID");

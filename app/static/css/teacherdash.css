@@ -1,13 +1,45 @@
-.navbar{
+*{
+    margin: 0;
+    font-family: 'Comfortaa', sans-serif;
+font-family: 'Kalam', cursive;
+font-family: 'KoHo', sans-serif;
+font-family: 'Mina', sans-serif;
+font-family: 'Quantico', sans-serif;
+font-family: 'Space Grotesk', sans-serif;
+}
+.head{
+    padding: 1.5%;
+    margin: 0%;
+    text-align: center;
+    color: aliceblue;
+    background-color: rgb(3, 0, 23);
+}
+.head2{
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
+    width: 100%;
+    padding: 2rem;
+}
+
+.navbar{
+    display: flex;
     flex-direction: column;
-    background-color: rgb(18, 18, 18);
+    background-color: #000000;
     color: aliceblue;
-    font-size: 1.5rem;
-    width: 40%;
-    height: 100%;
+    text-decoration: none;
+    align-items: center;
+    width: 30vh;
+    height: 86.5vh;
+    text-align: center;
+    justify-content: space-between;
+    /* position: absolute; */
+    padding-top: 17%;
+    margin: 0%;
+    font-size: 23px;
+   
+    
 }
 .main{
     display: flex;
@@ -15,7 +47,7 @@
 .nd{
     display: flex;
     flex-direction: column;
-
+    width: 100%;
 }
 
 .navbar ul{
@@ -23,17 +55,15 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    gap: 10rem;
+    gap: 7rem;
 }
-h2{
-    padding: 2rem; 
-}
+
 .navbar ul li{
     list-style: none;
 }
 .navbar ul :hover{
     cursor: pointer;
-    text-decoration: underline;
+    color: rgb(250, 87, 87);
 }
 .testcreation{
     display: flex;
@@ -54,7 +84,7 @@ form input{
 .upcoming{
     display: flex;
     flex-wrap: wrap;
-    
+    padding: 2rem;
     gap: 1rem;
     width: 100%;
     justify-content: space-between;

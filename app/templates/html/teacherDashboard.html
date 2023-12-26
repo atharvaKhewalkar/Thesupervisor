@@ -10,31 +10,34 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/teacherdash.css') }}">
 
-    <section class="main">
-      <div>
 
-      </div>
-      <div>
-        <div class="heading1">
-          <h1>Welcome to Teacher Dashboard</h1>
-        </div>
-        
-        <div class="navbar"> 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&family=Kalam&family=KoHo:wght@200&family=Mina&family=Quantico&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
+
+  <div class="head">
+    <h1>Welcome to Teacher Dashboard</h1>
+  </div>
+<section class="main">
+      
+      <div> 
+         <div class="navbar"> 
             <ul>
               <a href="/typeofque"><li>Create Test</li></a>
                 <a href="/score"><li>Scores</li></a>
-                <a href="/para_ans"><li>Answers checking</li></a>
-                <li>Blah</li>
+                <a href="/para_ans"><li>Answer checking</li></a>
+                <li>Logout</li>
             </ul>
-
-        </div>
-      </div>
+         </div>
+       </div>
         
     
 <div class="nd">
     <section class="tests">
-        <div class="heading">
-          <h1 align="center">Upcoming Tests</h1>
+        <div class="head2">
+          <h1>Upcoming Tests</h1>
         </div>
         <div class="upcoming">
           {% for test in upcoming_tests %}

@@ -1,4 +1,19 @@
-
+*{
+    margin: 0;
+    font-family: 'Comfortaa', sans-serif;
+font-family: 'Kalam', cursive;
+font-family: 'KoHo', sans-serif;
+font-family: 'Mina', sans-serif;
+font-family: 'Quantico', sans-serif;
+font-family: 'Space Grotesk', sans-serif;
+}
+.head{
+    padding: 1.5%;
+    margin: 0%;
+    text-align: center;
+    color: aliceblue;
+    background-color: rgb(3, 0, 23);
+}
 
 /* Custom CSS */
 body {
