@@ -7,7 +7,7 @@
     <title>THE SUPERVISOR</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
-    
+
 </head>
 
 <body>
@@ -24,49 +24,51 @@
             <form method="POST" action="{{ url_for('main.register') }}" enctype="multipart/form-data">
                 <h1>Create Account</h1>
                 <input type="text" name="username" placeholder="Name" />
-                <select class="form-select" name="year" aria-label="Select Year">
-                    <option value="SE">SE</option>
-                    <option value="TE">TE</option>
-                    <option value="BE">BE</option>
-                </select>
-                <select class="form-select" name="department" aria-label="Select Department">
-                    <option value="IT">IT</option>
-                    <option value="CS">CS</option>
-                    <option value="ENTC">ENTC</option>
-                    <option value="AI&DS">AI&DS</option>
-                    <option value="CIVIL">CIVIL</option>
-                    <option value="A&R">A&R</option>
-                    <option value="MECHANICAL">MECHANICAL</option>
-                    <option value="INSTRUMENTATION">INSTRUMENTATION</option>
-                </select>
+                <div class="sele">
+                    <select class="form-select" name="year" aria-label="Select Year">
+                        <option value="SE">SE</option>
+                        <option value="TE">TE</option>
+                        <option value="BE">BE</option>
+                    </select>
+                    <select class="form-select" name="department" aria-label="Select Department">
+                        <option value="IT">IT</option>
+                        <option value="CS">CS</option>
+                        <option value="ENTC">ENTC</option>
+                        <option value="AI&DS">AI&DS</option>
+                        <option value="CIVIL">CIVIL</option>
+                        <option value="A&R">A&R</option>
+                        <option value="MECHANICAL">MECHANICAL</option>
+                        <option value="INSTRUMENTATION">INSTRUMENTATION</option>
+                    </select>
+                </div>
                 <input type="number" name="rollno" placeholder="Roll No" />
-                
+
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Password" />
                 <input type="file" name="file" accept="image/*" required>
                 <button>Sign Up</button>
             </form>
-            
+
         </div>
         <div class="form-container sign-in-container">
             <form method="POST" action="{{ url_for('main.login') }}">
                 <h1>Sign in</h1>
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Password" />
-                
+
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="user_type" id="teacher" value="teacher">
                     <label class="form-check-label" for="teacher">Teacher</label>
                 </div>
-                
+
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="user_type" id="student" value="student" checked>
                     <label class="form-check-label" for="student">Student</label>
                 </div>
-                
+
                 <button type="submit">Sign In</button>
             </form>
-            
+
 
         </div>
         <div class="overlay-container">

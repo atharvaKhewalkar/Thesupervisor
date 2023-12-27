@@ -235,3 +235,13 @@ background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%)
 	letter-spacing: 15px;
 	align-items: center;
 }
+
+.sele{
+    display: flex;
+    gap: 20px;
+}
+.form-select{
+    width: 50%;
+    height: 25px;
+    
+}
