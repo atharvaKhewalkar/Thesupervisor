@@ -13,6 +13,14 @@ bp = Blueprint('main', __name__)
 def index():
     return render_template('html/login.html')
 
+@bp.app_errorhandler(404)
+def not_found_error(error):
+    return render_template('errors/404.html'), 404
+
+@bp.app_errorhandler(500)
+def internal_error(error):
+    return render_template('errors/500.html'), 500
+
 
 # @bp.route('/uploads/<filename>')
 # def uploaded_file(filename):
@@ -722,31 +730,35 @@ def check_answer(test_id, student_email):
 @bp.route('/submit_scores/<test_id>/<student_email>', methods=['POST'])
 def submit_scores(test_id, student_email):
     if request.method == 'POST':
-        # Retrieve scores from the form submission
-        scores = [int(score) for score in request.form.getlist('scores') if score is not None]
-        
-        # Calculate total score
-        total_score = sum(scores)
+        try:
+            # Retrieve scores from the form submission
+            scores = [int(score) for score in request.form.getlist('scores') if score is not None]
 
-        check_id=mongo.db.student_score_para.find_one({'test_id':test_id})
+            # Calculate total score
+            total_score = sum(scores)
 
-        if check_id is None:
-            res={}
-            
-            res[student_email]=total_score
-            
-            mongo.db.student_score_para.insert_one({
-                'test_id': test_id,
-                'student_data': res
-            })
-        else:
-            res = check_id.get('student_data', {})  # Retrieve 'student_data' from the found document or initialize as an empty dictionary if not present
-            res[student_email] = total_score
+            check_id = mongo.db.student_score_para.find_one({'test_id': test_id})
 
-            # Update the existing document in the collection with the modified 'student_data'
-            mongo.db.student_score_para.update_one(
-            {'test_id': test_id},
-            {'$set': {'student_data': res}}
-            )        
-        return redirect(url_for('main.stu_attempted_tests', test_id=test_id))
+            if check_id is None:
+                res = {student_email: total_score}
+
+                mongo.db.student_score_para.insert_one({
+                    'test_id': test_id,
+                    'student_data': res
+                })
+            else:
+                res = check_id.get('student_data', {})
+                res[student_email] = total_score
+
+                mongo.db.student_score_para.update_one(
+                    {'test_id': test_id},
+                    {'$set': {'student_data': res}}
+                )
+                
+            flash('Scores submitted successfully', 'success')
+            return redirect(url_for('main.stu_attempted_tests', test_id=test_id))
+        except ValueError:
+            flash('Invalid score input. Please enter numeric values only.', 'error')
+            return redirect(url_for('main.stu_attempted_tests', test_id=test_id))
+
     return 'Invalid request method'
