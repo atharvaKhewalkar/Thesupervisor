@@ -89,24 +89,46 @@ def edit_profile():
         email = session['user']['email']
         users_collection = mongo.db.users
 
-        # Fetch user details from the collection based on email
         user_details = users_collection.find_one({'email': email})
 
         if user_details:
             # Update user details based on the submitted form
             user_details['name'] = request.form.get('name')
-            # Repeat similar lines for other details like email, year, department, etc.
+            user_details['year'] = request.form.get('year')
+            user_details['department'] = request.form.get('department')
+            # Update other details similarly based on your form fields
+            
+            # Handling profile photo upload
+            if 'profile_photo' in request.files:
+                profile_photo = request.files['profile_photo']
+                if profile_photo.filename != '':
+                    # Save the uploaded file to a specific folder
+                    uploads_dir = 'app/uploads'
+                    if not os.path.exists(uploads_dir):
+                        os.makedirs(uploads_dir)
+                    
+                    # Use secure_filename to prevent malicious file names
+                    filename = secure_filename(f"{email}.jpg")
+                    databse_path=os.path.join("profile_photo_"+filename)
+                    photo_path = os.path.join(uploads_dir, "profile_photo_"+ filename)
+                    profile_photo.save(photo_path)
+                    
+                    # Update the user details with the profile photo path
+                    user_details['profile_photo'] = databse_path
 
-            # Update the document in the collection
-            users_collection.update_one({'email': email}, {'$set': user_details})
+            # Update specific fields in the document
+            users_collection.update_one({'email': email}, {'$set': {
+                'name': user_details['name'],
+                'year': user_details['year'],
+                'department': user_details['department'],
+                'profile_photo': user_details.get('profile_photo', '')
+            }})
 
-            # Redirect to the profile page after updating
             return redirect(url_for('main.profile'))
         else:
             return 'User details not found'
     else:
-        return redirect(url_for('main.index'))
-    
+        return redirect(url_for('main.index'))    
 
 
 @bp.route('/home')
