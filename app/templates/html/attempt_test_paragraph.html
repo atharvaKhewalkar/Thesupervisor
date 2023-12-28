@@ -6,34 +6,116 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Attempt Test</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/attempt_test.css') }}">
-  
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
 </head>
 
 <body>
   <div class="container">
+    <!-- Display test details -->
     <h1>{{ test.subject }}</h1>
     <p>{{ test.description }}</p>
+    <p>Start Time: {{ st }}</p>
+    <p>End Time: {{ et }}</p>
+    <!-- Add other test details like marks, time, etc. if available -->
+    <!-- Display test questions -->
+    <div id="content"></div>
+    <div id="timer"></div>
+    <!-- Submit button to submit the test -->
+    <div id="testForm">
+      <form method="POST" action="{{ url_for('main.submit_test_para',test_id=test.test_id) }}">
+        <!-- Loop through and display test questions -->
+        {% for question in questions %}
 
-    <form method="POST" action="{{ url_for('main.submit_test_para',test_id=test.test_id) }}">
-      {% for question in questions %}
+        <div class="question">
 
-      <div class="question">
+          <h3>Question {{ (loop.index) }}</h3>
+          <p>{{ question.question }}</p>
+          {% if question.image_path %}
+          <img src="{{ url_for('download_file', filename= question.image_path) }}" alt="Question Image"
+            style="height: 300px; width: 300px;">
+          {% endif %}
+          
+          <textarea type="test" name="answer_{{ loop.index }}" id="answer_{{ loop.index }}"></textarea>
+        </div>
 
-        <h3>Question {{ (loop.index) }}</h3>
-        <p>{{ question.question }}</p>
-        {% if question.image_path %}
-        <img src="{{ url_for('download_file', filename= question.image_path) }}" alt="Question Image" style="height: 80%; width: 80%;"><br>
-        {% endif %}
-        <textarea type="test" name="answer_{{ loop.index }}" id="answer_{{ loop.index }}"></textarea>
-      </div>
-
-      {% endfor %}
-
-
-      <!-- Submit button to submit the test -->
-      <button type="submit">Submit Test</button>
+        {% endfor %}
+    </div>
+    <button type="submit" id="submitButton">Submit Test</button>
     </form>
+
+
   </div>
+
+  <script>
+
+
+    $(document).ready(function () {
+      function disableBack() {
+        window.history.forward();
+      }
+
+      disableBack();
+
+      window.onload = disableBack;
+      window.onpageshow = function (evt) {
+        if (evt.persisted) disableBack();
+      };
+    });
+
+
+
+    var start_time = new Date("{{ start_time }}");
+    var end_time = new Date("{{ end_time }}");
+
+    function checkAccess() {
+      var currentTime = new Date();
+
+      if (currentTime < start_time) {
+        document.getElementById("content").innerHTML = "The exam will start at " +
+          start_time.toLocaleTimeString(); document.getElementById("timer").style.display = "block";
+        document.getElementById("submitButton").style.display = "none";
+        document.getElementById("testForm").style.display = "none"; var delay = start_time - currentTime; if (delay > 0) {
+          setTimeout(function () {
+            location.reload(true); // Reload the page when the test starts
+          }, delay);
+        } // Start countdown after checking access
+      } else if (currentTime > end_time) {
+        document.getElementById("content").innerHTML = "The exam has ended.";
+        document.getElementById("submitButton").style.display = "block";
+        document.getElementById("testForm").style.display = "none";
+      } else {
+        document.getElementById("content").innerHTML = "Timer";
+        document.getElementById("submitButton").style.display = "block";
+        document.getElementById("testForm").style.display = "block";
+        countdown(); // Start countdown after checking access
+
+        // Calculate the delay until the test starts
+      }
+    }
+
+    function countdown() {
+      var currentTime = new Date();
+
+      var timeRemaining = Math.max(0, end_time - currentTime);
+      var hours = Math.floor(timeRemaining / (1000 * 60 * 60));
+      var minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+
+      document.getElementById("timer").innerHTML = hours + "h " + minutes + "m " + seconds + "s";
+      if (timeRemaining > 0) {
+        setTimeout(countdown, 1000);
+      } else {
+        checkAccess();
+      }
+    }
+
+    window.onload = function () {
+      checkAccess();
+    };
+  </script>
+
 </body>
 
 </html>
