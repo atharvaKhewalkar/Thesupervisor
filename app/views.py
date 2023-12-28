@@ -97,46 +97,24 @@ def edit_profile():
         email = session['user']['email']
         users_collection = mongo.db.users
 
+        # Fetch user details from the collection based on email
         user_details = users_collection.find_one({'email': email})
 
         if user_details:
             # Update user details based on the submitted form
             user_details['name'] = request.form.get('name')
-            user_details['year'] = request.form.get('year')
-            user_details['department'] = request.form.get('department')
-            # Update other details similarly based on your form fields
-            
-            # Handling profile photo upload
-            if 'profile_photo' in request.files:
-                profile_photo = request.files['profile_photo']
-                if profile_photo.filename != '':
-                    # Save the uploaded file to a specific folder
-                    uploads_dir = 'app/uploads'
-                    if not os.path.exists(uploads_dir):
-                        os.makedirs(uploads_dir)
-                    
-                    # Use secure_filename to prevent malicious file names
-                    filename = secure_filename(f"{email}.jpg")
-                    databse_path=os.path.join("profile_photo_"+filename)
-                    photo_path = os.path.join(uploads_dir, "profile_photo_"+ filename)
-                    profile_photo.save(photo_path)
-                    
-                    # Update the user details with the profile photo path
-                    user_details['profile_photo'] = databse_path
+            # Repeat similar lines for other details like email, year, department, etc.
 
-            # Update specific fields in the document
-            users_collection.update_one({'email': email}, {'$set': {
-                'name': user_details['name'],
-                'year': user_details['year'],
-                'department': user_details['department'],
-                'profile_photo': user_details.get('profile_photo', '')
-            }})
+            # Update the document in the collection
+            users_collection.update_one({'email': email}, {'$set': user_details})
 
+            # Redirect to the profile page after updating
             return redirect(url_for('main.profile'))
         else:
             return 'User details not found'
     else:
-        return redirect(url_for('main.index'))    
+        return redirect(url_for('main.index'))
+    
 
 
 @bp.route('/home')
@@ -730,35 +708,31 @@ def check_answer(test_id, student_email):
 @bp.route('/submit_scores/<test_id>/<student_email>', methods=['POST'])
 def submit_scores(test_id, student_email):
     if request.method == 'POST':
-        try:
-            # Retrieve scores from the form submission
-            scores = [int(score) for score in request.form.getlist('scores') if score is not None]
+        # Retrieve scores from the form submission
+        scores = [int(score) for score in request.form.getlist('scores') if score is not None]
+        
+        # Calculate total score
+        total_score = sum(scores)
 
-            # Calculate total score
-            total_score = sum(scores)
+        check_id=mongo.db.student_score_para.find_one({'test_id':test_id})
 
-            check_id = mongo.db.student_score_para.find_one({'test_id': test_id})
+        if check_id is None:
+            res={}
+            
+            res[student_email]=total_score
+            
+            mongo.db.student_score_para.insert_one({
+                'test_id': test_id,
+                'student_data': res
+            })
+        else:
+            res = check_id.get('student_data', {})  # Retrieve 'student_data' from the found document or initialize as an empty dictionary if not present
+            res[student_email] = total_score
 
-            if check_id is None:
-                res = {student_email: total_score}
-
-                mongo.db.student_score_para.insert_one({
-                    'test_id': test_id,
-                    'student_data': res
-                })
-            else:
-                res = check_id.get('student_data', {})
-                res[student_email] = total_score
-
-                mongo.db.student_score_para.update_one(
-                    {'test_id': test_id},
-                    {'$set': {'student_data': res}}
-                )
-                
-            flash('Scores submitted successfully', 'success')
-            return redirect(url_for('main.stu_attempted_tests', test_id=test_id))
-        except ValueError:
-            flash('Invalid score input. Please enter numeric values only.', 'error')
-            return redirect(url_for('main.stu_attempted_tests', test_id=test_id))
-
+            # Update the existing document in the collection with the modified 'student_data'
+            mongo.db.student_score_para.update_one(
+            {'test_id': test_id},
+            {'$set': {'student_data': res}}
+            )        
+        return redirect(url_for('main.stu_attempted_tests', test_id=test_id))
     return 'Invalid request method'
