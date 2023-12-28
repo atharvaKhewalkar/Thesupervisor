@@ -13,13 +13,13 @@ bp = Blueprint('main', __name__)
 def index():
     return render_template('html/login.html')
 
-@bp.app_errorhandler(404)
-def not_found_error(error):
-    return render_template('errors/404.html'), 404
+# @bp.app_errorhandler(404)
+# def not_found_error(error):
+#     return render_template('errors/404.html'), 404
 
-@bp.app_errorhandler(500)
-def internal_error(error):
-    return render_template('errors/500.html'), 500
+# @bp.app_errorhandler(500)
+# def internal_error(error):
+#     return render_template('errors/500.html'), 500
 
 
 # @bp.route('/uploads/<filename>')
@@ -480,7 +480,8 @@ def create_test_mcq():
                 'subject': request.form['test_sub_name'],
                 'description': request.form['test_description'],
                 'marks': request.form['test_marks'],
-                'time': request.form['test_time'],
+                'Start time': request.form['start_time'],
+                'End time': request.form['end_time'],
                 'test_date': request.form['test_date'],
                 'questions': questions  # Use 'questions' instead of 'question'
             }
@@ -533,7 +534,8 @@ def create_test_paragraph():
                 'subject': request.form['test_sub_name'],
                 'description': request.form['test_description'],
                 'marks': request.form['test_marks'],
-                'time': request.form['test_time'],
+                'Start time': request.form['start_time'],
+                'End time': request.form['end_time'],
                 'test_date': request.form['test_date'],
                 'teacher_email':session.get('user').get('email'),
                 'questions': questions
