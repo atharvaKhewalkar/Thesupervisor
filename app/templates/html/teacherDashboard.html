@@ -29,7 +29,7 @@
                 <a href="/score"><li>Scores</li></a>
                 <a href="/para_ans"><li>Answer checking</li></a>
                 <a href="/teacher_profile"><li>profile</li></a>
-                <li>Logout</li>
+                <a href="/logout"><li onclick="logout()">Logout</li></a>
             </ul>
          </div>
        </div>
@@ -62,4 +62,12 @@
   </div>
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 </body>
+<script>
+  function logout() {
+    return (
+      window.confirm("You Sure?")
+    )
+  }
+
+</script>
 </html>

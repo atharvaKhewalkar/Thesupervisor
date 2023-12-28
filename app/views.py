@@ -46,8 +46,6 @@ def logout():
 def teacher_profile():
     temail=session.get('user').get('email')
     teacher_details=mongo.db.teachers.find_one({'email': temail})
-    print(teacher_details)
-    print("//////////////////////////////////////////////////////////////////////////////////")
     return render_template('html/teacher_profile.html',teacher_details=teacher_details)
     
     
