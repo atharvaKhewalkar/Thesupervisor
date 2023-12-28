@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Test Results</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/result.css') }}">
 </head>
-<body>
-    <h1>Test Details</h1>
-    <p>Test ID: {{ test_id }}</p>
-    <p>Test marks: {{ marks }}</p>
-    <p>Test subject: {{ subject }}</p>
-    <!-- Display other test details here -->
-    <!-- You can include other test details using the same syntax as above -->
-    
-    <h2>Student Score</h2>
-    <p>Student ID: {{ student_id }}</p>
-    <p>Score: {{ score }}</p>
 
-    <h3><a href="/home">Home -></a></h3>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="content">
+                <h1>Test Details</h1>
+                <div class="test-info">
+                    <p>Test ID: <span class="highlight">{{ test_id }}</span></p>
+                    <p>Test Marks: <span class="highlight">{{ marks }}</span></p>
+                    <p>Test Subject: <span class="highlight">{{ subject }}</span></p>
+                    <!-- Display other test details here -->
+                    <!-- You can include other test details using the same syntax as above -->
+                </div>
+
+                <h2>Student Score</h2>
+                <div class="student-info">
+                    <p>Student ID: <span class="highlight">{{ student_id }}</span></p>
+                    <p>Score: <span class="highlight">{{ score }}</span></p>
+                </div>
+
+                <h3><a href="/home">Home -></a></h3>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
