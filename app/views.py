@@ -42,7 +42,61 @@ def logout():
         session.pop('user')  # Clear the user session if 'user' exists
     return redirect(url_for('main.index'))
 
+@bp.route('/teacher_profile')
+def teacher_profile():
+    temail=session.get('user').get('email')
+    teacher_details=mongo.db.teachers.find_one({'email': temail})
+    print(teacher_details)
+    print("//////////////////////////////////////////////////////////////////////////////////")
+    return render_template('html/teacher_profile.html',teacher_details=teacher_details)
+    
+    
+@bp.route('/t_edit_profile', methods=['POST'])
+def t_edit_profile():
+    if 'user' in session:
+        email = session['user']['email']
+        users_collection = mongo.db.teachers
 
+        teacher_details = users_collection.find_one({'email': email})
+        if teacher_details:
+            # Update user details based on the submitted form
+            teacher_details['name'] = request.form.get('name')
+            teacher_details['department'] = request.form.get('department')
+            # Update other details similarly based on your form fields
+            
+            # Handling profile photo upload
+            if 'profile_photo' in request.files:
+                profile_photo = request.files['profile_photo']
+                if profile_photo.filename != '':
+                    # Save the uploaded file to a specific folder
+                    uploads_dir = 'app/uploads'
+                    if not os.path.exists(uploads_dir):
+                        os.makedirs(uploads_dir)
+                    
+                    # Use secure_filename to prevent malicious file names
+                    filename = secure_filename(f"{email}.jpg")
+                    databse_path=os.path.join("profile_photo_"+filename)
+                    photo_path = os.path.join(uploads_dir, "profile_photo_"+ filename)
+                    profile_photo.save(photo_path)
+                    
+                    # Update the user details with the profile photo path
+                    teacher_details['profile_photo'] = databse_path
+
+            # Update specific fields in the document
+            users_collection.update_one({'email': email}, {'$set': {
+                'name': teacher_details['name'],
+                'department': teacher_details['department'],
+                'profile_photo': teacher_details.get('profile_photo', '')
+            }})
+
+            return redirect(url_for('main.teacher_profile'))
+        else:
+            return 'User details not found'
+    else:
+        return redirect(url_for('main.index'))
+
+    
+    
 @bp.route('/profile')
 def profile():
     # Check if the user is logged in

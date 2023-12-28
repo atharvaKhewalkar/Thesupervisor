@@ -1,0 +1,55 @@
+/* profile.css */
+
+/* Styles for the header */
+.head {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Styles for the main body */
+.main-body {
+    padding: 20px;
+}
+
+/* Styles for the teacher card */
+.card {
+    border: none;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card-body {
+    text-align: center;
+}
+
+/* Styles for the teacher name and role */
+.card-body h4 {
+    margin-bottom: 5px;
+}
+
+.text-secondary {
+    font-size: 14px;
+}
+
+/* Styles for the teacher profile image */
+.card img {
+    width: 210px;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Styles for form labels and inputs */
+.form-group label {
+    font-weight: bold;
+}
+
+/* Styles for the Save button */
+.button {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* Styles for the Back to Home button */
+.button a {
+    text-decoration: none;
+}
