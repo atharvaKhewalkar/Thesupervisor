@@ -6,6 +6,7 @@ import os
 from werkzeug.utils import secure_filename
 from . import app 
 from . import mongo, mail 
+from datetime import datetime
 
 bp = Blueprint('main', __name__)
 
@@ -473,15 +474,20 @@ def create_test_mcq():
                                 question['image_path'] = file_path
                         # Append the question dictionary to the list
                         questions.append(question)
+                
+            start_time = request.form['test_date'] + 'T' + request.form['start_time'] + ':00'
+            end_time = request.form['test_date'] + 'T' + request.form['end_time'] + ':00'
 
+            start_time_dt = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
+            end_time_dt = datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%S')
             # Create the new_test dictionary with the list of questions
             new_test = {
                 'test_id': test_id,
                 'subject': request.form['test_sub_name'],
                 'description': request.form['test_description'],
                 'marks': request.form['test_marks'],
-                'Start time': request.form['start_time'],
-                'End time': request.form['end_time'],
+                'start_time': start_time_dt.strftime('%Y-%m-%dT%H:%M:%S'),
+                'end_time': end_time_dt.strftime('%Y-%m-%dT%H:%M:%S'),
                 'test_date': request.form['test_date'],
                 'questions': questions  # Use 'questions' instead of 'question'
             }
@@ -534,8 +540,8 @@ def create_test_paragraph():
                 'subject': request.form['test_sub_name'],
                 'description': request.form['test_description'],
                 'marks': request.form['test_marks'],
-                'Start time': request.form['start_time'],
-                'End time': request.form['end_time'],
+                'start_time': request.form['start_time'],
+                'end_time': request.form['end_time'],
                 'test_date': request.form['test_date'],
                 'teacher_email':session.get('user').get('email'),
                 'questions': questions
@@ -558,7 +564,15 @@ def attempt_test(test_id):
     )
     if test:
         test_questions = test.get('questions', [])
-        return render_template('html/attempt_test.html', test=test, questions=test_questions)
+        start_time=test.get('start_time',[])
+        end_time=test.get('end_time',[])
+        
+        start_time_obj = datetime.strptime(start_time, "%Y-%m-%dT%H:%M:%S")
+        end_time_obj = datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S")
+        
+        st = start_time_obj.strftime("%H:%M:%S")
+        et = end_time_obj.strftime("%H:%M:%S")
+        return render_template('html/attempt_test.html', test=test, questions=test_questions,start_time=start_time,end_time=end_time,et=et,st=st)
     return 'Test not found'
 
 
