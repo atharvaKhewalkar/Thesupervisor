@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Test</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/createtest.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&family=Kalam&family=KoHo:wght@200&family=Mina&family=Quantico&family=Space+Grotesk:wght@500&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="head">
+        <h1>Create Test</h1>
+    </div>
+    <section class="createtest">
+        {% if test_id_exists %}
+        <script>
+            alert("Test ID already present, change the ID");
+        </script>
+        {% endif %}
+        <form method="post" action="{{ url_for('edit_test_mcq', test_id=test_details.test_id) }}"
+            enctype="multipart/form-data">
+            <div class="inputf">
+                <label for="test_id">Test ID:</label>
+                <input type="number" name="test_id" id="test_id" required value="{{ test_details.test_id }}" disabled>
+                <label for="test_sub_name">Subject:</label>
+                <input type="text" name="test_sub_name" id="test_sub_name" required value="{{ test_details.subject }}">
+                <label for="test_description">Description:</label>
+                <textarea name="test_description" id="test_description" rows="4"
+                    required>{{ test_details.description }}</textarea>
+                <label for="test_marks">Marks:</label>
+                <input type="number" name="test_marks" id="test_marks" required value="{{ test_details.marks }}">
+                <label for="start_time">Start Time:</label>
+                <input type="time" name="start_time" id="start_time" required value="{{ start_time }}">
+                <label for="end_time">End Time:</label>
+                <input type="time" name="end_time" id="end_time" required value="{{ end_time }}">
+                <label for="test_date">Date:</label>
+                <input type="date" name="test_date" id="test_date" required
+                    value="{{ test_details.test_date }}"><br><br>
+                <input type="number" name="que_count" id="que_count" required value="{{ qCount }}"
+                    style="display: none;"><br><br>
+            </div>
+            <br>
+            {% for question in test_questions %}
+            <div class="main">
+                <div class="questions">
+                    <div class="series">
+                        <label for="question_text_{{ loop.index }}">Question {{ loop.index }}:</label>
+                        <textarea type="text" id="question_text_{{ loop.index }}"
+                            name="question_{{ loop.index }}">{{ question.question }}</textarea><br>
+                    </div>
+                    <br>
+                    <div class="opt">
+                        <label for="option1_{{ loop.index }}">Option 1:</label><br>
+                        <input type="text" id="option1_{{ loop.index }}" name="option1_{{ loop.index }}"
+                            value="{{ question.option1 }}">
+                        <label for="option2_{{ loop.index }}">Option 2:</label><br>
+                        <input type="text" id="option2_{{ loop.index }}" name="option2_{{ loop.index }}"
+                            value="{{ question.option2 }}">
+                        <label for="option3_{{ loop.index }}">Option 3:</label><br>
+                        <input type="text" id="option3_{{ loop.index }}" name="option3_{{ loop.index }}"
+                            value="{{ question.option3 }}">
+                        <label for="option4_{{ loop.index }}">Option 4:</label><br>
+                        <input type="text" id="option4_{{ loop.index }}" name="option4_{{ loop.index }}"
+                            value="{{ question.option4 }}">
+                        <label for="correct_option_{{ loop.index }}">Choose a Correct Option:</label>
+                        <select id="correct_option_{{ loop.index }}" name="correct_option_{{ loop.index }}">
+                            <option value="option1_{{ loop.index }}" {% if question.answer=='option1_{{ loop.index }}'
+                                %} selected {% endif %}>Option1</option>
+                            <option value="option2_{{ loop.index }}" {% if question.answer=='option2_{{ loop.index }}'
+                                %} selected {% endif %}>Option2</option>
+                            <option value="option3_{{ loop.index }}" {% if question.answer=='option3_{{ loop.index }}'
+                                %} selected {% endif %}>Option3</option>
+                            <option value="option4_{{ loop.index }}" {% if question.answer=='option4_{{ loop.index }}'
+                                %} selected {% endif %}>Option4</option>
+                        </select>
+                        <input type="file" name="file_{{ loop.index }}" accept="image/*" value="{{ question.file }}">
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <br>
+            <div class="button">
+                <input type="submit" value="Update Test">
+            </div>
+        </form>
+    </section>
+</body>
+
+</html>

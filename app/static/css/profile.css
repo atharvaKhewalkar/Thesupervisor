@@ -41,6 +41,14 @@ body{
     border-radius: .25rem;
 }
 
+.card img {
+    width: 210px;
+    height: 210px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+
 .card-body {
     flex: 1 1 auto;
     min-height: 1px;

@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Attempt Test</title>
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/attempt_test.css') }}">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
 </head>
 
@@ -59,6 +61,23 @@
   </div>
 
   <script>
+
+
+    $(document).ready(function () {
+      function disableBack() {
+        window.history.forward();
+      }
+
+      disableBack();
+
+      window.onload = disableBack;
+      window.onpageshow = function (evt) {
+        if (evt.persisted) disableBack();
+      };
+    });
+
+
+
     var start_time = new Date("{{ start_time }}");
     var end_time = new Date("{{ end_time }}");
 
@@ -66,12 +85,10 @@
       var currentTime = new Date();
 
       if (currentTime < start_time) {
-        document.getElementById("content").innerHTML = "The exam will start at " + start_time.toLocaleTimeString();
-        document.getElementById("timer").style.display = "block";
+        document.getElementById("content").innerHTML = "The exam will start at " +
+          start_time.toLocaleTimeString(); document.getElementById("timer").style.display = "block";
         document.getElementById("submitButton").style.display = "none";
-        document.getElementById("testForm").style.display = "none";
-        var delay = start_time - currentTime;
-        if (delay > 0) {
+        document.getElementById("testForm").style.display = "none"; var delay = start_time - currentTime; if (delay > 0) {
           setTimeout(function () {
             location.reload(true); // Reload the page when the test starts
           }, delay);
