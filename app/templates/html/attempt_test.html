@@ -21,37 +21,41 @@
     <div id="content"></div>
     <div id="timer"></div>
     <!-- Submit button to submit the test -->
-    <form method="POST" action="{{ url_for('main.submit_test',test_id=test.test_id) }}" id="testForm">
-      <!-- Loop through and display test questions -->
-      {% for question in questions %}
+    <div id="testForm">
+      <form method="POST" action="{{ url_for('main.submit_test',test_id=test.test_id) }}">
+        <!-- Loop through and display test questions -->
+        {% for question in questions %}
 
-      <div class="question">
+        <div class="question">
 
-        <h3>Question {{ (loop.index) }}</h3>
-        <p>{{ question.question }}</p>
-        {% if question.image_path %}
-        <img src="{{ url_for('download_file', filename= question.image_path) }}" alt="Question Image"
-          style="height: 300px; width: 300px;">
-        {% endif %}
-        <!-- Display options for the question using radio buttons -->
-        <label for="option1_{{ loop.index }}">1. {{ question.option1 }}</label><br>
-        <label for="option2_{{ loop.index }}">2. {{ question.option2 }}</label><br>
-        <label for="option3_{{ loop.index }}">3. {{ question.option3 }}</label><br>
-        <label for="option4_{{ loop.index }}">4. {{ question.option4 }}</label><br>
+          <h3>Question {{ (loop.index) }}</h3>
+          <p>{{ question.question }}</p>
+          {% if question.image_path %}
+          <img src="{{ url_for('download_file', filename= question.image_path) }}" alt="Question Image"
+            style="height: 300px; width: 300px;">
+          {% endif %}
+          <!-- Display options for the question using radio buttons -->
+          <label for="option1_{{ loop.index }}">1. {{ question.option1 }}</label><br>
+          <label for="option2_{{ loop.index }}">2. {{ question.option2 }}</label><br>
+          <label for="option3_{{ loop.index }}">3. {{ question.option3 }}</label><br>
+          <label for="option4_{{ loop.index }}">4. {{ question.option4 }}</label><br>
 
-        <label for="correct_option_{{ loop.index }}">Choose a Correct Option:</label>
-        <select id="correct_option_{{ loop.index }}" name="correct_option_{{ loop.index }}">
-          <option value="option1_{{ loop.index }}">Option1</option>
-          <option value="option2_{{ loop.index }}">Option2</option>
-          <option value="option3_{{ loop.index }}">Option3</option>
-          <option value="option4_{{ loop.index }}">Option4</option>
-        </select><br>
-      </div>
+          <label for="correct_option_{{ loop.index }}">Choose a Correct Option:</label>
+          <select id="correct_option_{{ loop.index }}" name="correct_option_{{ loop.index }}">
+            <option value="" selected disabled>Select an Option</option>
+            <option value="option1_{{ loop.index }}">Option1</option>
+            <option value="option2_{{ loop.index }}">Option2</option>
+            <option value="option3_{{ loop.index }}">Option3</option>
+            <option value="option4_{{ loop.index }}">Option4</option>
+          </select><br>
+        </div>
 
-      {% endfor %}
-
-      <button type="submit" id="submitButton">Submit Test</button>
+        {% endfor %}
+    </div>
+    <button type="submit" id="submitButton">Submit Test</button>
     </form>
+
+
   </div>
 
   <script>
@@ -66,17 +70,23 @@
         document.getElementById("timer").style.display = "block";
         document.getElementById("submitButton").style.display = "none";
         document.getElementById("testForm").style.display = "none";
-        countdown(); // Start countdown after checking access
+        var delay = start_time - currentTime;
+        if (delay > 0) {
+          setTimeout(function () {
+            location.reload(true); // Reload the page when the test starts
+          }, delay);
+        } // Start countdown after checking access
       } else if (currentTime > end_time) {
         document.getElementById("content").innerHTML = "The exam has ended.";
-        document.getElementById("submitButton").style.display = "none";
+        document.getElementById("submitButton").style.display = "block";
         document.getElementById("testForm").style.display = "none";
       } else {
         document.getElementById("content").innerHTML = "Timer";
-        document.getElementById("testForm").style.display = "block";
         document.getElementById("submitButton").style.display = "block";
-
+        document.getElementById("testForm").style.display = "block";
         countdown(); // Start countdown after checking access
+
+        // Calculate the delay until the test starts
       }
     }
 

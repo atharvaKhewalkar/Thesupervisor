@@ -78,7 +78,7 @@ input[type="radio"]:checked+label:before {
 
 
 select {
-    width: 10%;
+    width: 15%;
     padding: 10px;
     margin-top: 10px;
     border-radius: 5px;
