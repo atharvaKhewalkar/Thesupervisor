@@ -248,6 +248,8 @@ def test():
 def login():
     user_type = request.form.get('user_type')  # Get the selected user type
 
+    jsonify_message = None 
+
     if user_type == 'student':
         collection = mongo.db.users
     elif user_type == 'teacher':
@@ -315,7 +317,8 @@ def login():
                         'test_id') not in ids_toremove_para]
 
                     return render_template('html/index.html', upcoming_tests=upcoming_test,
-                                           upcoming_test_para=upcoming_test_para)
+                                           upcoming_test_para=upcoming_test_para,
+                                           jsonify_message=jsonify_message)
 
             elif user_type == 'teacher':
                 if login_user:
@@ -330,11 +333,18 @@ def login():
 
                         return redirect(url_for('main.teacherDashboard'))
 
-                return 'Invalid email or password combination'
-            else:
-                return 'Your email is not verified. Please check your email for a verification link.'
+                    jsonify_message = 'Invalid email or password combination'
+                    return render_template('html/login.html', jsonify_message=jsonify_message)
 
-    return 'Invalid email or password combination'
+                else:
+                    jsonify_message = 'Your email is not verified. Please check your email for a verification link.'
+                    return render_template('html/login.html', jsonify_message=jsonify_message)
+
+        jsonify_message = 'Invalid email or password combination'
+        return render_template('html/login.html', jsonify_message=jsonify_message)
+
+    jsonify_message = 'Invalid user type selected'
+    return render_template('html/login.html', jsonify_message=jsonify_message)
 
 
 @bp.route('/register', methods=['POST', 'GET'])
@@ -370,9 +380,11 @@ def register():
             msg.body = f"Please click on the following link to verify your email: {url_for('main.verify_email', token=token, _external=True)}"
             mail.send(msg)
 
-            return 'Please check your email to verify your account.'
+            jsonify_message = 'Please check your email to verify your account.'
+            return render_template('html/login.html', jsonify_message=jsonify_message)
 
-    return 'User with this email already exists.'
+    jsonify_message = 'User with this email already exists.'
+    return render_template('html/login.html', jsonify_message=jsonify_message)
 
 
 @bp.route('/verify_email/<token>', methods=['GET'])
@@ -384,9 +396,11 @@ def verify_email(token):
         # Mark the user as verified and remove the token
         users.update_one({'_id': user['_id']}, {
             '$set': {'verified': True}, '$unset': {'token': 1}})
-        return 'Email verification successful. You can now log in.'
+        jsonify_message = 'Email verification successful. You can now log in.'
+        return render_template('html/login.html', jsonify_message=jsonify_message)
 
-    return 'Invalid token or user not found.'
+    jsonify_message = 'Invalid token or user not found.'
+    return render_template('html/login.html', jsonify_message=jsonify_message)
 
 
 @bp.route('/signUpTeacher', methods=['POST', 'GET'])
@@ -405,7 +419,8 @@ def signUpTeacher():
             teachers.insert_one(new_teacher)
             return render_template('html/login.html')
 
-    return 'User with this email already exists.'
+    jsonify_message = 'User with this email already exists.'
+    return render_template('html/teacherlogin.html', jsonify_message=jsonify_message)
 
 
 @bp.route("/teacherLogin")
@@ -952,7 +967,8 @@ def result():
 
     check_var = mongo.db.result.find_one({'test_id': test_id})
     if check_var is None:
-        return "Test details not found"
+        jsonify_message = "Test details not found"
+        return render_template('html/result.html', jsonify_message=jsonify_message)
     else:
         student_data = check_var.get('student_data', {})
         student_id = session.get('user').get('email')
@@ -962,7 +978,8 @@ def result():
             return render_template('html/result.html', test_id=test_id, score=value, marks=marks, subject=subject,
                                    student_id=student_id)
         else:
-            return "Test not given"
+            jsonify_message = "Test not given"
+            return render_template('html/result.html', jsonify_message=jsonify_message)
 
 
 @bp.route('/stu_attempted_tests/<test_id>', methods=['GET', 'POST'])

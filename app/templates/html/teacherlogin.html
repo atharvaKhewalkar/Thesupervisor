@@ -44,7 +44,19 @@
     </section>
 
 
+    {% if jsonify_message is undefined %}
+    {% set jsonify_message = '' %}
+    {% endif %}
 
+    <script>
+        // Get the message from the JSON response
+        var message = {{ jsonify_message | tojson | safe }};
+
+        // Check if there's a message and display it as a pop-up
+        if (message) {
+            alert(message);
+        }
+    </script>
     <script src="{{ url_for('static', filename='js/teacherlogin.js') }}"></script>
 </body>
 </html>
