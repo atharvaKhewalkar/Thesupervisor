@@ -456,14 +456,34 @@ def typeofque():
 def questionCount():
     qCount = 0  # Provide a default value
     selected_option = request.form.get('que_type')
-
     if request.method == 'POST':
         qCount = int(request.form.get('count', 0))
-
+        max_id=1
         if selected_option == "mcq":
-            return render_template('html/question_addition.html', qCount=qCount)
+            test_ids=[]
+            test_details=list(mongo.db.test.find())
+            for test in test_details:
+                test_id=test.get('test_id')
+                test_ids.append(int(test_id))
+            if test_ids:
+                max_id=max(test_ids)
+                max_id+=1
+            else:
+                max_id=1
+            
+            return render_template('html/question_addition.html', qCount=qCount,test_id=max_id)
         else:
-            return render_template('html/paragraph.html', qCount=qCount)
+            test_ids=[]
+            test_details=list(mongo.db.test_paragraph.find())
+            for test in test_details:
+                test_id=test.get('test_id')
+                test_ids.append(int(test_id))
+            if test_ids:
+                max_id=max(test_ids)
+                max_id+=1
+            else:
+                max_id=1
+            return render_template('html/paragraph.html', qCount=qCount,test_id=max_id)
 
 
 @bp.route('/create_test_mcq', methods=['GET', 'POST'])
@@ -679,15 +699,6 @@ def edit_test_mcq(test_id):
                                  '$set': test_details})
 
         return redirect(url_for('main.teacherDashboard'))
-    # # If it's a GET request, fetch the existing test details for rendering the form
-    # test_details = mongo.db.test.find_one({'test_id': test_id})
-
-    # if test_details:
-    #     test_questions = test_details.get('questions', [])
-    #     qCount = len(test_questions)
-    #     return render_template('html/edit_test_mcq.html', test_details=test_details, test_questions=test_questions, qCount=qCount)
-
-    # # Handle case where the test with the given ID is not found
     return render_template('html/error.html', error_message="Test not found")
 
 

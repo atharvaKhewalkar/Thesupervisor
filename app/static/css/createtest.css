@@ -95,3 +95,10 @@ form textarea{
     box-shadow: 1px 1px 3px 3px rgb(18, 18, 24);
     text-align: center;
 }
+
+input:disabled {
+    /* Change the background color */
+    background-color: rgb(239, 238, 238);
+    /* Change the text color */
+    color: rgb(0, 0, 0);
+  }
