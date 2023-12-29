@@ -414,21 +414,35 @@ def teacherLogin():
 @bp.route('/teacherDashboard')
 def teacherDashboard():
     upcoming_test = list(mongo.db.test.find())
-    start_time = []
-    end_time = []
-    for i in upcoming_test:
-        st = i.get('start_time',[])
-        et = i.get('end_time',[])
-        start_time_obj = datetime.strptime(st, "%Y-%m-%dT%H:%M:%S")
-        end_time_obj = datetime.strptime(et, "%Y-%m-%dT%H:%M:%S")
+    if upcoming_test:
+        start_time = []
+        end_time = []
+        for i in upcoming_test:
+            st = i.get('start_time',[])
+            et = i.get('end_time',[])
+            start_time_obj = datetime.strptime(st, "%Y-%m-%dT%H:%M:%S")
+            end_time_obj = datetime.strptime(et, "%Y-%m-%dT%H:%M:%S")
 
-        stime = start_time_obj.strftime("%H:%M")
-        etime = end_time_obj.strftime("%H:%M")
-        start_time.append(stime)
-        end_time.append(etime)
+            stime = start_time_obj.strftime("%H:%M")
+            etime = end_time_obj.strftime("%H:%M")
+            start_time.append(stime)
+            end_time.append(etime)
+    
+    upcoming_test_para = list(mongo.db.test_paragraph.find())
+    if upcoming_test_para:
+        start_time_para = []
+        end_time_para = []
+        for i in upcoming_test_para:
+            st_para = i.get('start_time',[])
+            et_para = i.get('end_time',[])
+            start_time_obj_para = datetime.strptime(st_para, "%Y-%m-%dT%H:%M:%S")
+            end_time_obj_para = datetime.strptime(et_para, "%Y-%m-%dT%H:%M:%S")
 
-    QUESTION_COUNT = 10  # Set the value according to your requirements
-    return render_template('html/teacherDashboard.html', upcoming_tests=upcoming_test, QUESTION_COUNT=QUESTION_COUNT, start_time=start_time, end_time=end_time)
+            stime_para = start_time_obj_para.strftime("%H:%M")
+            etime_para = end_time_obj_para.strftime("%H:%M")
+            start_time_para.append(stime_para)
+            end_time_para.append(etime_para)
+    return render_template('html/teacherDashboard.html', upcoming_tests=upcoming_test, start_time=start_time, end_time=end_time,upcoming_tests_para=upcoming_test_para, start_time_para=start_time_para, end_time_para=end_time_para)
 
 
 @bp.route('/typeofque')

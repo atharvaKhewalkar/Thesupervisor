@@ -58,7 +58,29 @@
           </div>
           {% endfor %}
         </div>
+
+        <div class="upcoming">
+          {% for test in upcoming_tests_para %}
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{ test.test_id }}</h5>
+              <h5 class="card-title">{{ test.subject }}</h5>
+              <p class="card-text">{{ test.description }}</p><br>
+              <a href="{{ url_for('#') }}" class="btn btn-primary">Edit Test</a><br><br>
+              <p>
+                Marks: {{ test.marks }} <br>
+                Date: {{ test.test_date }} <br>
+                Start Time: {{ start_time_para[ loop.index0 ] }} <br>
+                End Time: {{ end_time_para[ loop.index0 ] }}
+              </p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
       </section>
+
+      
+
       <br><br><br>
     </section>
   </div>
