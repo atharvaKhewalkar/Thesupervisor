@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from . import app
 from . import mongo, mail
 from datetime import datetime
-
+from flask import request, jsonify 
 bp = Blueprint('main', __name__)
 
 
@@ -359,7 +359,7 @@ def register():
                 'password': request.form['password'],
                 'token': token,
                 'verified': False,
-                'profile_image': filename  # Save the filename in the database
+                'profile_photo': filename  # Save the filename in the database
             }
             users.insert_one(new_user)
 
@@ -414,9 +414,9 @@ def teacherLogin():
 @bp.route('/teacherDashboard')
 def teacherDashboard():
     upcoming_test = list(mongo.db.test.find())
+    start_time = []
+    end_time = []
     if upcoming_test:
-        start_time = []
-        end_time = []
         for i in upcoming_test:
             st = i.get('start_time',[])
             et = i.get('end_time',[])
@@ -548,6 +548,7 @@ def create_test_mcq():
                 'subject': request.form['test_sub_name'],
                 'description': request.form['test_description'],
                 'marks': request.form['test_marks'],
+                'teacher_email': session.get('user').get('email'),
                 'start_time': start_time_dt.strftime('%Y-%m-%dT%H:%M:%S'),
                 'end_time': end_time_dt.strftime('%Y-%m-%dT%H:%M:%S'),
                 'test_date': request.form['test_date'],
@@ -1033,3 +1034,70 @@ def submit_scores(test_id, student_email):
             )
         return redirect(url_for('main.stu_attempted_tests', test_id=test_id))
     return 'Invalid request method'
+
+
+@bp.route('/score', methods=['GET', 'POST'])
+def score():
+    temail = session.get('user').get('email')
+    mcq_test = list(mongo.db.test.find({'teacher_email': temail}))
+    para_test = list(mongo.db.test_paragraph.find({'teacher_email': temail}))
+    return render_template('html/scores.html',mcq_test=mcq_test,para_test=para_test)
+
+
+@bp.route('/mcq_stud_score/<test_id>', methods=['GET', 'POST'])
+def mcq_stud_score(test_id):
+    # Assuming you have already imported necessary modules and set up your Flask app
+
+    # Fetch test details from the result collection
+    test_details = mongo.db.result.find_one({'test_id': test_id})
+    student_data = test_details.get('student_data', [])
+
+    # Extract student email addresses and scores
+    student_email = list(student_data.keys())
+
+    # Fetch user details for each student using their email addresses
+    students_details = []
+    for email in student_email:
+        user_details = mongo.db.users.find_one({'email': email})
+        if user_details:
+            student_details = {
+                'name': user_details.get('name', ''),
+                'rollno': user_details.get('rollno', ''),
+                'email': email,
+                'score': student_data[email]  # Assuming scores are stored as-is in the result
+            }
+            students_details.append(student_details)
+
+    return render_template('html/stud_score.html', students_details=students_details)
+
+@bp.route('/get_student_data', methods=['POST'])
+def get_student_data():
+    try:
+        rollno = request.form.get('rollno')
+
+        # Fetch test details from the result collection
+        test_details = mongo.db.result.find_one({'test_id': '1'})  # Replace '1' with the actual test_id
+        student_data = test_details.get('student_data', {})
+
+        # Fetch user details for the specified roll number
+        user_details = mongo.db.users.find_one({'rollno': rollno})
+
+        if user_details:
+            student_data_for_rollno = student_data.get(user_details.get('email', ''), 0)
+            student_data = {
+                'name': user_details.get('name', ''),
+                'rollno': rollno,
+                'email': user_details.get('email', ''),
+                'score': student_data_for_rollno
+            }
+            return jsonify(student_data)
+        else:
+            return jsonify({'error': 'Student not found'})
+    except Exception as e:
+        print(f"Error in get_student_data route: {str(e)}")
+        return jsonify({'error': 'Internal Server Error'})
+
+
+@bp.route('/para_stud_score/<test_id>', methods=['GET', 'POST'])
+def para_stud_score(test_id):
+    return "tadaaa"

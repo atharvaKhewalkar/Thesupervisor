@@ -36,7 +36,9 @@
 
 
                 <label for="test_id">Test ID:</label>
-                <input type="number" name="test_id" id="test_id" value="{{test_id}}" disabled >
+                <input type="number" name="test_id" id="test_id" value="{{ test_id }}" style="display: none;">
+                <input value="{{ test_id }}" style="display: block;" disabled>
+                
 
                 <label for="test_sub_name">Subject:</label>
                 <input type="text" name="test_sub_name" id="test_sub_name" required>

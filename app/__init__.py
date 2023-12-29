@@ -20,7 +20,7 @@ app.config['MAIL_USE_TLS'] = True
 # Replace with your email username
 app.config['MAIL_USERNAME'] = 'riteshphadtare32@gmail.com'
 # Replace with your email password
-app.config['MAIL_PASSWORD'] = 'ahvq xbdz jrcw wfyc'
+app.config['MAIL_PASSWORD'] = 'owyu hneq arko ocsq'
 app.config['UPLOAD_FOLDER'] = 'app/uploads'
 # upload_folder = app.config['UPLOAD_FOLDER']
 # if not os.path.exists(upload_folder):

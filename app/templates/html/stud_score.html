@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Scores</title>
+    <style>
+        /* Add this style to a new file or within a <style> tag in the head of your HTML document */
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fff;
+            /* Set background to white */
+            color: #000;
+            /* Set text color to black */
+            margin: 0 20px;
+            /* Add left and right margins */
+            padding: 0;
+        }
+
+        h1 {
+            color: #000;
+            /* Set heading color to black */
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            color: #000;
+            /* Set label color to black */
+        }
+
+        input[type="text"] {
+            width: 200px;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #000;
+            /* Set button background color to black */
+            color: #fff;
+            /* Set button text color to white */
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #333;
+            /* Darken button background color on hover */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            color: #000;
+            /* Set table text color to black */
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #000;
+            /* Set table border color to black */
+            text-align: left;
+        }
+
+        th {
+            background-color: #000;
+            /* Set table header background color to black */
+            color: #fff;
+            /* Set table header text color to white */
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #eee;
+            /* Set even row background color to light gray */
+        }
+
+        tbody tr:hover {
+            background-color: #ddd;
+            /* Darken row background color on hover */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Student Scores</h1>
+
+    <!-- Add a search box -->
+    <label for="rollno">Search by Roll Number:</label>
+    <input type="text" id="rollno" name="rollno">
+    <button onclick="searchStudent()">Search</button>
+
+    <table border="1" id="score-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Roll Number</th>
+                <th>Email</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students_details %}
+            <tr>
+                <td>{{ student.name }}</td>
+                <td>{{ student.rollno }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.score }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        async function searchStudent() {
+            var rollno = document.getElementById('rollno').value;
+
+            try {
+                // Use fetch to make an asynchronous request to the server
+                const response = await fetch('/get_student_data', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({ 'rollno': rollno })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Student not found');
+                }
+
+                const studentData = await response.json();
+                updateTable(studentData);
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function updateTable(studentData) {
+            var tableBody = document.getElementById('score-table').getElementsByTagName('tbody')[0];
+
+            // Clear existing table rows
+            tableBody.innerHTML = '';
+
+            // Add a new row with the fetched student data
+            var newRow = tableBody.insertRow(0);
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            var cell4 = newRow.insertCell(3);
+
+            cell1.innerHTML = studentData.name;
+            cell2.innerHTML = studentData.rollno;
+            cell3.innerHTML = studentData.email;
+            cell4.innerHTML = studentData.score;
+        }
+    </script>
+</body>
+
+</html>
