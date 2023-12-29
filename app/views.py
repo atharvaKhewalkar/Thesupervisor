@@ -1130,3 +1130,44 @@ def para_stud_score(test_id):
             students_details.append(student_details)
 
     return render_template('html/stud_score.html', students_details=students_details,test_id=test_id)
+
+@bp.route('/edit_stud_data',  methods=['GET', 'POST'])
+def edit_stud_data():
+    students = list(mongo.db.users.find().sort('department', 1))
+    return render_template('/edit_stud_data.html', students=students)
+
+
+@app.route('/edit_student', methods=['POST'])
+def edit_student():
+    # Get data from the JSON request
+    data = request.get_json()
+    email = data.get('email')
+    name = data.get('name')
+    year = data.get('year')
+    rollno = data.get('rollno')
+    password = data.get('password')
+
+    # Update the student data in the MongoDB collection
+    mongo.db.users.update_one({'email': email}, {'$set': {'name': name, 'year': year, 'rollno': rollno, 'password': password}})
+
+    return jsonify({"message": "Student data updated successfully!"})
+
+@app.route('/delete_student', methods=['POST'])
+def delete_student():
+    # Get data from the JSON request
+    data = request.get_json()
+    email = data.get('email')
+
+    # Delete the student data from the MongoDB collection
+    mongo.db.users.delete_one({'email': email})
+
+    return jsonify({"message": "Student data deleted successfully!"})
+
+@app.route('/filter_by_department/<department>', methods=['GET'])
+def filter_by_department(department):
+    if department == 'all':
+        students = list(mongo.db.users.find())
+    else:
+        students = list(mongo.db.users.find({'department': department}))
+
+    return render_template('/edit_stud_data.html', students=students)

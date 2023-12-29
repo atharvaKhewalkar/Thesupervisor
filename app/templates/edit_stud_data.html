@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Data</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #fff;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        th,
+        td {
+            border: 1px solid #fff;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #222;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333;
+        }
+
+        tr:hover {
+            background-color: #444;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            background-color: #222;
+            color: #fff;
+            border: 1px solid #fff;
+        }
+
+        button {
+            background-color: #fff;
+            color: #000;
+            padding: 8px;
+            cursor: pointer;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #000;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Student Data</h1>
+
+    <!-- Dropdown for department filtering -->
+    <label for="departmentFilter">Filter by Department:</label>
+    <select id="departmentFilter" onchange="filterByDepartment(this.value)">
+        <option value="all">All Departments</option>
+        <option value="SE">SE</option>
+        <option value="TE">TE</option>
+        <option value="BE">BE</option>
+    </select>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Year</th>
+                <th>Roll No</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td><input type="text" name="name" value="{{ student.name }}" data-email="{{ student.email }}"></td>
+                <td><input type="text" name="year" value="{{ student.year }}" data-email="{{ student.email }}"></td>
+                <td><input type="text" name="rollno" value="{{ student.rollno }}" data-email="{{ student.email }}"></td>
+                <td>{{ student.email }}</td>
+                <td><input type="text" name="password" value="{{ student.password }}" data-email="{{ student.email }}">
+                </td>
+                <td>
+                    <button onclick="editStudent('{{ student.email }}')">Edit</button>
+                    <button onclick="deleteStudent('{{ student.email }}')">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+    <script>
+        function showAlert(message) {
+            alert(message);
+        }
+
+        function editStudent(email) {
+            // Get the data from the row for the specified email
+            const nameInput = document.querySelector(`input[name="name"][data-email="${email}"]`);
+            const yearInput = document.querySelector(`input[name="year"][data-email="${email}"]`);
+            const rollnoInput = document.querySelector(`input[name="rollno"][data-email="${email}"]`);
+            const passwordInput = document.querySelector(`input[name="password"][data-email="${email}"]`);
+
+            // Check if the elements exist before accessing their values
+            if (nameInput && yearInput && rollnoInput && passwordInput) {
+                const nameValue = nameInput.value;
+                const yearValue = yearInput.value;
+                const rollnoValue = rollnoInput.value;
+                const passwordValue = passwordInput.value;
+
+                // Send data to the Flask route for editing using AJAX
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/edit_student', true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            showAlert(JSON.parse(xhr.responseText).message);
+                        } else {
+                            showAlert('Error updating student data.');
+                        }
+                    }
+                };
+                xhr.send(JSON.stringify({ email, name: nameValue, year: yearValue, rollno: rollnoValue, password: passwordValue }));
+            } else {
+                console.error('Error: One or more input elements not found.');
+            }
+        }
+
+        function deleteStudent(email) {
+            // Send data to the Flask route for deleting using AJAX
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/delete_student', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        showAlert(JSON.parse(xhr.responseText).message);
+                    } else {
+                        showAlert('Error deleting student data.');
+                    }
+                }
+            };
+            xhr.send(JSON.stringify({ email }));
+        }
+
+
+        function filterByDepartment(department) {
+            const rows = document.querySelectorAll('tr');
+
+            rows.forEach(row => {
+                const rowDepartment = row.getAttribute('data-department');
+                if (department === 'all' || rowDepartment === department) {
+                    row.style.display = ''; // Reset to default value ('table-row')
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+</body>
+
+</html>
