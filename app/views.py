@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, request, redirect, url_for, send_from_directory
+from flask import Blueprint, render_template, session, request, redirect, url_for, send_from_directory, jsonify
 from flask_mail import Message
 import secrets
 from bson import ObjectId
@@ -69,7 +69,7 @@ def t_edit_profile():
 
                     # Use secure_filename to prevent malicious file names
                     filename = secure_filename(f"{email}.jpg")
-                    databse_path = os.path.join("profile_photo_"+filename)
+                    databse_path = os.path.join("profile_photo_" + filename)
                     photo_path = os.path.join(
                         uploads_dir, "profile_photo_" + filename)
                     profile_photo.save(photo_path)
@@ -133,7 +133,8 @@ def profile():
 
         if student_details:
             # Pass student details, test IDs, and test scores to the template
-            return render_template('html/stud_profile.html', student_details=student_details, test_details=test_details, test_scores=test_scores)
+            return render_template('html/stud_profile.html', student_details=student_details, test_details=test_details,
+                                   test_scores=test_scores)
         else:
             return 'Student details not found'
     else:
@@ -166,7 +167,7 @@ def edit_profile():
 
                     # Use secure_filename to prevent malicious file names
                     filename = secure_filename(f"{email}.jpg")
-                    databse_path = os.path.join("profile_photo_"+filename)
+                    databse_path = os.path.join("profile_photo_" + filename)
                     photo_path = os.path.join(
                         uploads_dir, "profile_photo_" + filename)
                     profile_photo.save(photo_path)
@@ -313,7 +314,8 @@ def login():
                     upcoming_test_para = [test for test in upcoming_test_para if test.get(
                         'test_id') not in ids_toremove_para]
 
-                    return render_template('html/index.html', upcoming_tests=upcoming_test, upcoming_test_para=upcoming_test_para)
+                    return render_template('html/index.html', upcoming_tests=upcoming_test,
+                                           upcoming_test_para=upcoming_test_para)
 
             elif user_type == 'teacher':
                 if login_user:
@@ -325,7 +327,7 @@ def login():
                             'department': login_user['department'],
                             # Add other teacher-related information as needed
                         }
-                        
+
                         return redirect(url_for('main.teacherDashboard'))
 
                 return 'Invalid email or password combination'
@@ -381,7 +383,7 @@ def verify_email(token):
     if user:
         # Mark the user as verified and remove the token
         users.update_one({'_id': user['_id']}, {
-                         '$set': {'verified': True}, '$unset': {'token': 1}})
+            '$set': {'verified': True}, '$unset': {'token': 1}})
         return 'Email verification successful. You can now log in.'
 
     return 'Invalid token or user not found.'
@@ -418,8 +420,8 @@ def teacherDashboard():
     end_time = []
     if upcoming_test:
         for i in upcoming_test:
-            st = i.get('start_time',[])
-            et = i.get('end_time',[])
+            st = i.get('start_time', [])
+            et = i.get('end_time', [])
             start_time_obj = datetime.strptime(st, "%Y-%m-%dT%H:%M:%S")
             end_time_obj = datetime.strptime(et, "%Y-%m-%dT%H:%M:%S")
 
@@ -427,14 +429,14 @@ def teacherDashboard():
             etime = end_time_obj.strftime("%H:%M")
             start_time.append(stime)
             end_time.append(etime)
-    
+
         upcoming_test_para = list(mongo.db.test_paragraph.find())
         if upcoming_test_para:
             start_time_para = []
             end_time_para = []
             for i in upcoming_test_para:
-                st_para = i.get('start_time',[])
-                et_para = i.get('end_time',[])
+                st_para = i.get('start_time', [])
+                et_para = i.get('end_time', [])
                 start_time_obj_para = datetime.strptime(st_para, "%Y-%m-%dT%H:%M:%S")
                 end_time_obj_para = datetime.strptime(et_para, "%Y-%m-%dT%H:%M:%S")
 
@@ -442,9 +444,11 @@ def teacherDashboard():
                 etime_para = end_time_obj_para.strftime("%H:%M")
                 start_time_para.append(stime_para)
                 end_time_para.append(etime_para)
-                return render_template('html/teacherDashboard.html', upcoming_tests=upcoming_test, start_time=start_time, end_time=end_time,upcoming_tests_para=upcoming_test_para, start_time_para=start_time_para, end_time_para=end_time_para)
-    return render_template('html/teacherDashboard.html', upcoming_tests=upcoming_test, start_time=start_time, end_time=end_time)
-
+                return render_template('html/teacherDashboard.html', upcoming_tests=upcoming_test,
+                                       start_time=start_time, end_time=end_time, upcoming_tests_para=upcoming_test_para,
+                                       start_time_para=start_time_para, end_time_para=end_time_para)
+    return render_template('html/teacherDashboard.html', upcoming_tests=upcoming_test, start_time=start_time,
+                           end_time=end_time)
 
 
 @bp.route('/typeofque')
@@ -458,32 +462,32 @@ def questionCount():
     selected_option = request.form.get('que_type')
     if request.method == 'POST':
         qCount = int(request.form.get('count', 0))
-        max_id=1
+        max_id = 1
         if selected_option == "mcq":
-            test_ids=[]
-            test_details=list(mongo.db.test.find())
+            test_ids = []
+            test_details = list(mongo.db.test.find())
             for test in test_details:
-                test_id=test.get('test_id')
+                test_id = test.get('test_id')
                 test_ids.append(int(test_id))
             if test_ids:
-                max_id=max(test_ids)
-                max_id+=1
+                max_id = max(test_ids)
+                max_id += 1
             else:
-                max_id=1
-            
-            return render_template('html/question_addition.html', qCount=qCount,test_id=max_id)
+                max_id = 1
+
+            return render_template('html/question_addition.html', qCount=qCount, test_id=max_id)
         else:
-            test_ids=[]
-            test_details=list(mongo.db.test_paragraph.find())
+            test_ids = []
+            test_details = list(mongo.db.test_paragraph.find())
             for test in test_details:
-                test_id=test.get('test_id')
+                test_id = test.get('test_id')
                 test_ids.append(int(test_id))
             if test_ids:
-                max_id=max(test_ids)
-                max_id+=1
+                max_id = max(test_ids)
+                max_id += 1
             else:
-                max_id=1
-            return render_template('html/paragraph.html', qCount=qCount,test_id=max_id)
+                max_id = 1
+            return render_template('html/paragraph.html', qCount=qCount, test_id=max_id)
 
 
 @bp.route('/create_test_mcq', methods=['GET', 'POST'])
@@ -499,7 +503,7 @@ def create_test_mcq():
             c = int(request.form['que_count'])
 
             # Loop through the form data to get all questions
-            for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
+            for i in range(1, c + 1):  # Assuming you want to handle 3 questions, adjust as needed
                 question_key = f'question_{i}'
                 option1_key = f'option1_{i}'
                 option2_key = f'option2_{i}'
@@ -536,9 +540,9 @@ def create_test_mcq():
                     questions.append(question)
 
             start_time = request.form['test_date'] + \
-                'T' + request.form['start_time'] + ':00'
+                         'T' + request.form['start_time'] + ':00'
             end_time = request.form['test_date'] + \
-                'T' + request.form['end_time'] + ':00'
+                       'T' + request.form['end_time'] + ':00'
 
             start_time_dt = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
             end_time_dt = datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%S')
@@ -574,7 +578,7 @@ def create_test_paragraph():
 
             c = int(request.form['que_count'])
             test_id = request.form['test_id']
-            for i in range(1, c+1):  # Assuming you want to handle 3 questions, adjust as needed
+            for i in range(1, c + 1):  # Assuming you want to handle 3 questions, adjust as needed
                 question_key = f'question_{i}'
 
                 # Check if the question exists in the form data
@@ -600,9 +604,9 @@ def create_test_paragraph():
                     questions.append(question)
 
             start_time = request.form['test_date'] + \
-                'T' + request.form['start_time'] + ':00'
+                         'T' + request.form['start_time'] + ':00'
             end_time = request.form['test_date'] + \
-                'T' + request.form['end_time'] + ':00'
+                       'T' + request.form['end_time'] + ':00'
 
             start_time_dt = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
             end_time_dt = datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%S')
@@ -640,7 +644,8 @@ def view_test_mcq(test_id):
 
     start_time = start_time_obj.strftime("%H:%M")
     end_time = end_time_obj.strftime("%H:%M")
-    return render_template('html/edit_test_mcq.html', test_details=test_details, test_questions=test_questions, qCount=qCount, start_time=start_time, end_time=end_time)
+    return render_template('html/edit_test_mcq.html', test_details=test_details, test_questions=test_questions,
+                           qCount=qCount, start_time=start_time, end_time=end_time)
 
 
 @bp.route('/view_test_para/<test_id>')
@@ -656,17 +661,17 @@ def view_test_para(test_id):
 
     start_time = start_time_obj.strftime("%H:%M")
     end_time = end_time_obj.strftime("%H:%M")
-    return render_template('html/edit_test_para.html', test_details=test_details, test_questions=test_questions, qCount=qCount, start_time=start_time, end_time=end_time)
-
+    return render_template('html/edit_test_para.html', test_details=test_details, test_questions=test_questions,
+                           qCount=qCount, start_time=start_time, end_time=end_time)
 
 
 @app.route('/edit_test_mcq/<test_id>', methods=['GET', 'POST'])
 def edit_test_mcq(test_id):
     if request.method == 'POST':
         start_time = request.form['test_date'] + \
-            'T' + request.form['start_time'] + ':00'
+                     'T' + request.form['start_time'] + ':00'
         end_time = request.form['test_date'] + \
-            'T' + request.form['end_time'] + ':00'
+                   'T' + request.form['end_time'] + ':00'
 
         start_time_dt = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
         end_time_dt = datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%S')
@@ -697,20 +702,19 @@ def edit_test_mcq(test_id):
 
         # Update the test details in the MongoDB collection
         mongo.db.test.update_one({'test_id': test_id}, {
-                                 '$set': test_details})
+            '$set': test_details})
 
         return redirect(url_for('main.teacherDashboard'))
     return render_template('html/error.html', error_message="Test not found")
-
 
 
 @app.route('/edit_test_para/<test_id>', methods=['GET', 'POST'])
 def edit_test_para(test_id):
     if request.method == 'POST':
         start_time = request.form['test_date'] + \
-            'T' + request.form['start_time'] + ':00'
+                     'T' + request.form['start_time'] + ':00'
         end_time = request.form['test_date'] + \
-            'T' + request.form['end_time'] + ':00'
+                   'T' + request.form['end_time'] + ':00'
 
         start_time_dt = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
         end_time_dt = datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%S')
@@ -736,11 +740,10 @@ def edit_test_para(test_id):
 
         # Update the test details in the MongoDB collection
         mongo.db.test_paragraph.update_one({'test_id': test_id}, {
-                                 '$set': test_details})
+            '$set': test_details})
 
         return redirect(url_for('main.teacherDashboard'))
     return render_template('html/error.html', error_message="Test not found")
-
 
 
 @bp.route('/attempt_test/<test_id>')
@@ -760,7 +763,8 @@ def attempt_test(test_id):
 
         st = start_time_obj.strftime("%H:%M:%S")
         et = end_time_obj.strftime("%H:%M:%S")
-        return render_template('html/attempt_test.html', test=test, questions=test_questions, start_time=start_time, end_time=end_time, et=et, st=st)
+        return render_template('html/attempt_test.html', test=test, questions=test_questions, start_time=start_time,
+                               end_time=end_time, et=et, st=st)
     return 'Test not found'
 
 
@@ -781,7 +785,8 @@ def attempt_test_para(test_id):
 
         st = start_time_obj.strftime("%H:%M:%S")
         et = end_time_obj.strftime("%H:%M:%S")
-        return render_template('html/attempt_test_paragraph.html', test=test, questions=test_questions, et=et, st=st,start_time=start_time,end_time=end_time)
+        return render_template('html/attempt_test_paragraph.html', test=test, questions=test_questions, et=et, st=st,
+                               start_time=start_time, end_time=end_time)
     return 'Test not found'
 
 
@@ -851,7 +856,7 @@ def submit_test(test_id):
 
         # Retrieve the existing document from the collection based on test_id
         existing_submission = mongo.db.submitted_answers_collection.find_one({
-                                                                             'test_id': test_id})
+            'test_id': test_id})
 
         if existing_submission is None:
             # If no existing document is found, create a new one
@@ -873,7 +878,9 @@ def submit_test(test_id):
                 {'$set': {'answers': existing_answers}}
             )
 
-        return redirect(url_for('main.successfull_submition', test_details=test_details, student_id=session.get('user').get('email'), submitted_answers=selected_answers, correct_answer=correct_answer))
+        return redirect(url_for('main.successfull_submition', test_details=test_details,
+                                student_id=session.get('user').get('email'), submitted_answers=selected_answers,
+                                correct_answer=correct_answer))
 
     return 'Invalid request method'
 
@@ -952,7 +959,8 @@ def result():
 
         if student_id in student_data:
             value = student_data[student_id]
-            return render_template('html/result.html', test_id=test_id, score=value, marks=marks, subject=subject, student_id=student_id)
+            return render_template('html/result.html', test_id=test_id, score=value, marks=marks, subject=subject,
+                                   student_id=student_id)
         else:
             return "Test not given"
 
@@ -984,7 +992,7 @@ def stu_attempted_tests(test_id):
 def check_answer(test_id, student_email):
     # Retrieve the submitted answers for the specified test and student
     submission = mongo.db.submitted_answers_collection_para.find_one({
-                                                                     'test_id': test_id})
+        'test_id': test_id})
 
     if submission:
         answers = submission.get('answers', {})
@@ -996,7 +1004,8 @@ def check_answer(test_id, student_email):
         if test_paragraph:
             questions = test_paragraph.get('questions', [])
             # Add logic here to render a page with the student's answers and questions for the teacher to check
-            return render_template('html/teacher_check_answer.html', test_id=test_id, student_email=student_email, student_answers=student_answers, questions=questions)
+            return render_template('html/teacher_check_answer.html', test_id=test_id, student_email=student_email,
+                                   student_answers=student_answers, questions=questions)
 
     return 'No submission found for the specified test and student.'
 
@@ -1041,7 +1050,7 @@ def score():
     temail = session.get('user').get('email')
     mcq_test = list(mongo.db.test.find({'teacher_email': temail}))
     para_test = list(mongo.db.test_paragraph.find({'teacher_email': temail}))
-    return render_template('html/scores.html',mcq_test=mcq_test,para_test=para_test)
+    return render_template('html/scores.html', mcq_test=mcq_test, para_test=para_test)
 
 
 @bp.route('/mcq_stud_score/<test_id>', methods=['GET', 'POST'])
@@ -1068,15 +1077,18 @@ def mcq_stud_score(test_id):
             }
             students_details.append(student_details)
 
-    return render_template('html/stud_score.html', students_details=students_details)
+    return render_template('html/stud_score.html', students_details=students_details,test_id=test_id)
 
-@bp.route('/get_student_data', methods=['POST'])
-def get_student_data():
+
+@bp.route('/get_student_data/<test_id>', methods=['POST'])
+def get_student_data(test_id):
     try:
         rollno = request.form.get('rollno')
 
         # Fetch test details from the result collection
-        test_details = mongo.db.result.find_one({'test_id': '1'})  # Replace '1' with the actual test_id
+        test_details = mongo.db.result.find_one({'test_id': test_id})  # Replace '1' with the actual test_id
+        if test_details is None:
+            test_details = mongo.db.student_score_para.find_one({'test_id': test_id})
         student_data = test_details.get('student_data', {})
 
         # Fetch user details for the specified roll number
@@ -1100,4 +1112,21 @@ def get_student_data():
 
 @bp.route('/para_stud_score/<test_id>', methods=['GET', 'POST'])
 def para_stud_score(test_id):
-    return "tadaaa"
+    test_details = mongo.db.student_score_para.find_one({'test_id': test_id})
+    student_data = test_details.get('student_data', [])
+
+    student_email = list(student_data.keys())
+
+    students_details = []
+    for email in student_email:
+        user_details = mongo.db.users.find_one({'email': email})
+        if user_details:
+            student_details = {
+                'name': user_details.get('name', ''),
+                'rollno': user_details.get('rollno', ''),
+                'email': email,
+                'score': student_data[email]
+            }
+            students_details.append(student_details)
+
+    return render_template('html/stud_score.html', students_details=students_details,test_id=test_id)
