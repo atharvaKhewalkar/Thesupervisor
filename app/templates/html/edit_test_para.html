@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Test</title>
+
+</head>
+
+<body>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/createtest.css') }}">
+    <section class="createtest">
+        <h1 align="center">Create Test</h1>
+
+        {% if test_id_exists %}
+        <script>
+            alert("Test ID already present, change the ID");
+        </script>
+        {% endif %}
+
+        <form method="post" action="{{ url_for('edit_test_para', test_id=test_details.test_id) }}"
+            enctype="multipart/form-data">
+            <div class="inputf">
+                <label for="test_id">Test ID:</label>
+                <input type="number" name="test_id" id="test_id" required value="{{ test_details.test_id }}" disabled>
+                <label for="test_sub_name">Subject:</label>
+                <input type="text" name="test_sub_name" id="test_sub_name" required value="{{ test_details.subject }}">
+                <label for="test_description">Description:</label>
+                <textarea name="test_description" id="test_description" rows="4"
+                    required>{{ test_details.description }}</textarea>
+                <label for="test_marks">Marks:</label>
+                <input type="number" name="test_marks" id="test_marks" required value="{{ test_details.marks }}">
+                <label for="start_time">Start Time:</label>
+                <input type="time" name="start_time" id="start_time" required value="{{ start_time }}">
+                <label for="end_time">End Time:</label>
+                <input type="time" name="end_time" id="end_time" required value="{{ end_time }}">
+                <label for="test_date">Date:</label>
+                <input type="date" name="test_date" id="test_date" required
+                    value="{{ test_details.test_date }}"><br><br>
+                <input type="number" name="que_count" id="que_count" required value="{{ qCount }}"
+                    style="display: none;"><br><br>
+            </div>
+            <br>
+            {% for question in test_questions %}
+            <div class="main">
+                <div class="questions">
+                    <div class="series">
+                        <label for="question_text_{{ loop.index }}">Question {{ loop.index }}:</label>
+                        <textarea type="text" id="question_text_{{ loop.index }}"
+                            name="question_{{ loop.index }}">{{ question.question }}</textarea><br>
+                    </div>
+                    <div>
+                        <input type="file" name="file_{{ loop.index }}" accept="image/*">
+                    </div>
+                    <br>
+                </div>
+            </div>
+            {% endfor %}
+            <br>
+            <div class="button">
+                <input type="submit" value="Add Question">
+            </div>
+            <!-- Your existing submit button -->
+
+
+        </form>
+
+
+    </section>
+
+</body>
+
+</html>

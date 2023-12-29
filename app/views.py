@@ -428,21 +428,23 @@ def teacherDashboard():
             start_time.append(stime)
             end_time.append(etime)
     
-    upcoming_test_para = list(mongo.db.test_paragraph.find())
-    if upcoming_test_para:
-        start_time_para = []
-        end_time_para = []
-        for i in upcoming_test_para:
-            st_para = i.get('start_time',[])
-            et_para = i.get('end_time',[])
-            start_time_obj_para = datetime.strptime(st_para, "%Y-%m-%dT%H:%M:%S")
-            end_time_obj_para = datetime.strptime(et_para, "%Y-%m-%dT%H:%M:%S")
+        upcoming_test_para = list(mongo.db.test_paragraph.find())
+        if upcoming_test_para:
+            start_time_para = []
+            end_time_para = []
+            for i in upcoming_test_para:
+                st_para = i.get('start_time',[])
+                et_para = i.get('end_time',[])
+                start_time_obj_para = datetime.strptime(st_para, "%Y-%m-%dT%H:%M:%S")
+                end_time_obj_para = datetime.strptime(et_para, "%Y-%m-%dT%H:%M:%S")
 
-            stime_para = start_time_obj_para.strftime("%H:%M")
-            etime_para = end_time_obj_para.strftime("%H:%M")
-            start_time_para.append(stime_para)
-            end_time_para.append(etime_para)
-    return render_template('html/teacherDashboard.html', upcoming_tests=upcoming_test, start_time=start_time, end_time=end_time,upcoming_tests_para=upcoming_test_para, start_time_para=start_time_para, end_time_para=end_time_para)
+                stime_para = start_time_obj_para.strftime("%H:%M")
+                etime_para = end_time_obj_para.strftime("%H:%M")
+                start_time_para.append(stime_para)
+                end_time_para.append(etime_para)
+                return render_template('html/teacherDashboard.html', upcoming_tests=upcoming_test, start_time=start_time, end_time=end_time,upcoming_tests_para=upcoming_test_para, start_time_para=start_time_para, end_time_para=end_time_para)
+    return render_template('html/teacherDashboard.html', upcoming_tests=upcoming_test, start_time=start_time, end_time=end_time)
+
 
 
 @bp.route('/typeofque')
@@ -620,6 +622,23 @@ def view_test_mcq(test_id):
     return render_template('html/edit_test_mcq.html', test_details=test_details, test_questions=test_questions, qCount=qCount, start_time=start_time, end_time=end_time)
 
 
+@bp.route('/view_test_para/<test_id>')
+def view_test_para(test_id):
+    test_details = mongo.db.test_paragraph.find_one({'test_id': test_id})
+    test_questions = test_details.get('questions', [])
+    qCount = len(test_questions)
+    start_time = test_details.get('start_time', [])
+    end_time = test_details.get('end_time', [])
+
+    start_time_obj = datetime.strptime(start_time, "%Y-%m-%dT%H:%M:%S")
+    end_time_obj = datetime.strptime(end_time, "%Y-%m-%dT%H:%M:%S")
+
+    start_time = start_time_obj.strftime("%H:%M")
+    end_time = end_time_obj.strftime("%H:%M")
+    return render_template('html/edit_test_para.html', test_details=test_details, test_questions=test_questions, qCount=qCount, start_time=start_time, end_time=end_time)
+
+
+
 @app.route('/edit_test_mcq/<test_id>', methods=['GET', 'POST'])
 def edit_test_mcq(test_id):
     if request.method == 'POST':
@@ -660,17 +679,56 @@ def edit_test_mcq(test_id):
                                  '$set': test_details})
 
         return redirect(url_for('main.teacherDashboard'))
+    # # If it's a GET request, fetch the existing test details for rendering the form
+    # test_details = mongo.db.test.find_one({'test_id': test_id})
 
-    # If it's a GET request, fetch the existing test details for rendering the form
-    test_details = mongo.db.test.find_one({'test_id': test_id})
+    # if test_details:
+    #     test_questions = test_details.get('questions', [])
+    #     qCount = len(test_questions)
+    #     return render_template('html/edit_test_mcq.html', test_details=test_details, test_questions=test_questions, qCount=qCount)
 
-    if test_details:
-        test_questions = test_details.get('questions', [])
-        qCount = len(test_questions)
-        return render_template('html/edit_test_mcq.html', test_details=test_details, test_questions=test_questions, qCount=qCount)
-
-    # Handle case where the test with the given ID is not found
+    # # Handle case where the test with the given ID is not found
     return render_template('html/error.html', error_message="Test not found")
+
+
+
+@app.route('/edit_test_para/<test_id>', methods=['GET', 'POST'])
+def edit_test_para(test_id):
+    if request.method == 'POST':
+        start_time = request.form['test_date'] + \
+            'T' + request.form['start_time'] + ':00'
+        end_time = request.form['test_date'] + \
+            'T' + request.form['end_time'] + ':00'
+
+        start_time_dt = datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S')
+        end_time_dt = datetime.strptime(end_time, '%Y-%m-%dT%H:%M:%S')
+        test_details = {
+            "test_id": test_id,
+            "subject": request.form['test_sub_name'],
+            "description": request.form['test_description'],
+            "marks": int(request.form['test_marks']),
+            'start_time': start_time_dt.strftime('%Y-%m-%dT%H:%M:%S'),
+            'end_time': end_time_dt.strftime('%Y-%m-%dT%H:%M:%S'),
+            'test_date': request.form['test_date'],
+            "questions": []
+        }
+
+        que_count = int(request.form['que_count'])
+
+        for i in range(1, que_count + 1):
+            question = {
+                "question": request.form['question_' + str(i)],
+                "image_path": request.files['file_' + str(i)].filename if 'file_' + str(i) in request.files else None
+            }
+            test_details["questions"].append(question)
+
+        # Update the test details in the MongoDB collection
+        mongo.db.test_paragraph.update_one({'test_id': test_id}, {
+                                 '$set': test_details})
+
+        return redirect(url_for('main.teacherDashboard'))
+    return render_template('html/error.html', error_message="Test not found")
+
 
 
 @bp.route('/attempt_test/<test_id>')
