@@ -1151,7 +1151,7 @@ def para_stud_score(test_id):
 @bp.route('/edit_stud_data',  methods=['GET', 'POST'])
 def edit_stud_data():
     students = list(mongo.db.users.find().sort('department', 1))
-    return render_template('/edit_stud_data.html', students=students)
+    return render_template('html/edit_stud_data.html', students=students)
 
 
 @app.route('/edit_student', methods=['POST'])
