@@ -13,7 +13,7 @@
     margin: 0%;
     text-align: center;
     color: aliceblue;
-    background-color: rgb(3, 0, 23);
+    background-color: #070707;
 }
 
 .main {
@@ -26,8 +26,8 @@
 
     display: flex;
     flex-direction: column;
-    background-color: #000000;
-    color: aliceblue;
+    background-color: #7b0629;
+    color: rgb(30, 115, 189);
     text-decoration: none;
     align-items: center;
     width: 15%;
@@ -62,7 +62,7 @@
 }
 
 .Navbar ul :hover {
-    color: rgb(250, 87, 87);
+    color: #E54350;
 }
 
 .home {
@@ -97,7 +97,7 @@
     list-style: none;
     font-size: 100px;
     font-weight: 500;
-    color: rgb(250, 87, 87);
+    color: #E54350;
 }
 
 .dynamic-txt li span {
