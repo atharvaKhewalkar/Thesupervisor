@@ -175,7 +175,7 @@
             const rows = document.querySelectorAll('tr');
 
             rows.forEach(row => {
-                const rowDepartment = row.getAttribute('data-department');
+                const rowDepartment = row.getAttribute('Year');
                 if (department === 'all' || rowDepartment === department) {
                     row.style.display = ''; // Reset to default value ('table-row')
                 } else {
