@@ -14,16 +14,6 @@ font-family: 'Space Grotesk', sans-serif;
     color: aliceblue;
     background-color: rgb(3, 0, 23);
 }
-
-.head2{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    width: 100%;
-    padding: 2rem;
-}
-
 .navbar{
     display: flex;
     flex-direction: column;
@@ -32,20 +22,11 @@ font-family: 'Space Grotesk', sans-serif;
     text-decoration: none;
     text-align: left;
     width: 30vh;
-    height: 100%;
+    height: 86.3vh;
     padding-top: 2rem;
     margin: 0%;
     font-size: 23px; 
 }
-.main{
-    display: flex;
-}
-.nd{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
-
 .navbar ul{
     display: flex;
     align-items: left;
@@ -60,31 +41,6 @@ font-family: 'Space Grotesk', sans-serif;
 .navbar ul :hover{
     cursor: pointer;
     color: rgb(250, 87, 87);
-}
-.testcreation{
-    display: flex;
-    flex-direction: column;
-    gap: 1.7rem;
-    justify-content: center;
-    align-items: center;
-}
-form{
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-form input{
-    width: 17rem;
-    height: 3.5rem;
-}
-.upcoming{
-    display: flex;
-    flex-wrap: wrap;
-    padding: 2rem;
-    gap: 1rem;
-    width: 100%;
-    justify-content: space-between;
-    
 }
 a{
     text-decoration: none;
@@ -104,10 +60,22 @@ a:hover{
     align-items: center;
     background-color: #1a202c;
     color: aliceblue;
-    border-radius: 1rem;
+    
     width: 20vh;
     display: flex;
     justify-content: center;
-    box-shadow: 1px 1px 1px  rgba(0, 12, 76, 0.559);
+    box-shadow: 1px 1px 1px  rgba(76, 0, 0, 0.559);
     cursor: pointer;
+}
+.upcoming{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 2rem;
+    gap: 1rem;
+    width: 100%;
+    justify-content: space-between;
+    
+}
+.adjust{
+    display: flex;
 }

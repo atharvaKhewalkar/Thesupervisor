@@ -137,9 +137,6 @@ body{
     /* position: absolute; */
     padding-top: 7%;
     margin: 0%;
-    
-
-
 }
 
 .Navbar ul {
@@ -156,9 +153,7 @@ body{
     list-style: none;
     
 }
-.Navbar a{
-   
-}
+
 
 .Navbar ul li a {
     text-decoration: none;

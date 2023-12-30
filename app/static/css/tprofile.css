@@ -1,9 +1,58 @@
 /* profile.css */
-
+*{
+    margin: 0;
+    font-family: 'Comfortaa', sans-serif;
+font-family: 'Kalam', cursive;
+font-family: 'KoHo', sans-serif;
+font-family: 'Mina', sans-serif;
+font-family: 'Quantico', sans-serif;
+font-family: 'Space Grotesk', sans-serif;
+}
 /* Styles for the header */
-.head {
+.head{
+    padding: 1.5%;
+    margin: 0%;
     text-align: center;
-    margin-bottom: 20px;
+    color: aliceblue;
+    background-color: rgb(3, 0, 23);
+}
+.navbar{
+    display: flex;
+    flex-direction: column;
+    background-color: #7b0629;
+    color: aliceblue;
+    text-decoration: none;
+    text-align: left !important; 
+    padding-top: 2rem;
+    width: 30vh;
+    height: 86.3vh;
+    margin: 0%;
+    font-size: 23px; 
+}
+.navbar ul{
+    display: flex;
+   
+   
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.navbar ul li{
+    list-style: none;
+    text-align: left;
+}
+.navbar ul :hover{
+    cursor: pointer;
+    color: rgb(250, 87, 87);
+}
+a{
+    text-decoration: none;
+    color: aliceblue;
+    
+}
+a:hover{
+    text-decoration: none;
+    
 }
 
 /* Styles for the main body */
@@ -16,6 +65,7 @@
     border: none;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
+
 
 .card-body {
     text-align: center;
@@ -52,4 +102,11 @@
 /* Styles for the Back to Home button */
 .button a {
     text-decoration: none;
+}
+.adjust{
+    display: flex;
+}
+.active{
+    text-decoration: underline;
+    font-weight: 700;
 }

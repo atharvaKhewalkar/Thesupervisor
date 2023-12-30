@@ -8,18 +8,18 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #111;
+            background-color:#38373E;
             color: #fff;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            height: 100%;
         }
 
-        h1 {
-            color: #fff;
-            margin-top: 20px;
+        h1{
+            padding: 0.4rem;
+            margin: 0;
         }
 
         table {
@@ -70,13 +70,83 @@
             background-color: #000;
             color: #fff;
         }
+        .head{
+    padding: 1.5%;
+    margin: 0%;
+    text-align: center;
+    color: aliceblue;
+    background-color: rgb(3, 0, 23);
+    width: 97%;
+}
+        .adjust{
+            display: flex;
+        }
+        .navbar{
+    display: flex;
+    flex-direction: column;
+    background-color: #7b0629;
+    color: aliceblue;
+    text-decoration: none;
+    text-align: left;
+    width: 30vh;
+    height: 100vh;
+    padding-top: 2rem;
+    margin: 0%;
+    font-size: 23px; 
+}
+
+.navbar ul{
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.navbar ul li{
+    list-style: none;
+}
+.navbar ul :hover{
+    cursor: pointer;
+    color: rgb(250, 87, 87);
+}
+.navbar a{
+    color: aliceblue;
+    text-decoration: none;
+}
+.active{
+    text-decoration: underline;
+    font-weight: 700;
+}
+section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
     </style>
 </head>
 
 <body>
-    <h1>Student Data</h1>
-
+    <div class="head">
+        <h1>Student Data</h1>
+      </div>
+      <div class="adjust">
+        <div class="navbar"> 
+            <ul>
+                <a href="/teacherDashboard"><li>Home</li></a>
+              <a href="/typeofque"><li>Create Test</li></a>
+                <a href="/score"><li>Scores</li></a>
+                <a href="/para_ans"><li>Answer Checking</li></a>
+                <a href="/teacher_profile"><li>Profile</li></a>
+                <a class="active" href="/edit_stud_data"><li>Edit Student Data</li></a>
+                <a href="/logout"><li onclick="logout()">Logout</li></a>
+            </ul>
+         </div>
+      
     <!-- Dropdown for department filtering -->
+    <section>
+
+    
     <label for="departmentFilter">Filter by Department:</label>
     <select id="departmentFilter" onchange="filterByDepartment(this.value)">
         <option value="all">All Departments</option>
@@ -113,7 +183,8 @@
             {% endfor %}
         </tbody>
     </table>
-
+</section>
+</div>
 
     <script>
         function showAlert(message) {

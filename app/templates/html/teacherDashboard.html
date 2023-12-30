@@ -25,6 +25,7 @@
       <div> 
          <div class="navbar"> 
             <ul>
+              <a class="active"><li>Home</li></a>
               <a href="/typeofque"><li>Create Test</li></a>
                 <a href="/score"><li>Scores</li></a>
                 <a href="/para_ans"><li>Answer Checking</li></a>
@@ -48,7 +49,7 @@
               <h5 class="card-title">{{ test.test_id }}</h5>
               <h5 class="card-title">{{ test.subject }}</h5>
               <p class="card-text">{{ test.description }}</p><br>
-              <a href="{{ url_for('main.view_test_mcq', test_id=test.test_id) }}" class="btn btn-primary">Edit Test</a><br><br>
+              <a href="{{ url_for('main.view_test_mcq', test_id=test.test_id) }}" class=" but-1 btn btn-primary">Edit Test</a><br><br>
               <p>
                 Marks: {{ test.marks }} <br>
                 Date: {{ test.test_date }} <br>
@@ -67,7 +68,7 @@
               <h5 class="card-title">{{ test.test_id }}</h5>
               <h5 class="card-title">{{ test.subject }}</h5>
               <p class="card-text">{{ test.description }}</p><br>
-              <a href="{{ url_for('main.view_test_para', test_id=test.test_id) }}" class="btn btn-primary">Edit Test</a><br><br>
+              <a href="{{ url_for('main.view_test_para', test_id=test.test_id) }}" class="but-1 btn btn-primary">Edit Test</a>
               <p>
                 Marks: {{ test.marks }} <br>
                 Date: {{ test.test_date }} <br>
