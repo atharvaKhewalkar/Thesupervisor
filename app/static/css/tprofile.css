@@ -110,3 +110,14 @@ a:hover{
     text-decoration: underline;
     font-weight: 700;
 }
+.but-1{
+    align-items: center;
+    background-color: #1a202c;
+    color: aliceblue;
+    border-radius: 1rem;
+    width: 20vh;
+    display: flex;
+    justify-content: center;
+    box-shadow: 1px 1px 1px  rgba(0, 12, 76, 0.559);
+    cursor: pointer;
+}
