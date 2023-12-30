@@ -37,7 +37,7 @@
    
               <li onclick="logout()"><a href="/        logout">Logout</a></li>
    
-              <li><a>Profile</a></li>
+              <li class="active"><a>Profile</a></li>
             </ul>
           </div>
     
@@ -76,7 +76,7 @@
                                 <!-- Full Name -->
                                 <div class="form-group row">
                                     <label for="profile_photo" class="col-sm-3 col-form-label">Profile Photo</label>
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-9 " >
                                         <input type="file" class="form-control-file" id="profile_photo"
                                             name="profile_photo" accept="image/*">
                                     </div>
@@ -127,7 +127,7 @@
 
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-primary">Save</button>
+                                        <button type="submit" class="btn  but-1">Save</button>
                                     </div>
                                 </div>
                             </form>
@@ -154,9 +154,7 @@
                         {% endfor %}
                     </div>
                 </div>
-                <a class="button" href="/home">
-                    <button class="but-1">Back to Home page</button>
-                </a>
+               
             </div>
         </div>
     </div>

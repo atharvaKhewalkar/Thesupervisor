@@ -21,7 +21,11 @@
     margin-top: 0%;
 
 }
-
+.active{
+    color: rgb(255, 255, 255);
+    text-decoration: underline;
+    font-weight: 700;
+}
 .Navbar {
 
     display: flex;
