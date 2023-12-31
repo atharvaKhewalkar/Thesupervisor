@@ -14,10 +14,13 @@
 <body>
   <div class="container">
     <!-- Display test details -->
-    <h1>{{ test.subject }}</h1>
-    <p>{{ test.description }}</p>
-    <p>Start Time: {{ st }}</p>
-    <p>End Time: {{ et }}</p>
+    <div class="details">
+      <h1>{{ test.subject }}</h1>
+      <p>{{ test.description }}</p>
+      <p>Start Time: {{ st }}</p>
+      <p>End Time: {{ et }}</p>
+    </div>
+   
     <!-- Add other test details like marks, time, etc. if available -->
     <!-- Display test questions -->
     <div id="content"></div>
