@@ -872,13 +872,13 @@ def submit_test(test_id):
         # Retrieve the existing document from the collection based on test_id
         existing_submission = mongo.db.submitted_answers_collection.find_one({
             'test_id': test_id})
-
+        user_email = session.get('user').get('email')
         if existing_submission is None:
             # If no existing document is found, create a new one
             new_submission = {
                 'test_id': test_id,
                 'answers': {
-                    session.get('user').get('email'): selected_answers
+                    user_email: selected_answers
                 }
             }
             mongo.db.submitted_answers_collection.insert_one(new_submission)
