@@ -84,15 +84,14 @@ def t_edit_profile():
                 profile_photo = request.files['profile_photo']
                 if profile_photo.filename != '':
                     # Save the uploaded file to a specific folder
-                    uploads_dir = 'static/uploads'
+                    uploads_dir = 'static/uploads/profilePhotos'
                     if not os.path.exists(uploads_dir):
                         os.makedirs(uploads_dir)
 
                     # Use secure_filename to prevent malicious file names
                     filename = secure_filename(f"{email}.jpg")
-                    databse_path = os.path.join("profile_photo_" + filename)
-                    photo_path = os.path.join(
-                        uploads_dir, "profile_photo_" + filename)
+                    databse_path = os.path.join("/profilePhotos/profile_photo_" + filename)
+                    photo_path = os.path.join(uploads_dir, "profile_photo_" + filename)
                     profile_photo.save(photo_path)
 
                     # Update the user details with the profile photo path
@@ -182,15 +181,14 @@ def edit_profile():
                 profile_photo = request.files['profile_photo']
                 if profile_photo.filename != '':
                     # Save the uploaded file to a specific folder
-                    uploads_dir = 'static/uploads'
+                    uploads_dir = 'static/uploads/profilePhotos'
                     if not os.path.exists(uploads_dir):
                         os.makedirs(uploads_dir)
 
                     # Use secure_filename to prevent malicious file names
                     filename = secure_filename(f"{email}.jpg")
-                    databse_path = os.path.join("profile_photo_" + filename)
-                    photo_path = os.path.join(
-                        uploads_dir, "profile_photo_" + filename)
+                    databse_path = os.path.join("/profilePhotos/profile_photo_" + filename)
+                    photo_path = os.path.join(uploads_dir, "profile_photo_" + filename)
                     profile_photo.save(photo_path)
 
                     # Update the user details with the profile photo path
@@ -563,12 +561,13 @@ def create_test_mcq():
                     if file_key in request.files:
                         file = request.files[file_key]
                         if file.filename != '':
-                            # Ensure secure filename to prevent security risks
-                            filename = secure_filename(file.filename)
+                            uploads_dir = 'static/uploads/queImg'
+                            if not os.path.exists(uploads_dir):
+                                os.makedirs(uploads_dir)
                             # Save the file to the upload folder
                             file_path = '/queImg/' + f"{test_id}_{file_key}.jpg"
                             # Add the image path to the question dictionary
-                            file_save_path = os.path.join('static/uploads/queImg', f"{test_id}_{file_key}.jpg")
+                            file_save_path = os.path.join(uploads_dir,f"{test_id}_{file_key}.jpg")
                             file.save(file_save_path)
                             question['image_path'] = file_path
                     # Append the question dictionary to the list
@@ -627,13 +626,15 @@ def create_test_paragraph():
                     if file_key in request.files:
                         file = request.files[file_key]
                         if file.filename != '':
+                            uploads_dir = 'static/uploads/queImg'
+                            if not os.path.exists(uploads_dir):
+                                os.makedirs(uploads_dir)
                             # Ensure secure filename to prevent security risks
                             filename = secure_filename(file.filename)
                             # Save the file to the upload folder
                             file_path = f"{test_id}_{file_key}.jpg"
                             # Add the image path to the question dictionary
-                            file_save_path = os.path.join(
-                                'static/uploads/queImg', f"{test_id}_{file_key}.jpg")
+                            file_save_path = os.path.join(uploads_dir, f"{test_id}_{file_key}.jpg")
                             file.save(file_save_path)
                             question['image_path'] = file_path
                     questions.append(question)
