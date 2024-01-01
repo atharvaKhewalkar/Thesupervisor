@@ -21,7 +21,7 @@
     </div>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form method="POST" action="{{ url_for('main.register') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ url_for('register') }}" enctype="multipart/form-data">
                 <h1>Create Account</h1>
                 <input type="text" name="username" placeholder="Name" />
                 <div class="sele">
@@ -53,7 +53,7 @@
 
         </div>
         <div class="form-container sign-in-container">
-            <form method="POST" action="{{ url_for('main.login') }}">
+            <form method="POST" action="{{ url_for('login') }}">
                 <h1>Sign in</h1>
                 <input type="email" name="email" placeholder="Email" />
                 <input type="password" name="password" placeholder="Password" />

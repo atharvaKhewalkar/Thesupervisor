@@ -27,7 +27,7 @@
     <div id="timer"></div>
     <!-- Submit button to submit the test -->
     <div id="testForm">
-      <form method="POST" action="{{ url_for('main.submit_test',test_id=test.test_id) }}">
+      <form method="POST" action="{{ url_for('submit_test',test_id=test.test_id) }}">
         <!-- Loop through and display test questions -->
         {% for question in questions %}
 

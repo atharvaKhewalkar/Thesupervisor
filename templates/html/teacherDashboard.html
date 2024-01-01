@@ -8,7 +8,7 @@
 <body>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/scores.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/teacherdash.css') }}">
 
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,38 +18,43 @@
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600&family=Kalam&family=KoHo:wght@200&family=Mina&family=Quantico&family=Space+Grotesk:wght@500&display=swap" rel="stylesheet">
 
   <div class="head">
-    <h1>Tests</h1>
+    <h1>Welcome to Teacher Dashboard</h1>
   </div>
-
-  <div class="adjust">
-    <div class="navbar"> 
-      <ul>
-        <a href="/teacherDashboard"><li>Home</li></a>
-        <a href="/typeofque"><li>Create Test</li></a>
-          <a class="active" href="/score"><li>Scores</li></a>
-          <a href="/para_ans"><li>Answer Checking</li></a>
-          <a href="/teacher_profile"><li>Profile</li></a>
-          <a href="/edit_stud_data"><li>Edit Student Data</li></a>
-          <a href="/logout"><li onclick="logout()">Logout</li></a>
-      </ul>
-   </div>
-  
 <section class="main">
-            
+      
+      <div> 
+         <div class="navbar"> 
+            <ul>
+              <a class="active"><li>Home</li></a>
+              <a href="/typeofque"><li>Create Test</li></a>
+                <a href="/score"><li>Scores</li></a>
+                <a href="/para_ans"><li>Answer Checking</li></a>
+                <a href="/teacher_profile"><li>Profile</li></a>
+                <a href="/edit_stud_data"><li>Edit Student Data</li></a>
+                <a href="/logout"><li onclick="logout()">Logout</li></a>
+            </ul>
+         </div>
+       </div>
+        
     
 <div class="nd">
     <section class="tests">
+        <div class="head2">
+          <h1>Tests Created</h1>
+        </div>
         <div class="upcoming">
-          {% for test in mcq_test %}
+          {% for test in upcoming_tests %}
           <div class="card" style="width: 18rem;">
             <div class="card-body">
               <h5 class="card-title">{{ test.test_id }}</h5>
               <h5 class="card-title">{{ test.subject }}</h5>
               <p class="card-text">{{ test.description }}</p><br>
-              <a href="{{ url_for('main.mcq_stud_score', test_id=test.test_id) }}" class="but-1 btn btn-primary">View Score</a><br><br>
+              <a href="{{ url_for('view_test_mcq', test_id=test.test_id) }}" class=" but-1 btn btn-primary">Edit Test</a><br><br>
               <p>
                 Marks: {{ test.marks }} <br>
                 Date: {{ test.test_date }} <br>
+                Start Time: {{ start_time[ loop.index0 ] }} <br>
+                End Time: {{ end_time[ loop.index0 ] }}
               </p>
             </div>
           </div>
@@ -57,16 +62,18 @@
         </div>
 
         <div class="upcoming">
-          {% for test in para_test %}
+          {% for test in upcoming_tests_para %}
           <div class="card" style="width: 18rem;">
             <div class="card-body">
               <h5 class="card-title">{{ test.test_id }}</h5>
               <h5 class="card-title">{{ test.subject }}</h5>
               <p class="card-text">{{ test.description }}</p><br>
-              <a href="{{ url_for('main.para_stud_score', test_id=test.test_id) }}" class="btn btn-primary">View Score</a><br><br>
+              <a href="{{ url_for('view_test_para', test_id=test.test_id) }}" class="but-1 btn btn-primary">Edit Test</a>
               <p>
                 Marks: {{ test.marks }} <br>
                 Date: {{ test.test_date }} <br>
+                Start Time: {{ start_time_para[ loop.index0 ] }} <br>
+                End Time: {{ end_time_para[ loop.index0 ] }}
               </p>
             </div>
           </div>
@@ -79,7 +86,14 @@
       <br><br><br>
     </section>
   </div>
-  </div>
     <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 </body>
+<script>
+  function logout() {
+    return (
+      window.confirm("You Sure?")
+    )
+  }
+
+</script>
 </html>

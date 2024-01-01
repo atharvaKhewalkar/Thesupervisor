@@ -27,7 +27,7 @@
                     <h5 class="card-title">{{ test.subject }}</h5>
                     <p class="card-text">{{ test.test_id }}</p><br>
                     <p class="card-text">{{ test.description }}</p><br>
-                    <a href="{{ url_for('main.stu_attempted_tests', test_id=test.test_id) }}" class="btn btn-primary"> check Test</a>
+                    <a href="{{ url_for('stu_attempted_tests', test_id=test.test_id) }}" class="btn btn-primary"> check Test</a>
                             <p>
                                 Marks: {{ test.marks }} <br>
                                 Date: {{ test.test_date }} <br>

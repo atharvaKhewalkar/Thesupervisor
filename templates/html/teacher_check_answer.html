@@ -14,7 +14,7 @@
     <h1>Checking Answers for Test {{ test_id }}</h1>
     <h2>Student: {{ student_email }}</h2>
 
-    <form method="POST" action="{{ url_for('main.submit_scores', test_id=test_id, student_email=student_email) }}">
+    <form method="POST" action="{{ url_for('submit_scores', test_id=test_id, student_email=student_email) }}">
         <table border="1">
             <thead>
                 <tr>
@@ -47,6 +47,6 @@
 
     <br>
 
-    <a href="{{ url_for('main.stu_attempted_tests', test_id=test_id) }}">Back to Student List</a>
+    <a href="{{ url_for('stu_attempted_tests', test_id=test_id) }}">Back to Student List</a>
 </body>
 </html>

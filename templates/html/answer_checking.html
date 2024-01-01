@@ -24,7 +24,7 @@
                 <tr>
                     <td>{{ email }}</td>
                     <td>
-                        <form method="post" action="{{ url_for('main.check_answer', test_id=test_id, student_email=email) }}">
+                        <form method="post" action="{{ url_for('check_answer', test_id=test_id, student_email=email) }}">
                             <button type="submit">Check Answer</button>
                         </form>
                     </td>
