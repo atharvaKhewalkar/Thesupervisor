@@ -2,12 +2,19 @@ from flask import Flask
 from pymongo import MongoClient
 from flask import Blueprint, render_template, session, request, redirect, url_for, send_from_directory, jsonify
 from flask_mail import Message
+from flask_mail import Mail
 import secrets
 from bson import ObjectId
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from flask import request, jsonify 
+import cv2 #pip install opencv-contrib-python
+import numpy as np
+from PIL import Image
+import hashlib
+cam = cv2.VideoCapture(0)
+detector=cv2.CascadeClassifier('haarcascade.xml')
 # Replace with your email server details
 
 
@@ -21,6 +28,7 @@ app.config['MAIL_USERNAME'] = 'riteshphadtare32@gmail.com'
 app.config['MAIL_PASSWORD'] = 'owyu hneq arko ocsq'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.secret_key='IT2023'
+mail = Mail(app)
 # MongoDB Atlas connection URI
 MONGODB_URI = "mongodb+srv://itstudiodpu:43zB1ftcqLIBioLh@thesupervisor.lilvxlg.mongodb.net/"
 
@@ -378,8 +386,10 @@ def register():
             if file and allowed_file(file.filename):
                 # Generate a secure filename based on the student name
                 filename = secure_filename(request.form['username'] + '.jpg')
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
+                file.save(os.path.join('static/uploads/profilePhotos/', filename))
+            count = users.count_documents({})
+            unique_id = count + 1
+            
             token = secrets.token_urlsafe(16)
             new_user = {
                 'name': request.form['username'],
@@ -390,7 +400,8 @@ def register():
                 'password': request.form['password'],
                 'token': token,
                 'verified': False,
-                'profile_photo': filename  # Save the filename in the database
+                'profile_photo': filename,  # Save the filename in the database
+                'unique_id':unique_id
             }
             users.insert_one(new_user)
 
@@ -1209,6 +1220,58 @@ def filter_by_department(department):
         students = list(db.users.find({'department': department}))
 
     return render_template('/edit_stud_data.html', students=students)
+
+@app.route('/clickPhotos',methods=['GET', 'POST'])
+def clickPhotos():
+    
+    Id = db.users.find_one({'email': session.get('user').get('email')}, {'unique_id': 1})['unique_id'] if session.get('user') else None
+    sampleNum=0
+    while(True):
+        ret, img = cam.read()
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        faces = detector.detectMultiScale(gray, 1.3, 5)
+        for (x,y,w,h) in faces:
+            cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+            
+            #saving the captured face in the dataset folder
+            cv2.imwrite("static/uploads/studImg/User."+ str(Id) +'.'+ str(sampleNum) + ".jpg", gray[y:y+h,x:x+w])
+            sampleNum=sampleNum+1
+            cv2.imshow('frame',img)
+        # break if the sample number is morethan 20
+        if sampleNum>60:
+            break
+    cam.release()
+    cv2.destroyAllWindows()
+    
+    return redirect(url_for('profile'))
+
+@app.route('/trainModel',methods=['GET', 'POST'])
+def trainModel():
+    recognizer=cv2.face.LBPHFaceRecognizer_create()
+    path='static/uploads/studImg/'
+    def getImagesWithID(path):
+        imagePaths=[os.path.join(path,f) for f in os.listdir(path)]
+        faces=[]
+        IDs=[]
+
+        for imagepath in imagePaths:
+            faceImg=Image.open(imagepath).convert('L')
+            faceNp=np.array(faceImg,'uint8')
+            print(imagepath)
+            ID=int(os.path.split(imagepath)[-1].split(".")[1])
+            #dataset/User.1.3
+            faces.append(faceNp)
+            IDs.append(ID)
+            cv2.imshow("training",faceNp)
+            cv2.waitKey(10)
+        return np.array(IDs),faces
+
+    Ids,faces=getImagesWithID(path)
+    recognizer.train(faces,Ids)
+    recognizer.save('trainingData.yml')
+    cv2.destroyAllWindows()
+
+    return redirect(url_for('teacherDashboard'))
 
 if __name__ == '__main__':
     app.run(debug=True)
