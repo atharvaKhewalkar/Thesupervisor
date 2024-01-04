@@ -860,13 +860,15 @@ def check_user(test_id):
                     if first_time_user and not exam_tab_opened:
                         open_exam_tab()
                         first_time_user = False
+                        exam_tab_opened= True
 
                 else:
                     cv2.putText(frame, "Unknown", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
-
+    
                     if exam_tab_opened:
-                            close_exam_tab()
-                            break  # Terminate the loop and close the tab
+                        print("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+                        close_exam_tab()
+                        break  # Terminate the loop and close the tab
 
 
         # Get the frame shape and prepare it for YOLO
@@ -914,6 +916,8 @@ def check_user(test_id):
     # Release the video capture object and close all windows
     cap.release()
     cv2.destroyAllWindows()
+    
+    return "hiiiiiiiiiiii"
 
 
 @app.route('/attempt_test/<test_id>')
