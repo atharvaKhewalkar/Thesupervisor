@@ -63,7 +63,7 @@
               <h5 class="card-title">{{ test.subject }}</h5>
               <p class="card-text">{{ test.test_id }}</p><br>
               <p class="card-text">{{ test.description }}</p>
-              <a href="{{ url_for('check_user', test_id=test.test_id) }}" class="but-1 btn-primary"> Attempt Test<a>    <p>
+              <a href="{{ url_for('attempt_test', test_id=test.test_id) }}" class="but-1 btn-primary"> Attempt Test<a>    <p>
                 Marks: {{ test.marks }} <br>
                 Date: {{ test.test_date }} <br>
                 Time: {{ test.time }}

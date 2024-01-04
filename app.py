@@ -846,8 +846,8 @@ def check_user(test_id):
 
     # Set the minimum percentage of object visibility for detection
     min_visibility_percentage = 0.50
-
-    while True:
+    flag = True
+    while flag:
         # Read a frame from the camera
         ret, frame = cap.read()
         
@@ -874,7 +874,7 @@ def check_user(test_id):
                     cv2.putText(frame, "Unknown", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
     
                     if exam_tab_opened:
-                        print("hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii")
+                        flag = False
                         close_exam_tab()
                         break  # Terminate the loop and close the tab
 
@@ -925,7 +925,7 @@ def check_user(test_id):
     cap.release()
     cv2.destroyAllWindows()
     
-    return "hiiiiiiiiiiii"
+    return redirect(url_for('home'))
 
 
 @app.route('/attempt_test/<test_id>')
