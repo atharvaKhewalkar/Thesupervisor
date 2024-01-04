@@ -12,6 +12,8 @@ from flask import request, jsonify
 import cv2 #pip install opencv-contrib-python
 import numpy as np
 from PIL import Image
+import pygetwindow as gw
+import pyautogui
 import time
 import webbrowser
 
@@ -827,8 +829,15 @@ def check_user(test_id):
 
     def close_exam_tab():
         global exam_tab_opened
-        # Close exam tab by simulating keyboard shortcuts (may not work in all scenarios)
-        os.system("taskkill /F /IM chrome.exe")  # Terminate Chrome process
+
+        # Switch to the Chrome window (you might need to adjust these coordinates based on your screen resolution)
+        pyautogui.click(x=100, y=100)  # Click on the Chrome window to ensure it's active
+
+         # Switch to the next tab
+
+        # Close the current tab using Ctrl + W
+        pyautogui.hotkey('ctrl', 'w')
+
         print('Exam tab closed successfully')
         exam_tab_opened = False
         
@@ -844,7 +853,6 @@ def check_user(test_id):
         
         if ret:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
             # Detect faces
             faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
