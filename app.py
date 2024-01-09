@@ -931,12 +931,7 @@ def check_user(test_id):
                         y = int(center_y - h / 2)
                         
 
-                        detected_object = {
-                            'class': classes[class_id],
-                            'confidence': confidence,
-                            'visibility_percentage': visibility_percentage,
-                            'bounding_box': (x, y, x + w, y + h)
-                        }
+                        detected_object = classes[class_id]
                         if(detected_object=="cell phone" or detected_object=="laptop" or detected_object=="book"):
                             if exam_tab_opened:
                                 close_exam_tab()
