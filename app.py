@@ -818,7 +818,7 @@ def check_user(test_id):
     first_time_user = True
     exam_tab_opened = False
 
-    exam_url = "http://127.0.0.1:5000/attempt_test/"+test_id
+    exam_url = "https:/github.com/atharvaKhewalkar/Thesupervisor"
 
     def open_exam_tab():
         global exam_tab_opened
@@ -840,19 +840,22 @@ def check_user(test_id):
 
         print('Exam tab closed successfully')
         exam_tab_opened = False
+
+        
         
     # Exclude the "person" class
     exclude_class = "person"
-
+    min_faces=1
     # Set the minimum percentage of object visibility for detection
-    min_visibility_percentage = 0.50
-    flag = True
-    while flag:
+    min_visibility_percentage = 0.10
+
+    while True:
         # Read a frame from the camera
         ret, frame = cap.read()
         
         if ret:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
             # Detect faces
             faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
@@ -868,16 +871,31 @@ def check_user(test_id):
                     if first_time_user and not exam_tab_opened:
                         open_exam_tab()
                         first_time_user = False
-                        exam_tab_opened= True
+                        exam_tab_opened=True
 
-                else:
-                    cv2.putText(frame, "Unknown", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
-    
-                    if exam_tab_opened:
-                        flag = False
+                # else:
+                #     cv2.putText(frame, "Unknown", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
+
+                #     if exam_tab_opened:
+                #             close_exam_tab()
+                #             break  # Terminate the loop and close the tab
+
+            # Draw rectangles around the faces
+            for (x, y, w, h) in faces:
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+
+            # Check if more than two faces are detected
+            if len(faces) > min_faces:
+                print(f"More than {min_faces} faces detected. Trigger an action here.")
+                if exam_tab_opened:
                         close_exam_tab()
+                        exam_tab_opened = False
                         break  # Terminate the loop and close the tab
+                        # exam_tab_opened = False
 
+            # Display the resulting frame
+            # cv2.imshow("Face Detection", frame)
+            
 
         # Get the frame shape and prepare it for YOLO
         height, width, channels = frame.shape
@@ -885,6 +903,9 @@ def check_user(test_id):
         net.setInput(blob)
         outs = net.forward(layer_names)
 
+
+
+        # detected_objects = []
         # Process the outputs from YOLO
         for out in outs:
             for detection in out:
@@ -908,6 +929,19 @@ def check_user(test_id):
                         # Rectangle coordinates
                         x = int(center_x - w / 2)
                         y = int(center_y - h / 2)
+                        
+
+                        detected_object = {
+                            'class': classes[class_id],
+                            'confidence': confidence,
+                            'visibility_percentage': visibility_percentage,
+                            'bounding_box': (x, y, x + w, y + h)
+                        }
+                        if(detected_object=="cell phone" or detected_object=="laptop" or detected_object=="book"):
+                            if exam_tab_opened:
+                                close_exam_tab()
+                                exam_tab_opened = False
+                                break
 
                         # Draw bounding box for all classes except "person"
                         color = (0, 255, 0)  # Green color for the bounding box
@@ -918,7 +952,7 @@ def check_user(test_id):
         cv2.imshow("Object Detection", frame)
 
         # Break the loop if 'q' key is pressed
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) & 0xFF == ord('q')  :
             break
 
     # Release the video capture object and close all windows
