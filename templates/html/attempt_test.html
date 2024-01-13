@@ -20,52 +20,63 @@
       <p>Start Time: {{ st }}</p>
       <p>End Time: {{ et }}</p>
     </div>
-   
+
     <!-- Add other test details like marks, time, etc. if available -->
     <!-- Display test questions -->
     <div id="content"></div>
     <div id="timer"></div>
-    <!-- Submit button to submit the test -->
-    <div id="testForm">
-      <form method="POST" action="{{ url_for('submit_test',test_id=test.test_id) }}">
-        <!-- Loop through and display test questions -->
-        {% for question in questions %}
+    <button id="fullscreenButton">Enter Full Screen</button>
+    <div id="fullscreen" style="display: none;">
+      <!-- Submit button to submit the test -->
+      <div id="testForm">
+        <form method="POST" action="{{ url_for('submit_test',test_id=test.test_id) }}">
+          <!-- Loop through and display test questions -->
+          {% for question in questions %}
 
-        <div class="question">
+          <div class="question">
 
-          <h3>Question {{ (loop.index) }}</h3>
-          <p>{{ question.question }}</p>
-          {% if question.image_path %}
-          <img src="{{ url_for('download_file', filename= question.image_path) }}" alt="Question Image"
-            style="height: 300px; width: 300px;">
-          {% endif %}
-          <!-- Display options for the question using radio buttons -->
-          <label for="option1_{{ loop.index }}">1. {{ question.option1 }}</label><br>
-          <label for="option2_{{ loop.index }}">2. {{ question.option2 }}</label><br>
-          <label for="option3_{{ loop.index }}">3. {{ question.option3 }}</label><br>
-          <label for="option4_{{ loop.index }}">4. {{ question.option4 }}</label><br>
+            <h3>Question {{ (loop.index) }}</h3>
+            <p>{{ question.question }}</p>
+            {% if question.image_path %}
+            <img src="{{ url_for('download_file', filename= question.image_path) }}" alt="Question Image"
+              style="height: 300px; width: 300px;">
+            {% endif %}
+            <!-- Display options for the question using radio buttons -->
+            <label for="option1_{{ loop.index }}">1. {{ question.option1 }}</label><br>
+            <label for="option2_{{ loop.index }}">2. {{ question.option2 }}</label><br>
+            <label for="option3_{{ loop.index }}">3. {{ question.option3 }}</label><br>
+            <label for="option4_{{ loop.index }}">4. {{ question.option4 }}</label><br>
 
-          <label for="correct_option_{{ loop.index }}">Choose a Correct Option:</label>
-          <select id="correct_option_{{ loop.index }}" name="correct_option_{{ loop.index }}">
-            <option value="" selected disabled>Select an Option</option>
-            <option value="option1_{{ loop.index }}">Option1</option>
-            <option value="option2_{{ loop.index }}">Option2</option>
-            <option value="option3_{{ loop.index }}">Option3</option>
-            <option value="option4_{{ loop.index }}">Option4</option>
-          </select><br>
-        </div>
+            <label for="correct_option_{{ loop.index }}">Choose a Correct Option:</label>
+            <select id="correct_option_{{ loop.index }}" name="correct_option_{{ loop.index }}">
+              <option value="" selected disabled>Select an Option</option>
+              <option value="option1_{{ loop.index }}">Option1</option>
+              <option value="option2_{{ loop.index }}">Option2</option>
+              <option value="option3_{{ loop.index }}">Option3</option>
+              <option value="option4_{{ loop.index }}">Option4</option>
+            </select><br>
+          </div>
 
-        {% endfor %}
+          {% endfor %}
+      </div>
     </div>
+    
     <button type="submit" id="submitButton">Submit Test</button>
     </form>
 
-    
+
 
 
   </div>
 
   <script>
+
+    var popUpCount = 0;
+    var popUpCountExcided = false;
+    document.getElementById('fullscreenButton').addEventListener('click', enterFullScreen);
+
+    // Event listener for fullscreenchange
+    // document.addEventListener('fullscreenchange', checkFullScreen);
 
 
     $(document).ready(function () {
@@ -80,6 +91,47 @@
         if (evt.persisted) disableBack();
       };
     });
+
+    function enterFullScreen() {
+
+      document.getElementById("fullscreen").style.display = "block";
+
+      var element = document.documentElement; // Fullscreen for the whole document
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.mozRequestFullScreen) { // Firefox
+        element.mozRequestFullScreen();
+      } else if (element.webkitRequestFullscreen) { // Chrome, Safari and Opera
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) { // IE/Edge
+        element.msRequestFullscreen();
+      }
+    }
+
+    function checkFullScreen() {
+      if (popUpCount > 3) {
+        // If popUpCount is greater than 6, stop the function and click the submit button
+        document.getElementById("content").innerHTML = "The exam has ended.";
+        document.getElementById("submitButton").style.display = "block";
+        document.getElementById("testForm").style.display = "none";
+        popUpCountExcided = true;
+        document.getElementById("submitButton").click();
+        return;
+      }
+
+      if (!document.fullscreenElement) {
+        // User exited fullscreen, show popup and re-enter fullscreen on OK
+        alert("You have exited fullscreen mode. Please click on Enter Full Screen Button to go back into full screen mode");
+        popUpCount += 1;
+        console.log(popUpCount);
+      }
+
+      setTimeout(checkFullScreen, 5000);
+      
+    }
+
+
+
 
 
 
@@ -103,12 +155,13 @@
         document.getElementById("submitButton").style.display = "block";
         document.getElementById("testForm").style.display = "none";
       } else {
-        document.getElementById("content").innerHTML = "Timer";
-        document.getElementById("submitButton").style.display = "block";
-        document.getElementById("testForm").style.display = "block";
-        countdown(); // Start countdown after checking access
-
-        // Calculate the delay until the test starts
+        if (popUpCountExcided == false) {
+          document.getElementById("content").innerHTML = "Timer";
+          document.getElementById("submitButton").style.display = "block";
+          document.getElementById("testForm").style.display = "block";
+          checkFullScreen();
+          countdown();
+        }
       }
     }
 
