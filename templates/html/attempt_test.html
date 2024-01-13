@@ -60,7 +60,7 @@
           {% endfor %}
       </div>
     </div>
-    
+
     <button type="submit" id="submitButton">Submit Test</button>
     </form>
 
@@ -73,6 +73,7 @@
 
     var popUpCount = 0;
     var popUpCountExcided = false;
+    var firstTime = false;
     document.getElementById('fullscreenButton').addEventListener('click', enterFullScreen);
 
     // Event listener for fullscreenchange
@@ -93,9 +94,11 @@
     });
 
     function enterFullScreen() {
-
+      firstTime = true;
+      
+      document.getElementById("fullscreenButton").style.display = "none";
       document.getElementById("fullscreen").style.display = "block";
-
+      document.getElementById("testForm").style.display = "block";
       var element = document.documentElement; // Fullscreen for the whole document
       if (element.requestFullscreen) {
         element.requestFullscreen();
@@ -107,7 +110,7 @@
         element.msRequestFullscreen();
       }
     }
-
+    
     function checkFullScreen() {
       if (popUpCount > 3) {
         // If popUpCount is greater than 6, stop the function and click the submit button
@@ -118,16 +121,20 @@
         document.getElementById("submitButton").click();
         return;
       }
-
-      if (!document.fullscreenElement) {
-        // User exited fullscreen, show popup and re-enter fullscreen on OK
-        alert("You have exited fullscreen mode. Please click on Enter Full Screen Button to go back into full screen mode");
-        popUpCount += 1;
-        console.log(popUpCount);
+      
+      if (firstTime == true) {
+        if (!document.fullscreenElement) {
+          // User exited fullscreen, show popup and re-enter fullscreen on OK
+          document.getElementById("testForm").style.display = "none";
+          document.getElementById("fullscreenButton").style.display = "block";
+          alert("You have exited fullscreen mode. Please click on Enter Full Screen Button to go back into full screen mode");
+          popUpCount += 1;
+          console.log(popUpCount);
+        }
       }
 
       setTimeout(checkFullScreen, 5000);
-      
+
     }
 
 
@@ -143,9 +150,12 @@
 
       if (currentTime < start_time) {
         document.getElementById("content").innerHTML = "The exam will start at " +
-          start_time.toLocaleTimeString(); document.getElementById("timer").style.display = "block";
+        start_time.toLocaleTimeString(); 
+        document.getElementById("timer").style.display = "block";
         document.getElementById("submitButton").style.display = "none";
-        document.getElementById("testForm").style.display = "none"; var delay = start_time - currentTime; if (delay > 0) {
+        document.getElementById("testForm").style.display = "none"; 
+        var delay = start_time - currentTime; 
+        if (delay > 0) {
           setTimeout(function () {
             location.reload(true); // Reload the page when the test starts
           }, delay);
