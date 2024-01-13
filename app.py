@@ -17,7 +17,6 @@ import pyautogui
 import time
 import webbrowser
 from selenium import webdriver
-import dlib
 import sys
 from tkinter import messagebox  # Import the messagebox module
 import tkinter as tk
