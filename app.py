@@ -21,7 +21,7 @@ import sys
 from tkinter import messagebox  # Import the messagebox module
 import tkinter as tk
 from tkinter import messagebox
-
+import dlib
 
 
 
@@ -856,35 +856,10 @@ def check_user_opencv(test_id):
     popup_counter = 0
     max_popup_count = 5  # Set the maximum number of pop-ups before closing the tab
 
-    def show_popup(class_name):
-        root = tk.Tk()
-        root.withdraw()
-
-        # Function to resume code execution
-        def resume_code():
-            root.destroy()
-
-        # Create a top-level window
-        popup_window = tk.Toplevel(root)
-        popup_window.title("Object Detected")
-
-        # Label with the detected class name
-        label = tk.Label(popup_window, text=f"Non-Person Object Detected: {class_name}")
-        label.pack(pady=10)
-
-        # Button to resume code execution
-        resume_button = tk.Button(popup_window, text="Resume", command=resume_code)
-        resume_button.pack(pady=10)
-
-        # Bring the window to the front
-        popup_window.attributes("-topmost", True)
-
-        # Close the window after a delay (in milliseconds)
-        popup_window.after(5000, resume_code)
-
-        # Start the Tkinter main loop
-        root.mainloop()
-
+    def show_popup(class_name):  
+        # Show a browser alert
+        alert_message = f"Non-Person Object Detected: {class_name}"
+        pyautogui.alert(alert_message, title="Object Detected")
         
     
 
