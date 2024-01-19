@@ -58,10 +58,19 @@
     var popUpCount = 0;
     var popUpCountExcided = false;
     var firstTime = false;
+    var max_count = 5;
     document.getElementById('fullscreenButton').addEventListener('click', enterFullScreen);
 
-    // Event listener for fullscreenchange
-    // document.addEventListener('fullscreenchange', checkFullScreen);
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') {
+        // User switched away from the page
+        if (firstTime) {
+          alert("You have switched away from the test. Please click on Enter Full Screen Button to go back into full screen mode");
+          popUpCount += 1;
+          hideQuestion();
+        }
+      }
+    });
 
 
     $(document).ready(function () {
@@ -96,7 +105,7 @@
     }
 
     function checkFullScreen() {
-      if (popUpCount > 3) {
+      if (popUpCount > max_count) {
         // If popUpCount is greater than 6, stop the function and click the submit button
         document.getElementById("content").innerHTML = "The exam has ended.";
         document.getElementById("submitButton").style.display = "block";
@@ -117,7 +126,7 @@
         }
       }
 
-      setTimeout(checkFullScreen, 5000);
+      setTimeout(checkFullScreen, 7000);
 
     }
 
@@ -133,6 +142,7 @@
         document.getElementById("timer").style.display = "block";
         document.getElementById("submitButton").style.display = "none";
         document.getElementById("testForm").style.display = "none";
+        document.getElementById("fullscreenButton").style.display = "none";
         var delay = start_time - currentTime;
         if (delay > 0) {
           setTimeout(function () {
@@ -143,11 +153,13 @@
         document.getElementById("content").innerHTML = "The exam has ended.";
         document.getElementById("submitButton").style.display = "block";
         document.getElementById("testForm").style.display = "none";
+        document.getElementById("fullscreenButton").style.display = "none";
       } else {
         if (popUpCountExcided == false) {
           document.getElementById("content").innerHTML = "Timer";
           document.getElementById("submitButton").style.display = "block";
           document.getElementById("testForm").style.display = "block";
+          document.getElementById("fullscreenButton").style.display = "block";
           checkFullScreen();
           countdown();
         }
@@ -173,6 +185,28 @@
     window.onload = function () {
       checkAccess();
     };
+
+    document.addEventListener('contextmenu', function (event) {
+      event.preventDefault();
+    });
+
+    document.addEventListener('copy', function (event) {
+      event.preventDefault();
+    });
+
+    document.addEventListener('cut', function (event) {
+      event.preventDefault();
+    });
+
+    document.addEventListener('paste', function (event) {
+      event.preventDefault();
+    });
+
+    function hideQuestion() {
+      // Add code to hide the question element
+      document.getElementById("testForm").style.display = "none";
+      document.getElementById("fullscreenButton").style.display = "block";
+    }
   </script>
 
 </body>
