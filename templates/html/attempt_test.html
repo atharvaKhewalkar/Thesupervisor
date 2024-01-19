@@ -25,7 +25,7 @@
     <!-- Display test questions -->
     <div id="content"></div>
     <div id="timer"></div>
-    <button id="fullscreenButton">Enter Full Screen</button>
+    <button id="fullscreenButton" style="display: none;">Enter Full Screen</button>
     <div id="fullscreen" style="display: none;">
       <!-- Submit button to submit the test -->
       <div id="testForm">
@@ -128,6 +128,7 @@
         document.getElementById("testForm").style.display = "none";
         popUpCountExcided = true;
         document.getElementById("submitButton").click();
+        popUpCount = 0;
         return;
       }
 
@@ -171,7 +172,9 @@
         document.getElementById("testForm").style.display = "none";
         document.getElementById("fullscreenButton").style.display = "none";
       } else {
+        
         if (popUpCountExcided == false) {
+          document.getElementById("fullscreenButton").style.display = "block";
           document.getElementById("content").innerHTML = "Timer";
           document.getElementById("submitButton").style.display = "block";
           document.getElementById("testForm").style.display = "block";
