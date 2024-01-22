@@ -25,10 +25,6 @@ import dlib
 
 
 
-
-
-
-
 cam = cv2.VideoCapture(0)
 detector=cv2.CascadeClassifier('haarcascade.xml')
 # Replace with your email server details
@@ -814,24 +810,23 @@ def edit_test_para(test_id):
 
 
 def check_user_opencv(test_id):
-    # Load the trained face recognition model
+    global popup_counter  # Declare popup_counter as a global variable
+    popup_counter = 0
     recognizer = cv2.face.LBPHFaceRecognizer_create()
     recognizer.read('trainingData.yml')
     dlib_detector = dlib.get_frontal_face_detector()
     face_cascade = cv2.CascadeClassifier('haarcascade.xml')
 
-    # Load YOLO
-    net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
+    driver = webdriver.Chrome()
 
-    # Get the names of the output layers
+    net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
     layer_names = net.getUnconnectedOutLayersNames()
 
     classes = []
     with open("coco.names", "r") as f:
         classes = [line.strip() for line in f]
 
-    # Open a video capture object
-    cap = cv2.VideoCapture(0)  # 0 for default camera, or provide the path to a video file
+    cap = cv2.VideoCapture(0)
     user_detected = False
     first_time_user = True
     exam_tab_opened = False
@@ -841,8 +836,7 @@ def check_user_opencv(test_id):
 
     def open_exam_tab():
         global exam_tab_opened
-        # Open exam tab in the default web browser
-        webbrowser.open_new(exam_url)
+        driver.get(exam_url)
         print('Exam tab opened successfully 1')
         exam_tab_opened = True
 
@@ -853,15 +847,17 @@ def check_user_opencv(test_id):
         print('Exam tab closed successfully')
         exam_tab_opened = False
 
-    popup_counter = 0
-    max_popup_count = 5  # Set the maximum number of pop-ups before closing the tab
+    max_popup_count = 10
 
-    def show_popup(class_name):  
-        # Show a browser alert
+    def show_popup(class_name):
+        global popup_counter
         alert_message = f"Non-Person Object Detected: {class_name}"
-        pyautogui.alert(alert_message, title="Object Detected")
-        
-    
+        script = f"alert('{alert_message}');"
+        driver.execute_script(script)
+        popup_counter += 1
+
+
+
 
     # Exclude the "person" class
     exclude_class = "person"
@@ -869,12 +865,8 @@ def check_user_opencv(test_id):
     # Set the minimum percentage of object visibility for detection
     min_visibility_percentage = 0.50
     delay_before_opening_tab = 5
+    popup_delay = 5
 
-    # Function to show a pop-up for non-person objects
-    # def show_popup(class_name):
-    #     root = tk.Tk()
-    #     root.withdraw()
-    #     messagebox.showinfo("Non-Person Object Detected", f"Detected a non-person object: {class_name}")
 
 
 
@@ -927,10 +919,16 @@ def check_user_opencv(test_id):
                     
 
             # Check if more than two faces are detected
-            if(popup_counter==max_popup_count):
-                if len(faces) > min_faces or len(faces) == 0:
-                    print(f"More than {min_faces} faces or no face detected. Trigger an action here.")
-                    if exam_tab_opened:
+            
+            if len(faces) > min_faces or len(faces) == 0:
+                message1 = f"More than {min_faces} faces or no face detected. Trigger an action here."
+                print(message1)
+                if exam_tab_opened:
+                    show_popup(message1)
+                    if(popup_counter<max_popup_count):
+                        popup_counter+=1
+                        time.sleep(popup_delay)
+                    else:
                         close_exam_tab()
                         exam_tab_opened = False
                         break  # Terminate the loop and close the tab
@@ -985,15 +983,18 @@ def check_user_opencv(test_id):
 
             
 
-                        # Draw bounding box for all classes except "person"
                         if classes[class_id] == "cell phone":
-                            message = f"{detected_object['class']} detected with confidence {detected_object['confidence']:.2f}"
-                            show_popup(message)
+                            message = f"{detected_object['class']} detected with confidence {detected_object['confidence']:.2f} {popup_counter}" 
+                            show_popup(message)  
 
-                        if(popup_counter==max_popup_count): 
-                            close_exam_tab()
-                            sys.exit()
-                            break
+                            if popup_counter >= max_popup_count:
+                                close_exam_tab()
+                                sys.exit()
+                                break
+
+                            # Introduce a delay after each popup
+                            time.sleep(popup_delay)
+
                         
 
                     # Draw bounding box for all classes except "person"
@@ -1651,6 +1652,9 @@ def trainModel():
     cv2.destroyAllWindows()
 
     return redirect(url_for('teacherDashboard'))
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
