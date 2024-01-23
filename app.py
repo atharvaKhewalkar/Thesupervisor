@@ -21,7 +21,7 @@ import sys
 from tkinter import messagebox  # Import the messagebox module
 import tkinter as tk
 from tkinter import messagebox
-# import dlib
+import dlib
 
 
 
@@ -841,6 +841,7 @@ def check_user_opencv(test_id):
         exam_tab_opened = True
 
     def close_exam_tab():
+        driver.execute_script("document.getElementById('submitButton').click();")
         global exam_tab_opened
         pyautogui.click(x=100, y=100)
         pyautogui.hotkey('ctrl', 'w')
