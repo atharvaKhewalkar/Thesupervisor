@@ -47,7 +47,7 @@
     text-decoration: none;
     align-items: center;
     width: 15%;
-    height: 200vh;
+    height: 400vh;
     text-align: center;
     /* position: absolute; */
     padding-top: 7%;
@@ -140,7 +140,7 @@
 
 
 .tests {
-    height: 100%;
+    height: 70%;
     background-color: rgba(234, 232, 232, 0.814);
 }
 
