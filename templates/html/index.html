@@ -26,69 +26,66 @@
 
 
   <div class="main">
-      <div class="Navbar">
-         <ul>
-           <li class="active"><a>Home</a></li>
+                    <div class="Navbar">
+                        <ul>
+                          <li class="active"><a>Home</a></li>
+                          <li><a href="/profile">Profile</a></li>
+                          <li onclick="logout()"><a href="/logout">Logout</a></li>
+                        </ul>
+                      </div>
 
-          
+           <div class="content">
+                              <section class="home">
+                               <div class="wrapper">
+                                    <div class="static-txt">Hello..!</div>
 
-           <li><a href="/profile">Profile</a></li>
-           <li onclick="logout()"><a href="/logout">Logout</a></li>
-         </ul>
-       </div>
+                                    <ul class="dynamic-txt">
+                                      <li><span>IT Enthusiat..</span></li>
 
-      <div class="content">
-        <section class="home">
-           <div class="wrapper">
-              <div class="static-txt">Hello..!</div>
+                                    </ul>
+                                  </div>
 
-               <ul class="dynamic-txt">
-                <li><span>IT Enthusiat..</span></li>
+                              </section>
+                              <section class="tests">
 
-               </ul>
-             </div>
 
-        </section>
-        
-        
+                                  <div class="head">
+                                    <h1>Tests</h1>
+                                  </div>
 
-        <section class="tests">
-          <div class="head">
-             <h1>Tests</h1>
-           </div>
-          <div class="upcoming">
-             {% for test in upcoming_tests %}
-             <div class="card" style="width: 18rem;">
-             <div class="card-body">
-              <h5 class="card-title">{{ test.subject }}</h5>
-              <p class="card-text">{{ test.test_id }}</p><br>
-              <p class="card-text">{{ test.description }}</p>
-              <a href="{{ url_for('check_user', test_id=test.test_id) }}" class="but-1 btn-primary"> Attempt Test<a>    <p>
-                Marks: {{ test.marks }} <br>
-                Date: {{ test.test_date }} <br>
-                Time: {{ test.time }}
-                </p>
-            </div>
-          </div>
-               {% endfor %}
-               {% for test in upcoming_test_para %}
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title">{{ test.subject }}</h5>
-              <p class="card-text">{{ test.test_id }}</p><br>
-              <p class="card-text">{{ test.description }}</p>
-              <a href="{{ url_for('attempt_test_para', test_id=test.test_id) }}" class="but-1 btn-primary"> Attempt Test<a>    <p>
-                Marks: {{ test.marks }} <br>
-                Date: {{ test.test_date }} <br>
-                Time: {{ test.time }}
-              </p>
-            </div>
-          </div>
-          {% endfor %}
-          </div>
-       </section>
+                                  <div class="upcoming">
+                                    {% for test in upcoming_tests %}
+                                    <div class="card" style="width: 18rem;">
+                                    <div class="card-body">
+                                      <h5 class="card-title">{{ test.subject }}</h5>
+                                      <p class="card-text">{{ test.test_id }}</p><br>
+                                      <p class="card-text">{{ test.description }}</p>
+                                      <a href="{{ url_for('check_user', test_id=test.test_id) }}" class="but-1 btn-primary"> Attempt Test<a>    <p>
+                                        Marks: {{ test.marks }} <br>
+                                        Date: {{ test.test_date }} <br>
+                                        Time: {{ test.time }}
+                                        </p>
+                                    </div>
+                                  </div>
+                                      {% endfor %}
+                                      {% for test in upcoming_test_para %}
+                                  <div class="card" style="width: 18rem;">
+                                    <div class="card-body">
+                                      <h5 class="card-title">{{ test.subject }}</h5>
+                                      <p class="card-text">{{ test.test_id }}</p><br>
+                                      <p class="card-text">{{ test.description }}</p>
+                                      <a href="{{ url_for('attempt_test_para', test_id=test.test_id) }}" class="but-1 btn-primary"> Attempt Test<a>    <p>
+                                        Marks: {{ test.marks }} <br>
+                                        Date: {{ test.test_date }} <br>
+                                        Time: {{ test.time }}
+                                      </p>
+                                    </div>
+                                  </div>
+                                  {% endfor %}
+                                  </div>
+          </section>
     </div>
-  </div>
+</div>
   <script src="{{ url_for('static', filename='js/home.js') }}"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"

@@ -21,7 +21,7 @@ import sys
 from tkinter import messagebox  # Import the messagebox module
 import tkinter as tk
 from tkinter import messagebox
-import dlib
+# import dlib
 
 
 

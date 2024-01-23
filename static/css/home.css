@@ -19,7 +19,7 @@
 .main {
     display: flex;
     margin-top: 0%;
-
+    height: 100%;
 }
 .but-1{
     align-items: center;
@@ -41,21 +41,17 @@
     font-weight: 700;
 }
 .Navbar {
-
     display: flex;
     flex-direction: column;
     background-color: #7b0629;
-    
     text-decoration: none;
     align-items: center;
     width: 15%;
-    height: 190vh;
+    height: 200vh;
     text-align: center;
     /* position: absolute; */
     padding-top: 7%;
     margin: 0%;
-
-
 }
 
 .Navbar ul {
@@ -144,7 +140,7 @@
 
 
 .tests {
-    height: 101vh;
+    height: 100%;
     background-color: rgba(234, 232, 232, 0.814);
 }
 
@@ -167,7 +163,7 @@
     padding: 2rem;
     width: 170vh;
     justify-content: space-between;
-
+   
 
 }
 
@@ -181,11 +177,11 @@
     background: rgb(26, 26, 26);
     color: aliceblue;    
 } */
-.ranks {
+/* .ranks {
     padding: 3rem;
-}
+} */
 
-table {
+/* table {
     width: 100%;
     border-collapse: collapse;
     text-align: center;
@@ -205,9 +201,10 @@ th {
 
 td {
     text-align: center;
-}
+} */
 
 .home {
     width: 180vh;
+    
 
 }
