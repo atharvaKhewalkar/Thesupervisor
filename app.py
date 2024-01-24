@@ -357,7 +357,7 @@ def login():
 
                     return render_template('html/index.html', upcoming_tests=upcoming_test,
                                            upcoming_test_para=upcoming_test_para,
-                                           jsonify_message=jsonify_message)
+                                           jsonify_message=jsonify_message, Studemail = login_user['email'])
 
             elif user_type == 'teacher':
                 if login_user:
@@ -809,7 +809,7 @@ def edit_test_para(test_id):
 
 
 
-def check_user_opencv(test_id):
+def check_user_opencv(test_id,Studemail):
     global popup_counter  # Declare popup_counter as a global variable
     popup_counter = 0
     recognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -832,7 +832,7 @@ def check_user_opencv(test_id):
     exam_tab_opened = False
     start_time = 0
     start_time1 = 0
-    exam_url = "http://127.0.0.1:5000/attempt_test/"+test_id
+    exam_url = "http://127.0.0.1:5000/attempt_test/"+test_id+"/"+Studemail
 
     def open_exam_tab():
         global exam_tab_opened
@@ -1167,14 +1167,14 @@ def check_user_old_opencv(test_id):
     
     return redirect(url_for('home'))
 
-@app.route('/check_user/<test_id>')
-def check_user(test_id):
-    check_user_opencv(test_id)
-    return redirect(url_for('home'))
+@app.route('/check_user/<test_id>/<Studemail>')
+def check_user(test_id,Studemail):
+    check_user_opencv(test_id,Studemail)
+    return redirect(url_for('home',Studemail=Studemail))
 
 
-@app.route('/attempt_test/<test_id>')
-def attempt_test(test_id):
+@app.route('/attempt_test/<test_id>/<Studemail>')
+def attempt_test(test_id,Studemail):
     test = db.test.find_one(
         {
             'test_id': test_id
@@ -1192,7 +1192,7 @@ def attempt_test(test_id):
         et = end_time_obj.strftime("%H:%M:%S")
 
         return render_template('html/attempt_test.html', test=test, questions=test_questions, start_time=start_time,
-                               end_time=end_time, et=et, st=st)
+                               end_time=end_time, et=et, st=st, Studemail=Studemail)
     return 'Test not found'
 
 
@@ -1256,8 +1256,8 @@ def successfull_submition():
     return redirect(url_for('result', test_id=test_id, student_id=student_id, test_details=test_details))
 
 
-@app.route('/submit_test/<test_id>', methods=['GET', 'POST'])
-def submit_test(test_id):
+@app.route('/submit_test/<test_id>/<Studemail>', methods=['GET', 'POST'])
+def submit_test(test_id,Studemail):
     if request.method == 'POST':
         # Retrieve the submitted test details from the database based on specified fields
         test_details = db.test.find_one({'test_id': test_id})
@@ -1285,7 +1285,7 @@ def submit_test(test_id):
         # Retrieve the existing document from the collection based on test_id
         existing_submission = db.submitted_answers_collection.find_one({
             'test_id': test_id})
-        user_email = session.get('user').get('email')
+        user_email = Studemail
         if existing_submission is None:
             # If no existing document is found, create a new one
             new_submission = {
@@ -1307,7 +1307,7 @@ def submit_test(test_id):
             )
 
         return redirect(url_for('successfull_submition', test_details=test_details,
-                                student_id=session.get('user').get('email'), submitted_answers=selected_answers,
+                                student_id=Studemail, submitted_answers=selected_answers,
                                 correct_answer=correct_answer))
 
     return 'Invalid request method'
@@ -1373,6 +1373,7 @@ def result():
     test_details_str = test_details[0]
     test_details_dict = eval(test_details_str)
     test_id = test_details_dict.get('test_id')
+    Stud_email = request.args.getlist('student_id')
     # Assuming 'marks' is a field in the 'test_details'
     marks = test_details_dict.get('marks')
     # Assuming 'subject' is a field in the 'test_details'
@@ -1384,8 +1385,8 @@ def result():
         return render_template('html/result.html', jsonify_message=jsonify_message)
     else:
         student_data = check_var.get('student_data', {})
-        student_id = session.get('user').get('email')
-
+        student_id = Stud_email[0]
+        print(f"Student Email : {Stud_email}")
         if student_id in student_data:
             value = student_data[student_id]
             return render_template('html/result.html', test_id=test_id, score=value, marks=marks, subject=subject,
@@ -1654,8 +1655,11 @@ def trainModel():
 
     return redirect(url_for('teacherDashboard'))
 
-
-
+@app.route('/close_tab',methods=['GET', 'POST'])
+def close_tab():
+    pyautogui.click(x=100, y=100)
+    pyautogui.hotkey('ctrl', 'w')
+    print('Exam tab closed successfully')
 
 if __name__ == '__main__':
     app.run(debug=True)
