@@ -23,6 +23,9 @@ import tkinter as tk
 from tkinter import messagebox
 import dlib
 
+from flask import redirect, url_for, render_template
+from selenium.common.exceptions import NoSuchWindowException
+
 
 
 cam = cv2.VideoCapture(0)
@@ -808,10 +811,18 @@ def edit_test_para(test_id):
 
 
 
+exclude_class = "person"
+min_faces = 1
+min_visibility_percentage = 0.50
+delay_before_opening_tab = 5
+popup_delay = 5
 
-def check_user_opencv(test_id,Studemail):
+def check_user_opencv(test_id, Studemail):
+    global status
+    status = True
     global popup_counter  # Declare popup_counter as a global variable
     popup_counter = 0
+
     recognizer = cv2.face.LBPHFaceRecognizer_create()
     recognizer.read('trainingData.yml')
     dlib_detector = dlib.get_frontal_face_detector()
@@ -832,7 +843,7 @@ def check_user_opencv(test_id,Studemail):
     exam_tab_opened = False
     start_time = 0
     start_time1 = 0
-    exam_url = "http://127.0.0.1:5000/attempt_test/"+test_id+"/"+Studemail
+    exam_url = "http://127.0.0.1:5001/attempt_test/"+test_id+"/"+Studemail
 
     def open_exam_tab():
         global exam_tab_opened
@@ -840,13 +851,12 @@ def check_user_opencv(test_id,Studemail):
         print('Exam tab opened successfully 1')
         exam_tab_opened = True
 
-    def close_exam_tab():
+    def test_submitted():
+        global status
         driver.execute_script("document.getElementById('submitButton').click();")
-        global exam_tab_opened
-        pyautogui.click(x=100, y=100)
-        pyautogui.hotkey('ctrl', 'w')
         print('Exam tab closed successfully')
-        exam_tab_opened = False
+        status = False  # Set status to False to exit the loop
+
 
     max_popup_count = 10
 
@@ -857,38 +867,28 @@ def check_user_opencv(test_id,Studemail):
         driver.execute_script(script)
         popup_counter += 1
 
+    # ... (your existing code)
 
-
-
-    # Exclude the "person" class
-    exclude_class = "person"
-    min_faces = 1
-    # Set the minimum percentage of object visibility for detection
-    min_visibility_percentage = 0.50
-    delay_before_opening_tab = 5
-    popup_delay = 5
-
-
-
-
-    while True:
-        # Read a frame from the camera
+    while status:
+        print("Main Loop")
         ret, frame = cap.read()
 
         if ret:
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             height, width, channels = frame.shape
 
-            # Detect faces using Dlib
             faces = dlib_detector(gray, 1)
 
             for face in faces:
-                # Extract the bounding box coordinates
+                print("loop 1")
+                if not status:
+                    cap.release()
+                    cv2.destroyAllWindows()
+                    break
+
                 x, y, w, h = face.left(), face.top(), face.width(), face.height()
 
-                # Ensure the face region is within the bounds of the image
                 if x >= 0 and y >= 0 and x + w <= width and y + h <= height:
-                    # Your existing face recognition code goes here...
                     id_, confidence = recognizer.predict(gray[y:y + h, x:x + w])
 
                     if confidence < 65:
@@ -896,7 +896,6 @@ def check_user_opencv(test_id,Studemail):
                         cv2.putText(frame, name, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
                         if first_time_user and not exam_tab_opened:
-                            # Record the time when a face is detected
                             start_time = time.time()
                             first_time_user = False
 
@@ -905,63 +904,45 @@ def check_user_opencv(test_id,Studemail):
                             exam_tab_opened = True
                             print('Exam tab opened successfully 2')
 
-                    # else:
-                    #     cv2.putText(frame, "Unknown", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 0, 255), 2)
-                    #     start_time1 = time.time()
-                    #     if not exam_tab_opened and time.time() - start_time1 > delay_before_opening_tab:
-                    #         # Close the exam tab if an unknown face is detected within the specified time
-                    #         close_exam_tab()
-                    #         exam_tab_opened = False
-                    #         print('Exam tab closed successfully 2')
-                    #         sys.exit()
-
-                    # Draw the rectangle around the face
                     cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-                    
 
-            # Check if more than two faces are detected
-            
             if len(faces) > min_faces or len(faces) == 0:
                 message1 = f"More than {min_faces} faces or no face detected. Trigger an action here."
                 print(message1)
                 if exam_tab_opened:
                     show_popup(message1)
-                    if(popup_counter<max_popup_count):
-                        popup_counter+=1
+                    if popup_counter < max_popup_count:
+                        popup_counter += 1
                         time.sleep(popup_delay)
                     else:
-                        close_exam_tab()
-                        exam_tab_opened = False
-                        break  # Terminate the loop and close the tab
+                        test_submitted()
+                        break
 
-        # Get the frame shape and prepare it for YOLO
         blob = cv2.dnn.blobFromImage(frame, 0.00392, (416, 416), (0, 0, 0), True, crop=False)
         net.setInput(blob)
         outs = net.forward(layer_names)
 
-        # Process the outputs from YOLO
         for out in outs:
+            print("loop 2")
+            if not status:
+                break
             for detection in out:
-
+                print("loop 3")
+                if not status:
+                    break
                 scores = detection[5:]
                 class_id = np.argmax(scores)
                 confidence = scores[class_id]
 
-                # Exclude the "person" class
                 if confidence > 0.5 and classes[class_id] != exclude_class:
-                    # Object detected
                     center_x = int(detection[0] * width)
                     center_y = int(detection[1] * height)
                     w = int(detection[2] * width)
                     h = int(detection[3] * height)
 
-                    # Calculate the percentage of object visibility
                     visibility_percentage = (w * h) / (width * height) * 100
 
-                    # Draw bounding box if visibility is more than the threshold
                     if visibility_percentage > min_visibility_percentage:
-
-                        # Rectangle coordinates
                         x = int(center_x - w / 2)
                         y = int(center_y - h / 2)
 
@@ -971,48 +952,34 @@ def check_user_opencv(test_id,Studemail):
                             'visibility_percentage': visibility_percentage,
                             'bounding_box': (x, y, x + w, y + h)
                         }
-                        # if detected_object["class"] == "cell phone" or detected_object["class"] == "book":
-                        #     if exam_tab_opened:
-                        #         close_exam_tab()
-                        #         exam_tab_opened = False
-                        #         break
-
-                        # Show popup for all classes except "person"
-                        # message = f"{detected_object['class']} detected with confidence {detected_object['confidence']:.2f}"
-                        # show_popup(message)
-                        
-
-            
 
                         if classes[class_id] == "cell phone":
                             message = f"{detected_object['class']} detected with confidence {detected_object['confidence']:.2f} {popup_counter}" 
                             show_popup(message)  
 
                             if popup_counter >= max_popup_count:
-                                close_exam_tab()
-                                sys.exit()
+                                test_submitted()
                                 break
 
-                            # Introduce a delay after each popup
                             time.sleep(popup_delay)
 
-                        
-
-                    # Draw bounding box for all classes except "person"
-                        color = (0, 255, 0)  # Green color for the bounding box
+                        color = (0, 255, 0)
                         cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
                         cv2.putText(frame, f"{classes[class_id]} {confidence:.2f}", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX,
                                     0.5, color, 2)
 
         cv2.imshow("Object Detection", frame)
 
-        # Break the loop if 'q' key is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    # Release the video capture object and close all windows
     cap.release()
     cv2.destroyAllWindows()
+
+
+
+
+
 
 
 def check_user_old_opencv(test_id):
@@ -1033,7 +1000,7 @@ def check_user_old_opencv(test_id):
     first_time_user = True
     exam_tab_opened = False
 
-    exam_url = "http://127.0.0.1:5000/attempt_test/"+test_id
+    exam_url = "http://127.0.0.1:5001/attempt_test/"+test_id
 
     def open_exam_tab():
         global exam_tab_opened
@@ -1059,7 +1026,7 @@ def check_user_old_opencv(test_id):
     min_faces=1
     # Set the minimum percentage of object visibility for detection
     min_visibility_percentage = 0.10
-
+    
     while True:
         # Read a frame from the camera
         ret, frame = cap.read()
@@ -1167,11 +1134,19 @@ def check_user_old_opencv(test_id):
     
     return redirect(url_for('home'))
 
-@app.route('/check_user/<test_id>/<Studemail>')
-def check_user(test_id,Studemail):
-    check_user_opencv(test_id,Studemail)
-    return redirect(url_for('home',Studemail=Studemail))
 
+
+
+@app.route('/check_user/<test_id>/<Studemail>')
+def check_user(test_id, Studemail):
+    try:
+        check_user_opencv(test_id, Studemail)
+    except NoSuchWindowException as e:
+        # Handle NoSuchWindowException
+        print(f"Error executing check_user_opencv: {e}")
+    
+    # Redirect to home page
+    return redirect(url_for('home', Studemail=Studemail))
 
 @app.route('/attempt_test/<test_id>/<Studemail>')
 def attempt_test(test_id,Studemail):
@@ -1298,8 +1273,7 @@ def submit_test(test_id,Studemail):
         else:
             # If an existing document is found, update it
             existing_answers = existing_submission.get('answers', {})
-            existing_answers[session.get('user').get(
-                'email')] = selected_answers
+            existing_answers[user_email] = selected_answers
 
             db.submitted_answers_collection.update_one(
                 {'test_id': test_id},
@@ -1662,4 +1636,4 @@ def close_tab():
     print('Exam tab closed successfully')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(port=5001)
