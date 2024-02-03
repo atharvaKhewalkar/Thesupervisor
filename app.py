@@ -870,7 +870,6 @@ def check_user_opencv(test_id, Studemail):
     # ... (your existing code)
 
     while status:
-        print("Main Loop")
         ret, frame = cap.read()
 
         if ret:
@@ -880,7 +879,7 @@ def check_user_opencv(test_id, Studemail):
             faces = dlib_detector(gray, 1)
 
             for face in faces:
-                print("loop 1")
+                
                 if not status:
                     cap.release()
                     cv2.destroyAllWindows()
@@ -923,11 +922,11 @@ def check_user_opencv(test_id, Studemail):
         outs = net.forward(layer_names)
 
         for out in outs:
-            print("loop 2")
+            
             if not status:
                 break
             for detection in out:
-                print("loop 3")
+                
                 if not status:
                     break
                 scores = detection[5:]
