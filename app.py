@@ -811,13 +811,14 @@ def edit_test_para(test_id):
 
 
 
-exclude_class = "person"
-min_faces = 1
-min_visibility_percentage = 0.50
-delay_before_opening_tab = 5
-popup_delay = 5
+
 
 def check_user_opencv(test_id, Studemail):
+    exclude_class = "person"
+    min_faces = 1
+    min_visibility_percentage = 0.50
+    delay_before_opening_tab = 5
+    popup_delay = 5
     global status
     status = True
     global popup_counter  # Declare popup_counter as a global variable
@@ -853,7 +854,6 @@ def check_user_opencv(test_id, Studemail):
 
     def test_submitted():
         global status
-        driver.execute_script("document.getElementById('submitButton').click();")
         print('Exam tab closed successfully')
         status = False  # Set status to False to exit the loop
 
@@ -862,12 +862,16 @@ def check_user_opencv(test_id, Studemail):
 
     def show_popup(class_name):
         global popup_counter
-        alert_message = f"Non-Person Object Detected: {class_name}"
+        alert_message = f"Non-Person/Object Detected: {class_name}"
         script = f"alert('{alert_message}');"
-        driver.execute_script(script)
+        try:
+            driver.execute_script(script)
+            alert = driver.switch_to.alert
+            # alert.accept()  # You can also use alert.dismiss() if needed
+        except Exception as e:
+            # Handle other exceptions or log them if needed
+            print(f"Error handling alert: {e}")
         popup_counter += 1
-
-    # ... (your existing code)
 
     while status:
         ret, frame = cap.read()
@@ -1416,7 +1420,7 @@ def filter_by_department(department):
     else:
         students = list(db.users.find({'department': department}))
 
-    return render_template('/edit_stud_data.html', students=students)
+    return render_template('html/edit_stud_data.html', students=students)
 
 @app.route('/clickPhotos',methods=['GET', 'POST'])
 def clickPhotos():
@@ -1475,6 +1479,7 @@ def close_tab():
     pyautogui.click(x=100, y=100)
     pyautogui.hotkey('ctrl', 'w')
     print('Exam tab closed successfully')
+    return render_template('html/login.html')
 
 if __name__ == '__main__':
     app.run(port=5001)
