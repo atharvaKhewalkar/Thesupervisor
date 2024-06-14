@@ -74,7 +74,7 @@
     var popUpCount = 0;
     var popUpCountExcided = false;
     var firstTime = false;
-    var max_count=5;
+    var max_count=2;
     document.getElementById('fullscreenButton').addEventListener('click', enterFullScreen);
 
     document.addEventListener('visibilitychange', function () {
@@ -128,7 +128,6 @@
         document.getElementById("testForm").style.display = "none";
         popUpCountExcided = true;
         document.getElementById("submitButton").click();
-        popUpCount = 0;
         return;
       }
 
